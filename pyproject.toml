@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "bacen-ifdata-scraper"
+version = "0.0.1"
+description = "Este sistema foi projetado para automatizar o download dos relatórios da ferramenta IF.data do Banco Central do Brasil. Criado para facilitar a integração com ferramentas automatizadas de análise e visualização de dados, garantido acesso fácil e oportuno aos dados."
+authors = ["Alexsander Lopes Camargos <alcamargos@vivaldi.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selenium = "^4.16.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
