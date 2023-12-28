@@ -26,11 +26,11 @@ automatizadas de análise e visualização de dados, garantido acesso fácil e o
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-import config
-from utils import ensure_clickable
+from bacen_ifdata_scraper import config
+from bacen_ifdata_scraper.utils import ensure_clickable
 
 
-def main():
+def download_ifdata_reports():
     """
     Initializes a WebDriver session with Firefox, navigates to a specific URL,
     and interacts with a dynamic web page to ensure that specific elements
@@ -79,7 +79,3 @@ def main():
     # prosseguir com o download do arquivo CSV.
     # TODO: Implementar checagem de termino do download.
     ensure_clickable(driver, config.TIMEOUT, By.ID, 'aExportCsv')
-
-
-if __name__ == '__main__':
-    main()
