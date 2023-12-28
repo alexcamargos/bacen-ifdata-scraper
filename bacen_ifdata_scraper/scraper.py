@@ -37,64 +37,75 @@ INSTITUTION_TYPE = 'Conglomerados Financeiros e Instituições Independentes'
 REPORT_TYPE = 'Ativo'  # Tipo de relatório.
 
 
+def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator: str):
+    """
+    Waits for an element to be clickable on a web page and then clicks it.
+
+    This function uses explicit wait to pause the execution until the specified element is determined to be clickable. Once clickable, the function performs a click action on the element.
+
+    Parameters:
+    - driver (webdriver): The WebDriver instance being used to interact with the web page.
+    - wait_time (int): The maximum number of seconds to wait for the element to become clickable.
+    - by_method (str): The method used to locate the element (e.g., By.ID, By.XPATH).
+    - locator (str): The locator string used with the by_method to find the element.
+
+    Raises:
+    - TimeoutException: If the element is not clickable within the specified wait_time.
+
+    Returns:
+    None
+    """
+
+    element = WebDriverWait(driver, wait_time).until(
+        EC.element_to_be_clickable((by_method, locator))
+    )
+    element.click()
+
+
 # Inicializa o WebDriver para o Firefox.
 driver = webdriver.Firefox()
 
 # Acesse a página onde estão os relatórios.
 driver.get(URL)
 
-# O conteúdo do btnDataBase é carregado dinamicamente,
-# então precisamos forçar o inicio do carregamento.
-btn_data_base = WebDriverWait(driver, TIMEOUT).until(
-    EC.element_to_be_clickable((By.ID, 'btnDataBase'))
-    )
+# O sistema gera os relatórios de forma dinâmica, então precisamos garantir que
+# o conteúdo da página esteja carregado antes de prosseguir. Para isso, vamos
+# usar a função ensure_clickable() para garantir que o conteúdo esteja carregado
+# antes de prosseguirmos.
+
+# Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
+btn_data_base = driver.find_element(By.ID, 'btnDataBase')
 btn_data_base.click()
 
-# Garanta que o conteúdo do default_wait esteja carregado antes de prosseguir.
-WebDriverWait(driver, TIMEOUT).until(
-    EC.presence_of_element_located(
-        (By.XPATH, f"//a[text()='{LAST_BASE_DATE}']"))
-        )
+# Garanta que o conteúdo do dropdown menu "ulDataBase" esteja carregado antes de prosseguir.
+ensure_clickable(driver,
+                 TIMEOUT,
+                 By.XPATH,
+                 f"//a[text()='{LAST_BASE_DATE}']")
 
-# Agora, faça a seleção desejada.
-data_base_opt = driver.find_element(
-    By.XPATH, f"//a[text()='{LAST_BASE_DATE}']")
-data_base_opt.click()
+# Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
+btn_tipo_iInst = driver.find_element(By.ID, 'btnTipoInst')
+btn_tipo_iInst.click()
 
-# Escolha o tipo de instituição desejado. Altere o texto para corresponder à sua escolha.
-Institution_type_opt = driver.find_element(By.ID, 'btnTipoInst')
-Institution_type_opt.click()
+# Garanta que o conteúdo do dropdown menu "ulTipoInst" esteja carregado antes de prosseguir.
+ensure_clickable(driver,
+                 TIMEOUT,
+                 By.XPATH,
+                 f"//a[text()='{INSTITUTION_TYPE}']")
 
-# Garanta que o conteúdo do btnTipoInst esteja carregado antes de prosseguir.
-WebDriverWait(driver, TIMEOUT).until(
-    EC.presence_of_element_located(
-        (By.XPATH, f"//a[text()='{INSTITUTION_TYPE}']"))
-        )
+# Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
+btn_relatorio = driver.find_element(By.ID, 'btnRelatorio')
+btn_relatorio.click()
 
-driver.find_element(
-    By.XPATH, f"//a[text()='{INSTITUTION_TYPE}']").click()
+# Garanta que o conteúdo do dropdown menu "ulRelatorio" esteja carregado antes de prosseguir.
+ensure_clickable(driver,
+                 TIMEOUT,
+                 By.XPATH,
+                 f"//a[text()='{REPORT_TYPE}']")
 
-# Escolha o tipo de relatório desejado.
-report_type_opt = driver.find_element(By.ID, 'btnRelatorio')
-report_type_opt.click()
-
-# Garanta que o conteúdo do btnRelatorio esteja carregado antes de prosseguir.
-WebDriverWait(driver, TIMEOUT).until(
-    EC.presence_of_element_located((By.XPATH, f"//a[text()='{REPORT_TYPE}']"))
-    )
-
-driver.find_element(By.XPATH, f"//a[text()='{REPORT_TYPE}']").click()
-
-# Aguarde a página atualizar com as informações do relatório escolhido.
-# Aguarde até que o botão de data-base esteja clicável e clique nele para carregar as opções.
-data_table_export_csv = WebDriverWait(driver, TIMEOUT).until(
-    EC.element_to_be_clickable((By.ID, 'aExportCsv'))
-    )
-data_table_export_csv.click()
-
-# Clique no botão de download do CSV.
-btn_download_csv = driver.find_element(By.ID, 'aExportCsv')
-btn_download_csv.click()
+# Garanta que o conteúdo do relatório esteja carregado antes de
+# prosseguir com o download do arquivo CSV.
+ensure_clickable(driver, TIMEOUT, By.ID, 'aExportCsv')
 
 # TODO: Implementar checagem de termino do download.
 
