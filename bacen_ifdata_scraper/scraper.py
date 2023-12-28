@@ -24,10 +24,10 @@ automatizadas de análise e visualização de dados, garantido acesso fácil e o
 """
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # URL da página onde estão os relatórios.
 URL = 'https://www3.bcb.gov.br/ifdata/'
