@@ -74,8 +74,7 @@ driver.get(URL)
 # antes de prosseguirmos.
 
 # Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
-btn_data_base = driver.find_element(By.ID, 'btnDataBase')
-btn_data_base.click()
+ensure_clickable(driver, TIMEOUT, By.ID, 'btnDataBase')
 
 # Garanta que o conteúdo do dropdown menu "ulDataBase" esteja carregado antes de prosseguir.
 ensure_clickable(driver,
@@ -84,8 +83,7 @@ ensure_clickable(driver,
                  f"//a[text()='{LAST_BASE_DATE}']")
 
 # Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
-btn_tipo_iInst = driver.find_element(By.ID, 'btnTipoInst')
-btn_tipo_iInst.click()
+ensure_clickable(driver, TIMEOUT, By.ID, 'btnTipoInst')
 
 # Garanta que o conteúdo do dropdown menu "ulTipoInst" esteja carregado antes de prosseguir.
 ensure_clickable(driver,
@@ -94,8 +92,7 @@ ensure_clickable(driver,
                  f"//a[text()='{INSTITUTION_TYPE}']")
 
 # Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
-btn_relatorio = driver.find_element(By.ID, 'btnRelatorio')
-btn_relatorio.click()
+ensure_clickable(driver, TIMEOUT, By.ID, 'btnRelatorio')
 
 # Garanta que o conteúdo do dropdown menu "ulRelatorio" esteja carregado antes de prosseguir.
 ensure_clickable(driver,
