@@ -47,14 +47,14 @@ driver.get(URL)
 # então precisamos forçar o inicio do carregamento.
 btn_data_base = WebDriverWait(driver, TIMEOUT).until(
     EC.element_to_be_clickable((By.ID, 'btnDataBase'))
-)
+    )
 btn_data_base.click()
 
 # Garanta que o conteúdo do default_wait esteja carregado antes de prosseguir.
 WebDriverWait(driver, TIMEOUT).until(
     EC.presence_of_element_located(
         (By.XPATH, f"//a[text()='{LAST_BASE_DATE}']"))
-)
+        )
 
 # Agora, faça a seleção desejada.
 data_base_opt = driver.find_element(
@@ -69,7 +69,7 @@ Institution_type_opt.click()
 WebDriverWait(driver, TIMEOUT).until(
     EC.presence_of_element_located(
         (By.XPATH, f"//a[text()='{INSTITUTION_TYPE}']"))
-)
+        )
 
 driver.find_element(
     By.XPATH, f"//a[text()='{INSTITUTION_TYPE}']").click()
@@ -81,7 +81,7 @@ report_type_opt.click()
 # Garanta que o conteúdo do btnRelatorio esteja carregado antes de prosseguir.
 WebDriverWait(driver, TIMEOUT).until(
     EC.presence_of_element_located((By.XPATH, f"//a[text()='{REPORT_TYPE}']"))
-)
+    )
 
 driver.find_element(By.XPATH, f"//a[text()='{REPORT_TYPE}']").click()
 
@@ -89,7 +89,7 @@ driver.find_element(By.XPATH, f"//a[text()='{REPORT_TYPE}']").click()
 # Aguarde até que o botão de data-base esteja clicável e clique nele para carregar as opções.
 data_table_export_csv = WebDriverWait(driver, TIMEOUT).until(
     EC.element_to_be_clickable((By.ID, 'aExportCsv'))
-)
+    )
 data_table_export_csv.click()
 
 # Clique no botão de download do CSV.
