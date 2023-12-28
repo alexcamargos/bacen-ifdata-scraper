@@ -27,6 +27,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 # URL da página onde estão os relatórios.
 URL = 'https://www3.bcb.gov.br/ifdata/'
@@ -58,10 +59,15 @@ def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator:
     None
     """
 
-    element = WebDriverWait(driver, wait_time).until(
-        EC.element_to_be_clickable((by_method, locator))
-    )
-    element.click()
+    try:
+        element = WebDriverWait(driver, wait_time).until(
+            EC.element_to_be_clickable((by_method, locator))
+        )
+        element.click()
+    except TimeoutException:
+        print(f"Timeout: O elemento {locator} não se tornou clicável após {wait_time} segundos.")
+    except NoSuchElementException:
+        print(f"Não encontrado: O elemento {locator} não foi encontrado na página.")
 
 
 def main():
