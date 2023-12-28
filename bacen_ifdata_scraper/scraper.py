@@ -41,7 +41,9 @@ def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator:
     """
     Waits for an element to be clickable on a web page and then clicks it.
 
-    This function uses explicit wait to pause the execution until the specified element is determined to be clickable. Once clickable, the function performs a click action on the element.
+    This function uses explicit wait to pause the execution until the specified
+    element is determined to be clickable. Once clickable, the function
+    performs a click action on the element.
 
     Parameters:
     - driver (webdriver): The WebDriver instance being used to interact with the web page.
