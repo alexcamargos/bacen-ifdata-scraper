@@ -29,13 +29,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-# URL da página onde estão os relatórios.
-URL = 'https://www3.bcb.gov.br/ifdata/'
-TIMEOUT = 120  # Tempo máximo de espera para carregamento de elementos.
-LAST_BASE_DATE = '06/2023'  # Data-base do último relatório disponível.
-# Tipo de instituição.
-INSTITUTION_TYPE = 'Conglomerados Financeiros e Instituições Independentes'
-REPORT_TYPE = 'Ativo'  # Tipo de relatório.
+import config
 
 
 def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator: str):
@@ -65,9 +59,11 @@ def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator:
         )
         element.click()
     except TimeoutException:
-        print(f"Timeout: O elemento {locator} não se tornou clicável após {wait_time} segundos.")
+        print(f"Timeout: O elemento {
+              locator} não se tornou clicável após {wait_time} segundos.")
     except NoSuchElementException:
-        print(f"Não encontrado: O elemento {locator} não foi encontrado na página.")
+        print(f"Não encontrado: O elemento {
+              locator} não foi encontrado na página.")
 
 
 def main():
@@ -81,7 +77,7 @@ def main():
     driver = webdriver.Firefox()
 
     # Acesse a página onde estão os relatórios.
-    driver.get(URL)
+    driver.get(config.URL)
 
     # O sistema gera os relatórios de forma dinâmica, então precisamos garantir que
     # o conteúdo da página esteja carregado antes de prosseguir. Para isso, vamos
@@ -89,36 +85,36 @@ def main():
     # antes de prosseguirmos.
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
-    ensure_clickable(driver, TIMEOUT, By.ID, 'btnDataBase')
+    ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnDataBase')
 
     # Garanta que o conteúdo do dropdown menu "ulDataBase" esteja carregado antes de prosseguir.
     ensure_clickable(driver,
-                     TIMEOUT,
+                     config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{LAST_BASE_DATE}']")
+                     f"//a[text()='{config.LAST_BASE_DATE}']")
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
-    ensure_clickable(driver, TIMEOUT, By.ID, 'btnTipoInst')
+    ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnTipoInst')
 
     # Garanta que o conteúdo do dropdown menu "ulTipoInst" esteja carregado antes de prosseguir.
     ensure_clickable(driver,
-                     TIMEOUT,
+                     config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{INSTITUTION_TYPE}']")
+                     f"//a[text()='{config.INSTITUTION_TYPE}']")
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
-    ensure_clickable(driver, TIMEOUT, By.ID, 'btnRelatorio')
+    ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnRelatorio')
 
     # Garanta que o conteúdo do dropdown menu "ulRelatorio" esteja carregado antes de prosseguir.
     ensure_clickable(driver,
-                     TIMEOUT,
+                     config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{REPORT_TYPE}']")
+                     f"//a[text()='{config.REPORT_TYPE}']")
 
     # Garanta que o conteúdo do relatório esteja carregado antes de
     # prosseguir com o download do arquivo CSV.
     # TODO: Implementar checagem de termino do download.
-    ensure_clickable(driver, TIMEOUT, By.ID, 'aExportCsv')
+    ensure_clickable(driver, config.TIMEOUT, By.ID, 'aExportCsv')
 
 
 if __name__ == '__main__':
