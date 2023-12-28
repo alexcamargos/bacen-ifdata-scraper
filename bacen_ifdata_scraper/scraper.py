@@ -62,49 +62,56 @@ def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator:
     element.click()
 
 
-# Inicializa o WebDriver para o Firefox.
-driver = webdriver.Firefox()
+def main():
+    """
+    Initializes a WebDriver session with Firefox, navigates to a specific URL,
+    and interacts with a dynamic web page to ensure that specific elements
+    are clickable before proceeding.
+    """
 
-# Acesse a página onde estão os relatórios.
-driver.get(URL)
+    # Inicializa o WebDriver para o Firefox.
+    driver = webdriver.Firefox()
 
-# O sistema gera os relatórios de forma dinâmica, então precisamos garantir que
-# o conteúdo da página esteja carregado antes de prosseguir. Para isso, vamos
-# usar a função ensure_clickable() para garantir que o conteúdo esteja carregado
-# antes de prosseguirmos.
+    # Acesse a página onde estão os relatórios.
+    driver.get(URL)
 
-# Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
-ensure_clickable(driver, TIMEOUT, By.ID, 'btnDataBase')
+    # O sistema gera os relatórios de forma dinâmica, então precisamos garantir que
+    # o conteúdo da página esteja carregado antes de prosseguir. Para isso, vamos
+    # usar a função ensure_clickable() para garantir que o conteúdo esteja carregado
+    # antes de prosseguirmos.
 
-# Garanta que o conteúdo do dropdown menu "ulDataBase" esteja carregado antes de prosseguir.
-ensure_clickable(driver,
-                 TIMEOUT,
-                 By.XPATH,
-                 f"//a[text()='{LAST_BASE_DATE}']")
+    # Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
+    ensure_clickable(driver, TIMEOUT, By.ID, 'btnDataBase')
 
-# Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
-ensure_clickable(driver, TIMEOUT, By.ID, 'btnTipoInst')
+    # Garanta que o conteúdo do dropdown menu "ulDataBase" esteja carregado antes de prosseguir.
+    ensure_clickable(driver,
+                     TIMEOUT,
+                     By.XPATH,
+                     f"//a[text()='{LAST_BASE_DATE}']")
 
-# Garanta que o conteúdo do dropdown menu "ulTipoInst" esteja carregado antes de prosseguir.
-ensure_clickable(driver,
-                 TIMEOUT,
-                 By.XPATH,
-                 f"//a[text()='{INSTITUTION_TYPE}']")
+    # Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
+    ensure_clickable(driver, TIMEOUT, By.ID, 'btnTipoInst')
 
-# Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
-ensure_clickable(driver, TIMEOUT, By.ID, 'btnRelatorio')
+    # Garanta que o conteúdo do dropdown menu "ulTipoInst" esteja carregado antes de prosseguir.
+    ensure_clickable(driver,
+                     TIMEOUT,
+                     By.XPATH,
+                     f"//a[text()='{INSTITUTION_TYPE}']")
 
-# Garanta que o conteúdo do dropdown menu "ulRelatorio" esteja carregado antes de prosseguir.
-ensure_clickable(driver,
-                 TIMEOUT,
-                 By.XPATH,
-                 f"//a[text()='{REPORT_TYPE}']")
+    # Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
+    ensure_clickable(driver, TIMEOUT, By.ID, 'btnRelatorio')
 
-# Garanta que o conteúdo do relatório esteja carregado antes de
-# prosseguir com o download do arquivo CSV.
-ensure_clickable(driver, TIMEOUT, By.ID, 'aExportCsv')
+    # Garanta que o conteúdo do dropdown menu "ulRelatorio" esteja carregado antes de prosseguir.
+    ensure_clickable(driver,
+                     TIMEOUT,
+                     By.XPATH,
+                     f"//a[text()='{REPORT_TYPE}']")
 
-# TODO: Implementar checagem de termino do download.
+    # Garanta que o conteúdo do relatório esteja carregado antes de
+    # prosseguir com o download do arquivo CSV.
+    # TODO: Implementar checagem de termino do download.
+    ensure_clickable(driver, TIMEOUT, By.ID, 'aExportCsv')
 
-# Feche o navegador após o download (opcional).
-# driver.quit()
+
+if __name__ == '__main__':
+    main()
