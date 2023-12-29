@@ -35,18 +35,44 @@ def download_ifdata_reports(driver: webdriver,
                             institution_type: str,
                             report_type: str):
     """
-    Initializes a WebDriver session with Firefox, navigates to a specific URL,
-    and interacts with a dynamic web page to ensure that specific elements
-    are clickable before proceeding.
+    Navigates to the financial reports page of the Central Bank of Brazil using a WebDriver,
+    interacts with the page to select the desired options for data base, type of institution,
+    and type of report, and initiates the download process for the report in CSV format.
+
+    The function dynamically waits until the necessary elements are clickable and interacts
+    with multiple dropdown menus to set the report criteria specified by the parameters.
+
+    Parameters:
+        driver (webdriver): Instance of the browser's WebDriver.
+        data_base (str): Base date of the report available for download.
+        institution_type (str): Type of financial institution for which the report is desired.
+        report_type (str): Type of report to be downloaded.
+
+    Behavior:
+        The function performs a series of actions to interact with the web page:
+        1. Accesses the URL of the financial reports.
+        2. Waits and interacts with the data base selection menu.
+        3. Waits and interacts with the type of institution selection menu.
+        4. Waits and interacts with the type of report selection menu.
+        5. Initiates the download of the selected report.
+
+    Notes:
+        - The function relies on external configuration (config.py) for URLs and timeouts.
+        - The implementation assumes that the page and its elements are in an expected state and may
+          require updates if the site structure of the Central Bank of Brazil changes.
+        - Checking for the completion of the file download still needs to be implemented (TODO).
+
+    Returns:
+        None. The function initiates the file download but does not verify its completion.
     """
 
     # Acesse a página onde estão os relatórios.
     driver.get(config.URL)
 
-    # O sistema gera os relatórios de forma dinâmica, então precisamos garantir que
-    # o conteúdo da página esteja carregado antes de prosseguir. Para isso, vamos
-    # usar a função ensure_clickable() para garantir que o conteúdo esteja carregado
-    # antes de prosseguirmos.
+    # IMPORTANTE: O sistema gera os relatórios de forma dinâmica, então precisamos
+    # garantir que o conteúdo da página esteja carregado antes de prosseguir.
+    # Para isso, vamos usar a função ensure_clickable() para garantir que o conteúdo
+    # esteja carregado antes de prosseguirmos.
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulDataBase".
     ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnDataBase')
@@ -77,5 +103,4 @@ def download_ifdata_reports(driver: webdriver,
 
     # Garanta que o conteúdo do relatório esteja carregado antes de
     # prosseguir com o download do arquivo CSV.
-    # TODO: Implementar checagem de termino do download.
     ensure_clickable(driver, config.TIMEOUT, By.ID, 'aExportCsv')
