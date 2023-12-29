@@ -66,6 +66,8 @@ def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator:
     except TimeoutException:
         print(f"Timeout: O elemento {
               locator} não se tornou clicável após {wait_time} segundos.")
+        raise
     except NoSuchElementException:
         print(f"Não encontrado: O elemento {
               locator} não foi encontrado na página.")
+        raise
