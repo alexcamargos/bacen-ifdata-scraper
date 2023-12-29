@@ -23,8 +23,10 @@ IF.data do Banco Central do Brasil. Criado para facilitar a integração com fer
 automatizadas de análise e visualização de dados, garantido acesso fácil e oportuno aos dados.
 """
 
+from bacen_ifdata_scraper.utils import initialize_webdriver
 from bacen_ifdata_scraper.scraper import download_ifdata_reports
 import bacen_ifdata_scraper.config as config
 
 if __name__ == '__main__':
-    download_ifdata_reports(config.LAST_BASE_DATE, config.INSTITUTION_TYPE, config.REPORT_TYPE)
+    driver = initialize_webdriver()
+    download_ifdata_reports(driver, config.LAST_BASE_DATE, config.INSTITUTION_TYPE, config.REPORT_TYPE)

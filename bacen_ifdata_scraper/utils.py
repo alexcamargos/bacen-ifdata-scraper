@@ -23,6 +23,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
+def initialize_webdriver() -> webdriver:
+    """
+    Initializes a WebDriver session with Firefox.
+
+    Returns:
+    - driver (webdriver): The WebDriver instance being used to interact with the web page.
+    """
+
+    # Inicializa o WebDriver para o Firefox.
+    driver = webdriver.Firefox()
+
+    return driver
+
+
 def ensure_clickable(driver: webdriver, wait_time: int, by_method: str, locator: str):
     """
     Waits for an element to be clickable on a web page and then clicks it.

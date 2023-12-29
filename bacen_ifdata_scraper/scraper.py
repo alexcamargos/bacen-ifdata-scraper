@@ -30,15 +30,15 @@ from bacen_ifdata_scraper import config
 from bacen_ifdata_scraper.utils import ensure_clickable
 
 
-def download_ifdata_reports(data_base: str, institution_type: str, report_type: str):
+def download_ifdata_reports(driver: webdriver,
+                            data_base: str,
+                            institution_type: str,
+                            report_type: str):
     """
     Initializes a WebDriver session with Firefox, navigates to a specific URL,
     and interacts with a dynamic web page to ensure that specific elements
     are clickable before proceeding.
     """
-
-    # Inicializa o WebDriver para o Firefox.
-    driver = webdriver.Firefox()
 
     # Acesse a página onde estão os relatórios.
     driver.get(config.URL)
