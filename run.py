@@ -24,6 +24,7 @@ automatizadas de análise e visualização de dados, garantido acesso fácil e o
 """
 
 from bacen_ifdata_scraper.scraper import download_ifdata_reports
+import bacen_ifdata_scraper.config as config
 
 if __name__ == '__main__':
-    download_ifdata_reports()
+    download_ifdata_reports(config.LAST_BASE_DATE, config.INSTITUTION_TYPE, config.REPORT_TYPE)

@@ -30,7 +30,7 @@ from bacen_ifdata_scraper import config
 from bacen_ifdata_scraper.utils import ensure_clickable
 
 
-def download_ifdata_reports():
+def download_ifdata_reports(data_base: str, institution_type: str, report_type: str):
     """
     Initializes a WebDriver session with Firefox, navigates to a specific URL,
     and interacts with a dynamic web page to ensure that specific elements
@@ -55,7 +55,7 @@ def download_ifdata_reports():
     ensure_clickable(driver,
                      config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{config.LAST_BASE_DATE}']")
+                     f"//a[text()='{data_base}']")
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulTipoInst".
     ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnTipoInst')
@@ -64,7 +64,7 @@ def download_ifdata_reports():
     ensure_clickable(driver,
                      config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{config.INSTITUTION_TYPE}']")
+                     f"//a[text()='{institution_type}']")
 
     # Forçando o inicio do carregando do conteúdo do dropdown menu "ulRelatorio".
     ensure_clickable(driver, config.TIMEOUT, By.ID, 'btnRelatorio')
@@ -73,7 +73,7 @@ def download_ifdata_reports():
     ensure_clickable(driver,
                      config.TIMEOUT,
                      By.XPATH,
-                     f"//a[text()='{config.REPORT_TYPE}']")
+                     f"//a[text()='{report_type}']")
 
     # Garanta que o conteúdo do relatório esteja carregado antes de
     # prosseguir com o download do arquivo CSV.
