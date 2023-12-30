@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: interfaces.py
+#  Name: interacting.py
 #  Version: 0.0.1
 #  Summary: Banco Central do Brasil IF.data Scraper
 #           Este sistema foi projetado para automatizar o download dos
@@ -33,6 +33,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+from bacen_ifdata_scraper import config
 
 
 class Browser:
@@ -93,6 +95,33 @@ class Browser:
 
         option_xpath = f"//a[text()='{option_text}']"
         self.__ensure_clickable(wait_time, By.XPATH, option_xpath)
+
+    def get_dropdown_options(self, dropdown_id: str) -> list:
+        """Returns a list of options from a dropdown menu on a web page."""
+
+        self.ensure_dropdown_content('btnDataBase', config.TIMEOUT)
+        # self.select_dropdown_option('03/2000', config.TIMEOUT)
+
+        # Using __ensure_clickable() not working here.
+        # Need to investigate further.
+        # Solution is to use WebDriverWait() directly.
+        WebDriverWait(self._driver, config.TIMEOUT).until(
+            EC.element_to_be_clickable((By.XPATH,
+                                        '//*[@id="ulDataBase"]/li[1]/a')
+                                       )
+        )
+
+        dropdown = self._driver.find_element(By.ID, dropdown_id)
+        dropdown_items = dropdown.find_elements(By.TAG_NAME, 'li')
+
+        dropdown_texts = [
+            item.find_element(By.TAG_NAME, 'a').text for item in dropdown_items
+            if item.text.strip() != ''
+        ]
+
+        self.select_dropdown_option(dropdown_texts[0], config.TIMEOUT)
+
+        return dropdown_texts
 
     def download_report(self, wait_time: int):
         """Downloads a report from a web page."""

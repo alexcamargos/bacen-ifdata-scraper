@@ -37,5 +37,6 @@ if __name__ == '__main__':
     session = Session(driver, config.URL)
 
     session.open()
-    session.download_reports(config.LAST_BASE_DATE, config.INSTITUTION_TYPE, config.REPORT_TYPE)
+    data_base = session.get_data_bases()
+    session.download_reports(data_base[0], config.INSTITUTION_TYPE, config.REPORT_TYPE)
     session.cleanup()

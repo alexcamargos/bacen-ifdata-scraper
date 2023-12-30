@@ -32,7 +32,7 @@ from time import time
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata_scraper import config
-from bacen_ifdata_scraper.interfaces import Browser
+from bacen_ifdata_scraper.interfaces.interacting import Browser
 
 
 class Session:
@@ -80,6 +80,11 @@ class Session:
               self.session_data['reports_downloaded']}.")
 
         self._driver.quit()
+
+    def get_data_bases(self) -> list:
+        """Returns a list of available data bases."""
+
+        return self.browser.get_dropdown_options('ulDataBase')
 
     def download_reports(self,
                          data_base: str,
