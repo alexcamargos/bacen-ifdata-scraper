@@ -30,16 +30,22 @@ License: MIT
 
 from bacen_ifdata_scraper.config import *
 from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.utils import initialize_webdriver
+from bacen_ifdata_scraper.utils import ensure_download_directory, initialize_webdriver
 
 if __name__ == '__main__':
     driver = initialize_webdriver()
-    session = Session(driver, URL)
 
+    session = Session(driver, URL)
     session.open()
+
+    # Ensure that the download directory exists.
+    ensure_download_directory(DOWNLOAD_DIRECTORY)
+
     data_base = session.get_data_bases()
     session.download_reports(data_base[0],
                              InstitutionType.FINANCIAL_CONGLOMERATES,
                              REPORTS[InstitutionType.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
                              )
+
+    # Clean up the session, closing the browser and show report.
     session.cleanup()

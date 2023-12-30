@@ -28,12 +28,16 @@ License: MIT
 """
 
 from enum import StrEnum
+from pathlib import Path
 
 # URL of the page where the reports are located.
 URL = 'https://www3.bcb.gov.br/ifdata/'
 
 # Maximum waiting time for elements to load.
 TIMEOUT = 120
+
+BASE_DIRECTORY = Path.cwd()
+DOWNLOAD_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_content'
 
 
 # Type of institution for the report.
@@ -97,11 +101,15 @@ class ReportTypeForForeignExchange(StrEnum):
     QUARTERLY_FOREIGN_CURRENCY_FLOW = 'Movimentação de Câmbio no Trimestre'
 
 
-REPORTS = {
-    InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportTypeForPrudentialConglomerates,
-    InstitutionType.FINANCIAL_CONGLOMERATES: ReportTypeForFinancialConglomerates,
-    InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportTypeForIndividualInstitutions,
-    InstitutionType.FOREIGN_EXCHANGE: ReportTypeForForeignExchange
-}
+# Mapping of the report types to the institution types.
+REPORTS = {InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportTypeForPrudentialConglomerates,
+           InstitutionType.FINANCIAL_CONGLOMERATES: ReportTypeForFinancialConglomerates,
+           InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportTypeForIndividualInstitutions,
+           InstitutionType.FOREIGN_EXCHANGE: ReportTypeForForeignExchange}
 
-__all__ = ['URL', 'TIMEOUT', 'InstitutionType', 'REPORTS']
+__all__ = ['URL',
+           'TIMEOUT',
+           'BASE_DIRECTORY',
+           'DOWNLOAD_DIRECTORY',
+           'InstitutionType',
+           'REPORTS']
