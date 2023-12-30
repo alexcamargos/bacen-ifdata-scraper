@@ -63,6 +63,14 @@ class Session:
 
         self._started = time()
 
+    def __ensure_and_select_dropdown_option(self, element_id: str, option: str) -> None:
+        """Ensures the dropdown menu is clickable and selects the desired option."""
+
+        # Ensuring the dropdown menu is clickable.
+        self.browser.ensure_dropdown_content(element_id, config.TIMEOUT)
+        # Selecting the desired option in the "ulDataBase" dropdown menu.
+        self.browser.select_dropdown_option(option, config.TIMEOUT)
+
     def open(self) -> None:
         """Opens the URL in a web browser."""
 
@@ -98,16 +106,16 @@ class Session:
         """
 
         # Selecting the desired option in the "ulDataBase" dropdown menu.
-        self.browser.ensure_dropdown_content('btnDataBase', config.TIMEOUT)
-        self.browser.select_dropdown_option(data_base, config.TIMEOUT)
+        self.__ensure_and_select_dropdown_option('btnDataBase',
+                                                 data_base)
 
         # Selecting the desired option in the "ulTipoInst" dropdown menu.
-        self.browser.ensure_dropdown_content('btnTipoInst', config.TIMEOUT)
-        self.browser.select_dropdown_option(institution_type, config.TIMEOUT)
+        self.__ensure_and_select_dropdown_option('btnTipoInst',
+                                                 institution_type)
 
         # Selecting the desired option in the "ulRelatorio" dropdown menu.
-        self.browser.ensure_dropdown_content('btnRelatorio', config.TIMEOUT)
-        self.browser.select_dropdown_option(report_type, config.TIMEOUT)
+        self.__ensure_and_select_dropdown_option('btnRelatorio',
+                                                 report_type)
 
         # Ensure the report content is loaded before proceeding with
         # the download of the CSV file.
