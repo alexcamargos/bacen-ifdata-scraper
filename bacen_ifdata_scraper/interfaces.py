@@ -17,6 +17,17 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
+"""
+Interface definitions for Banco Central do Brasil IF.data Scraper
+
+This module defines the Browser class, which provides methods for interacting
+with a web browser, including clicking elements, navigating, and downloading reports.
+
+Author: Alexsander Lopes Camargos
+License: MIT
+"""
+
+
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -25,15 +36,34 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Browser:
-    """A class for interacting with a web browser."""
+    """A class for interacting with a web browser.
+
+    Attributes:
+        _driver (WebDriver): The WebDriver instance for browser interactions.
+    """
 
     def __init__(self, driver: WebDriver) -> None:
         """Initializes a new instance of the Browser class."""
 
         self._driver = driver
 
-    def __ensure_clickable(self, wait_time: int, by_method: str, locator: str):
-        """Waits for an element to be clickable on a web page and then clicks it."""
+    def __ensure_clickable(self,
+                           wait_time: int,
+                           by_method: str,
+                           locator: str) -> None:
+        """
+        Waits for an element to be clickable on a web page and then clicks it.
+
+        Args:
+            wait_time (int): The maximum time to wait for the element to become clickable.
+            by_method (str): The Selenium By method to locate the element.
+            locator (str): The locator string for finding the element.
+
+        Raises:
+            TimeoutException: If the element doesn't become clickable after wait_time seconds.
+            NoSuchElementException: If the element is not found on the page.
+        """
+
         try:
             element = WebDriverWait(self._driver, wait_time).until(
                 EC.element_to_be_clickable((by_method, locator))

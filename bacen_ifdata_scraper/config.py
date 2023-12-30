@@ -17,14 +17,27 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
-# URL da página onde estão os relatórios.
+"""
+Configuration settings for Banco Central do Brasil IF.data Scraper
+
+This module contains the configuration settings for scraping IF.data reports from
+Banco Central do Brasil, including URLs, timeouts, and specific report details.
+
+Author: Alexsander Lopes Camargos
+License: MIT
+"""
+
+# URL of the page where the reports are located.
 URL = 'https://www3.bcb.gov.br/ifdata/'
 
-TIMEOUT = 120  # Tempo máximo de espera para carregamento de elementos.
+# Maximum waiting time for elements to load.
+TIMEOUT = 120
 
-LAST_BASE_DATE = '06/2023'  # Data-base do último relatório disponível.
+# Base date of the last available report.
+LAST_BASE_DATE = '06/2023'
 
-# Tipo de instituição.
+# Type of institution for the report.
 INSTITUTION_TYPE = 'Conglomerados Financeiros e Instituições Independentes'
 
-REPORT_TYPE = 'Ativo'  # Tipo de relatório.
+# Type of report to download.
+REPORT_TYPE = 'Ativo'
