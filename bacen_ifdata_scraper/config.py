@@ -35,9 +35,6 @@ URL = 'https://www3.bcb.gov.br/ifdata/'
 # Maximum waiting time for elements to load.
 TIMEOUT = 120
 
-# Base date of the last available report.
-LAST_BASE_DATE = '06/2023'
-
 
 # Type of institution for the report.
 class InstitutionType(StrEnum):
@@ -70,11 +67,16 @@ class ReportTypeForFinancialConglomerates(StrEnum):
     INCOME_STATEMENT = 'Demonstração de Resultado'
     CAPITAL_INFORMATION = 'Informações de Capital'
     SEGMENTATION = 'Segmentação'
-    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = 'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = 'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = 'Carteira de crédito ativa Pessoa Jurídica -  por atividade econômica (CNAE)'
-    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = 'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
-    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = 'Carteira de crédito ativa - quantidade de clientes e de operações'
+    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
+        'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
+        'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
+        'Carteira de crédito ativa Pessoa Jurídica -  por atividade econômica (CNAE)'
+    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
+        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
+    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
+        'Carteira de crédito ativa - quantidade de clientes e de operações'
     PORTFOLIO_RISK_LEVEL = 'Carteira de crédito ativa - por nível de risco da operação'
     PORTFOLIO_INDEXER = 'Carteira de crédito ativa - por indexador'
     PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
@@ -89,7 +91,17 @@ class ReportTypeForIndividualInstitutions(StrEnum):
     INCOME_STATEMENT = 'Demonstração de Resultado'
 
 
-class ReportTypeForInstitutionsForeignExchangeOperations(StrEnum):
+class ReportTypeForForeignExchange(StrEnum):
     """Enumeration of the types of reports to download."""
 
-    Quarterly_Foreign_Currency_Flow = 'Movimentação de Câmbio no Trimestre'
+    QUARTERLY_FOREIGN_CURRENCY_FLOW = 'Movimentação de Câmbio no Trimestre'
+
+
+REPORTS = {
+    InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportTypeForPrudentialConglomerates,
+    InstitutionType.FINANCIAL_CONGLOMERATES: ReportTypeForFinancialConglomerates,
+    InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportTypeForIndividualInstitutions,
+    InstitutionType.FOREIGN_EXCHANGE: ReportTypeForForeignExchange
+}
+
+__all__ = ['URL', 'TIMEOUT', 'InstitutionType', 'REPORTS']

@@ -28,17 +28,18 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-import bacen_ifdata_scraper.config as config
+from bacen_ifdata_scraper.config import *
 from bacen_ifdata_scraper.session import Session
 from bacen_ifdata_scraper.utils import initialize_webdriver
 
 if __name__ == '__main__':
     driver = initialize_webdriver()
-    session = Session(driver, config.URL)
+    session = Session(driver, URL)
 
     session.open()
     data_base = session.get_data_bases()
     session.download_reports(data_base[0],
-                             config.InstitutionType.FINANCIAL_CONGLOMERATES,
-                             config.ReportTypeForFinancialConglomerates.ASSETS)
+                             InstitutionType.FINANCIAL_CONGLOMERATES,
+                             REPORTS[InstitutionType.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
+                             )
     session.cleanup()
