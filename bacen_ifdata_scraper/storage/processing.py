@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: run.py
+#  Name: processing.py
 #  Version: 0.0.1
 #  Summary: Banco Central do Brasil IF.data Scraper
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,28 +28,22 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata_scraper.config import *
-from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.utils import ensure_download_directory, initialize_webdriver
-from bacen_ifdata_scraper.storage.processing import process_downloaded_files
+from os import path
+from time import sleep
 
-if __name__ == '__main__':
-    driver = initialize_webdriver()
+import shutil
 
-    session = Session(driver, URL)
-    session.open()
+import bacen_ifdata_scraper.config as config
 
-    # Ensure that the download directory exists.
-    ensure_download_directory(DOWNLOAD_DIRECTORY)
 
-    data_base = session.get_data_bases()
+def process_downloaded_files(src: str, dst: str) -> None:
+    """Process downloaded files."""
 
-    session.download_reports(data_base[0],
-                             InstitutionType.FINANCIAL_CONGLOMERATES,
-                             REPORTS[InstitutionType.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
-                             )
+    sleep(3)
 
-    process_downloaded_files('dados.csv', f'{data_base[0].replace('/', '_')}.csv')
+    if path.exists(f'{config.DOWNLOAD_DIRECTORY}\\{src}'):
+        # Rename the downloaded file.
+        shutil.move(f'{config.DOWNLOAD_DIRECTORY}\\{src}',
+                    f'{config.DOWNLOAD_DIRECTORY}\\{dst}')
 
-    # Clean up the session, closing the browser and show report.
-    session.cleanup()
+        print(f'File {src} moved to {config.DOWNLOAD_DIRECTORY}\\{dst}.')
