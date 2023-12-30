@@ -26,7 +26,8 @@ which is used to interact with web pages.
 Author: Alexsander Lopes Camargos
 License: MIT
 """
-
+import os
+import time
 from pathlib import Path
 
 from selenium import webdriver
@@ -50,7 +51,8 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
     options.set_preference("browser.download.dir", DOWNLOAD_DIRECTORY)
-    options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
+    options.set_preference(
+        "browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
     # Initializes the WebDriver for Firefox.
     driver = webdriver.Firefox(options=options)
@@ -68,3 +70,34 @@ def ensure_download_directory(path: str) -> None:
 
     # Creates the download directory if it does not exist.
     Path(path).mkdir(parents=True, exist_ok=True)
+
+
+def wait_for_download_completion(directory, filename, timeout=300):
+    """
+    Waits until a file has been completely downloaded.
+
+    This function checks the specified download directory for the presence of a
+    fully downloaded file. It waits until the file with the specified beginning of the filename
+    is present and no longer has a temporary '.part' or other browser-specific temporary extension.
+
+    Args:
+        directory (str): The directory where the file is being downloaded.
+        filename (str): The beginning of the filename to check for.
+        timeout (int): The maximum amount of time to wait for the file to download, in seconds. Defaults to 300 seconds.
+
+    Returns:
+        bool: True if the file was downloaded completely within the timeout, False otherwise.
+    """
+
+    start_time = time.time()
+
+    while True:
+        # Check if the file exists.
+        for fname in os.listdir(directory):
+            if fname.startswith(filename) and not fname.endswith('.crdownload') and not fname.endswith('.part'):
+                return True
+
+        if time.time() - start_time > timeout:
+            return False
+
+        time.sleep(1)

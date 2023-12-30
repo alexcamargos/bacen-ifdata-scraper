@@ -30,7 +30,7 @@ License: MIT
 
 from bacen_ifdata_scraper.config import *
 from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.utils import ensure_download_directory, initialize_webdriver
+from bacen_ifdata_scraper.utils import ensure_download_directory, initialize_webdriver, wait_for_download_completion
 from bacen_ifdata_scraper.storage.processing import process_downloaded_files
 
 if __name__ == '__main__':
@@ -49,7 +49,12 @@ if __name__ == '__main__':
                              REPORTS[InstitutionType.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
                              )
 
-    process_downloaded_files('dados.csv', f'{data_base[0].replace('/', '_')}.csv')
+    # Wait for the download to finish before processing the file.
+    if wait_for_download_completion(DOWNLOAD_DIRECTORY, 'dados.csv'):
+        process_downloaded_files(
+            'dados.csv', f'{data_base[0].replace('/', '_')}.csv')
+    else:
+        print('Download was not completed in the expected time.')
 
     # Clean up the session, closing the browser and show report.
     session.cleanup()
