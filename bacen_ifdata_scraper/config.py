@@ -27,7 +27,6 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from enum import StrEnum
 from pathlib import Path
 
 # URL of the page where the reports are located.
@@ -40,76 +39,4 @@ BASE_DIRECTORY = Path.cwd()
 DOWNLOAD_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_content'
 
 
-# Type of institution for the report.
-class InstitutionType(StrEnum):
-    """Enumeration of the types of institutions for the report."""
-
-    PRUDENTIAL_CONGLOMERATES = 'Conglomerados Prudenciais e Instituições Independentes'
-    FINANCIAL_CONGLOMERATES = 'Conglomerados Financeiros e Instituições Independentes'
-    INDIVIDUAL_INSTITUTIONS = 'Instituições Individuais'
-    FOREIGN_EXCHANGE = 'Instituições com Operações de Câmbio'
-
-
-# Type of report to download.
-class ReportTypeForPrudentialConglomerates(StrEnum):
-    """Enumeration of the types of reports to download."""
-
-    SUMMARY = 'Resumo'
-    ASSETS = 'Ativo'
-    LIABILITIES = 'Passivo'
-    INCOME_STATEMENT = 'Demonstração de Resultado'
-    CAPITAL_INFORMATION = 'Informações de Capital'
-    SEGMENTATION = 'Segmentação'
-
-
-class ReportTypeForFinancialConglomerates(StrEnum):
-    """Enumeration of the types of reports to download."""
-
-    SUMMARY = 'Resumo'
-    ASSETS = 'Ativo'
-    LIABILITIES = 'Passivo'
-    INCOME_STATEMENT = 'Demonstração de Resultado'
-    CAPITAL_INFORMATION = 'Informações de Capital'
-    SEGMENTATION = 'Segmentação'
-    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
-        'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
-        'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
-        'Carteira de crédito ativa Pessoa Jurídica -  por atividade econômica (CNAE)'
-    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
-        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
-    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
-        'Carteira de crédito ativa - quantidade de clientes e de operações'
-    PORTFOLIO_RISK_LEVEL = 'Carteira de crédito ativa - por nível de risco da operação'
-    PORTFOLIO_INDEXER = 'Carteira de crédito ativa - por indexador'
-    PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
-
-
-class ReportTypeForIndividualInstitutions(StrEnum):
-    """Enumeration of the types of reports to download."""
-
-    SUMMARY = 'Resumo'
-    ASSETS = 'Ativo'
-    LIABILITIES = 'Passivo'
-    INCOME_STATEMENT = 'Demonstração de Resultado'
-
-
-class ReportTypeForForeignExchange(StrEnum):
-    """Enumeration of the types of reports to download."""
-
-    QUARTERLY_FOREIGN_CURRENCY_FLOW = 'Movimentação de Câmbio no Trimestre'
-
-
-# Mapping of the report types to the institution types.
-REPORTS = {InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportTypeForPrudentialConglomerates,
-           InstitutionType.FINANCIAL_CONGLOMERATES: ReportTypeForFinancialConglomerates,
-           InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportTypeForIndividualInstitutions,
-           InstitutionType.FOREIGN_EXCHANGE: ReportTypeForForeignExchange}
-
-__all__ = ['URL',
-           'TIMEOUT',
-           'BASE_DIRECTORY',
-           'DOWNLOAD_DIRECTORY',
-           'InstitutionType',
-           'REPORTS']
+__all__ = ['URL', 'TIMEOUT', 'BASE_DIRECTORY', 'DOWNLOAD_DIRECTORY']

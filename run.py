@@ -28,29 +28,35 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata_scraper.config import *
+import bacen_ifdata_scraper.config as CONFIG
 from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.utils import ensure_download_directory, initialize_webdriver, wait_for_download_completion
+from bacen_ifdata_scraper.utils import initialize_webdriver
+from bacen_ifdata_scraper.utils import ensure_download_directory
+from bacen_ifdata_scraper.utils import wait_for_download_completion
 from bacen_ifdata_scraper.storage.processing import process_downloaded_files
+from bacen_ifdata_scraper.institutions_type import InstitutionType as Institution
+from bacen_ifdata_scraper.reports_type import REPORTS
+
 
 if __name__ == '__main__':
     driver = initialize_webdriver()
 
-    session = Session(driver, URL)
+    session = Session(driver, CONFIG.URL)
     session.open()
 
     # Ensure that the download directory exists.
-    ensure_download_directory(DOWNLOAD_DIRECTORY)
+    ensure_download_directory(CONFIG.DOWNLOAD_DIRECTORY)
 
     data_base = session.get_data_bases()
 
     session.download_reports(data_base[0],
-                             InstitutionType.FINANCIAL_CONGLOMERATES,
-                             REPORTS[InstitutionType.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
+                             Institution.FINANCIAL_CONGLOMERATES,
+                             REPORTS[Institution.FINANCIAL_CONGLOMERATES]
+                             .PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
                              )
 
     # Wait for the download to finish before processing the file.
-    if wait_for_download_completion(DOWNLOAD_DIRECTORY, 'dados.csv'):
+    if wait_for_download_completion(CONFIG.DOWNLOAD_DIRECTORY, 'dados.csv'):
         process_downloaded_files(
             'dados.csv', f'{data_base[0].replace('/', '_')}.csv')
     else:
