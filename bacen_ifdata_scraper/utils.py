@@ -61,15 +61,15 @@ def initialize_webdriver() -> WebDriver:
     return driver
 
 
-def ensure_download_directory(path: str) -> None:
+def ensure_directory(path: str) -> None:
     """
-    Ensures that the download directory exists.
+    Ensures that the directory exists.
 
     Args:
-        path (str): The path to the download directory.
+        path (str): The path to the directory.
     """
 
-    # Creates the download directory if it does not exist.
+    # Creates the directory if it does not exist.
     Path(path).mkdir(parents=True, exist_ok=True)
 
 
