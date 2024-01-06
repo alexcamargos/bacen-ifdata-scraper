@@ -66,8 +66,6 @@ class ReportTypeForFinancialConglomerates(StrEnum):
     ASSETS = 'Ativo'
     LIABILITIES = 'Passivo'
     INCOME_STATEMENT = 'Demonstração de Resultado'
-    CAPITAL_INFORMATION = 'Informações de Capital'
-    SEGMENTATION = 'Segmentação'
     PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
         'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
     PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
