@@ -61,7 +61,32 @@ def initialize_webdriver() -> WebDriver:
     return driver
 
 
-def ensure_directory(path: str) -> None:
+def build_directory_path(base_dir, *parts):
+    """
+    Constructs a safe and absolute directory path from provided components.
+
+    This function takes multiple arguments (parts) that are joined together
+    to form a complete and absolute directory path, resolves the final path
+    to ensure it is absolute and removes any relative or redundant references.
+
+    Parameters:
+        base_dir (str): The base directory where the path will be created.
+        *parts (str): Variable components of the directory path.
+                      Each argument is a part of the final path,
+                      such as the name of a subdirectory or file.
+
+    Returns:
+        Path: A Path object representing the absolute and resolved path.
+
+    Example:
+    >>> build_directory_path('folder1', 'subfolder2')
+    PosixPath('/path/to/DOWNLOAD_DIRECTORY/folder1/subfolder2')
+    """
+
+    return Path(base_dir, *parts).resolve()
+
+
+def ensure_directory(path: Path) -> None:
     """
     Ensures that the directory exists.
 
@@ -70,7 +95,7 @@ def ensure_directory(path: str) -> None:
     """
 
     # Creates the directory if it does not exist.
-    Path(path).mkdir(parents=True, exist_ok=True)
+    path.mkdir(parents=True, exist_ok=True)
 
 
 def wait_for_download_completion(directory: str, filename: str, timeout: int = 300) -> bool:
