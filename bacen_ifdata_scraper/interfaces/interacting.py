@@ -93,7 +93,7 @@ class Browser:
     def select_dropdown_option(self, option_text: str, wait_time: int):
         """Selects an option from a dropdown menu on a web page."""
 
-        option_xpath = f"//a[text()='{option_text}']"
+        option_xpath = f"//a[normalize-space(text())='{option_text}']"
         self.__ensure_clickable(wait_time, By.XPATH, option_xpath)
 
     def get_dropdown_options(self, dropdown_id: str) -> list:
