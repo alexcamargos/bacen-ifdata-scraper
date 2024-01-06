@@ -71,7 +71,7 @@ class ReportTypeForFinancialConglomerates(StrEnum):
     PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
         'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
     PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
-        'Carteira de crédito ativa Pessoa Jurídica -  por atividade econômica (CNAE)'
+        'Carteira de crédito ativa Pessoa Jurídica - por atividade econômica (CNAE)'
     PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
         'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
     PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
