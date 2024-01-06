@@ -28,22 +28,22 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from os import path
 from time import sleep
-
-import shutil
-
-import bacen_ifdata_scraper.config as config
+from pathlib import Path
 
 
-def process_downloaded_files(src: str, dst: str) -> None:
-    """Process downloaded files."""
+def process_downloaded_files(src: Path, dst: Path) -> None:
+    """
+    Check if the downloaded files are complete and move
+    them to the destination folder.
+    """
 
+    # Wait for the download to complete.
     sleep(3)
 
-    if path.exists(f'{config.DOWNLOAD_DIRECTORY}\\{src}'):
-        # Rename the downloaded file.
-        shutil.move(f'{config.DOWNLOAD_DIRECTORY}\\{src}',
-                    f'{config.DOWNLOAD_DIRECTORY}\\{dst}')
-
-        print(f'File {src} moved to {config.DOWNLOAD_DIRECTORY}\\{dst}.')
+    # Check if the file exists.
+    if src.exists():
+        # Move the file to the destination folder.
+        src.rename(dst)
+    else:
+        raise FileNotFoundError(f'File {src} does not exist.')
