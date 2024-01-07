@@ -36,6 +36,8 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.firefox.options import Options
 
 from bacen_ifdata_scraper.config import DOWNLOAD_DIRECTORY
+from bacen_ifdata_scraper.institutions_type import InstitutionType as INSTITUTIONS
+from bacen_ifdata_scraper.reports_type import REPORTS
 
 
 def initialize_webdriver() -> WebDriver:
@@ -146,3 +148,28 @@ def check_file_already_downloaded(file: Path) -> bool:
     """
 
     return Path(file).exists()
+
+
+def validate_report_selection(institution: str, report: str, data_base: list) -> list:
+    """Validates the report selection."""
+
+    if institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
+            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
+        cut_off_date = '03/2017'
+    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
+            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+        cut_off_date = '03/2015'
+    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES:
+        cut_off_date = '03/2014'
+    elif institution == INSTITUTIONS.FOREIGN_EXCHANGE:
+        cut_off_date = '12/2014'
+    else:
+        # No cut-off for other institutions and reports.
+        return data_base
+
+    try:
+        data_base_index = data_base.index(cut_off_date)
+        return data_base[:data_base_index + 1]
+    except ValueError:
+        # cut_off_date not in data_base, return as is
+        return data_base
