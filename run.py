@@ -34,7 +34,8 @@ from bacen_ifdata_scraper.utils import (initialize_webdriver,
                                         build_directory_path,
                                         ensure_directory,
                                         wait_for_download_completion,
-                                        check_file_already_downloaded)
+                                        check_file_already_downloaded,
+                                        validate_report_selection)
 from bacen_ifdata_scraper.storage.processing import process_downloaded_files
 from bacen_ifdata_scraper.institutions_type import InstitutionType as INSTITUTIONS
 from bacen_ifdata_scraper.reports_type import REPORTS
@@ -90,8 +91,13 @@ if __name__ == '__main__':
 
             for institution in INSTITUTIONS:
                 for report in REPORTS[institution]:
+                    # Validate the report selection.
+                    data_base = validate_report_selection(institution, report, data_base)
+
                     for data in data_base:
                         # Download the reports.
+                        print(f'Downloading report "{report.name}" from "{institution.name}" '
+                              f'referring to "{data}"...')
                         main_scraper(session, data, institution, report)
     except IfDataScraperException as error:
         print(error.message)

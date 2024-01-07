@@ -39,7 +39,7 @@ def process_downloaded_files(src: Path, dst: Path) -> None:
     """
 
     # Wait for the download to complete.
-    # sleep(3)
+    sleep(3)
 
     # Check if the file exists.
     if src.exists():
