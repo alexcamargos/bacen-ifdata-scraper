@@ -132,3 +132,17 @@ def wait_for_download_completion(directory: str, filename: str, timeout: int = 3
             return False
 
         time.sleep(1)
+
+
+def check_file_already_downloaded(file: Path) -> bool:
+    """
+    Checks if the file has already been downloaded.
+
+    Args:
+        file (str): The path to the file.
+
+    Returns:
+        bool: True if the file exists, False otherwise.
+    """
+
+    return Path(file).exists()
