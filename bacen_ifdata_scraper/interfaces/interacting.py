@@ -28,7 +28,10 @@ License: MIT
 """
 
 
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (NoSuchElementException,
+                                        TimeoutException,
+                                        ElementClickInterceptedException,
+                                        MoveTargetOutOfBoundsException)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -64,13 +67,18 @@ class Browser:
         Raises:
             TimeoutException: If the element doesn't become clickable after wait_time seconds.
             NoSuchElementException: If the element is not found on the page.
+            ElementClickInterceptedException: If the element is intercepted by another element.
+            MoveTargetOutOfBoundsException: If the element is outside the boundaries of the window.
         """
 
         try:
+            # Wait until the element is clickable.
             element = WebDriverWait(self._driver, wait_time).until(
                 EC.element_to_be_clickable((by_method, locator))
             )
-            element.click()
+            # Click the element using JavaScript.
+            self._driver.execute_script('arguments[0].click();', element)
+
         except TimeoutException:
             print(f"Timeout: O elemento {
                 locator} não se tornou clicável após {wait_time} segundos.")
@@ -78,6 +86,14 @@ class Browser:
         except NoSuchElementException:
             print(f"Não encontrado: O elemento {
                 locator} não foi encontrado na página.")
+            raise
+        except ElementClickInterceptedException:
+            print(f'Elemento interceptado: O elemento {
+                locator} foi interceptado por outro elemento.')
+            raise
+        except MoveTargetOutOfBoundsException:
+            print(f'Fora dos limites: O elemento {
+                locator} está fora dos limites da janela.')
             raise
 
     def initialize(self, url: str) -> None:
