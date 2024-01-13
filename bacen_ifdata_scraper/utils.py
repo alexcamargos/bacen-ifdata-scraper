@@ -28,8 +28,8 @@ License: MIT
 """
 
 from selenium import webdriver
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata_scraper.config import DOWNLOAD_DIRECTORY
 from bacen_ifdata_scraper.institutions import InstitutionType as INSTITUTIONS

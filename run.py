@@ -29,17 +29,17 @@ License: MIT
 """
 
 import bacen_ifdata_scraper.config as CONFIG
+from bacen_ifdata_scraper.exceptions import IfDataScraperException
+from bacen_ifdata_scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata_scraper.reports import REPORTS
 from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.utils import (initialize_webdriver,
-                                        validate_report_selection)
 from bacen_ifdata_scraper.storage.processing import (process_downloaded_files,
                                                      build_directory_path,
                                                      ensure_directory,
                                                      wait_for_download_completion,
                                                      check_file_already_downloaded)
-from bacen_ifdata_scraper.institutions import InstitutionType as INSTITUTIONS
-from bacen_ifdata_scraper.reports import REPORTS
-from bacen_ifdata_scraper.exceptions import IfDataScraperException
+from bacen_ifdata_scraper.utils import (initialize_webdriver,
+                                        validate_report_selection)
 
 
 def main_scraper(_session: Session, _data_base: str, _institution, _report):

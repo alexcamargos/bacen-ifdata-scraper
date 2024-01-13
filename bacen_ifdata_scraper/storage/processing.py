@@ -29,9 +29,8 @@ License: MIT
 """
 import os
 import time
-
-from time import sleep
 from pathlib import Path
+from time import sleep
 
 
 def process_downloaded_files(src: Path, dst: Path) -> None:
