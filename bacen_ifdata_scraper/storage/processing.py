@@ -27,7 +27,6 @@ ensuring easy and timely access to data.
 Author: Alexsander Lopes Camargos
 License: MIT
 """
-import os
 import time
 from pathlib import Path
 
@@ -104,19 +103,20 @@ def wait_for_download_completion(directory: str, filename: str, timeout: int = 3
     """
 
     start_time = time.time()
+    directory_path = Path(directory)
 
-    while True:
-        # Check if the file exists.
-        for fname in os.listdir(directory):
-            if fname.startswith(filename) \
-                and not fname.endswith('.crdownload') \
-                    and not fname.endswith('.part'):
+    while time.time() - start_time < timeout:
+        # Check if the filename exists in the directory.
+        for file_path in directory_path.glob(f'{filename}*'):
+            if (not file_path.name.endswith('.crdownload') and not
+                    file_path.name.endswith('.part')):
+                # The file has been completely downloaded.
                 return True
 
-        if time.time() - start_time > timeout:
-            return False
-
+        # Wait for the file to be downloaded.
         time.sleep(1)
+
+    return False
 
 
 def check_file_already_downloaded(file: Path) -> bool:
