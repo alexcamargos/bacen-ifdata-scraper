@@ -30,7 +30,6 @@ License: MIT
 import os
 import time
 from pathlib import Path
-from time import sleep
 
 
 def process_downloaded_files(src: Path, dst: Path) -> None:
@@ -38,9 +37,6 @@ def process_downloaded_files(src: Path, dst: Path) -> None:
     Check if the downloaded files are complete and move
     them to the destination folder.
     """
-
-    # Wait for the download to complete.
-    sleep(3)
 
     # Check if the file exists.
     if src.exists():
