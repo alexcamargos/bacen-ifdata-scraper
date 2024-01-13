@@ -36,8 +36,8 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.firefox.options import Options
 
 from bacen_ifdata_scraper.config import DOWNLOAD_DIRECTORY
-from bacen_ifdata_scraper.institutions_type import InstitutionType as INSTITUTIONS
-from bacen_ifdata_scraper.reports_type import REPORTS
+from bacen_ifdata_scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata_scraper.reports import REPORTS
 
 
 def initialize_webdriver() -> WebDriver:
@@ -154,22 +154,56 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
     """Validates the report selection."""
 
     if institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
-            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
-        cut_off_date = '03/2017'
+        report in (REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SUMMARY,
+                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].ASSETS,
+                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
+                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT):
+        cutoff_date = '03/2014'
     elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
             report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
-        cut_off_date = '03/2015'
-    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES:
-        cut_off_date = '03/2014'
+        cutoff_date = '03/2015'
+
+    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
+            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
+        cutoff_date = '03/2017'
+    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
+            report in (REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
+                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER):
+        cutoff_date = '06/2014'
+    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
+            report == REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION:
+        cutoff_date = '09/2014'
+    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
+            report == REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+        cutoff_date_start = '12/2000'
+        data_base_index_start = data_base.index(cutoff_date_start)
+
+        cutoff_date_end = '12/2014'
+        data_base_index_end = data_base.index(cutoff_date_end)
+
+        return data_base[data_base_index_end:data_base_index_start + 1]
     elif institution == INSTITUTIONS.FOREIGN_EXCHANGE:
-        cut_off_date = '12/2014'
+        cutoff_date = '12/2014'
+    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES_SCR:
+        cutoff_date_start = '06/2012'
+        data_base_index_start = data_base.index(cutoff_date_start)
+
+        cutoff_date_end = '03/2014'
+        data_base_index_end = data_base.index(cutoff_date_end)
+
+        return data_base[data_base_index_end:data_base_index_start]
     else:
-        # No cut-off for other institutions and reports.
+        # No cutoff for other institutions and reports.
         return data_base
 
     try:
-        data_base_index = data_base.index(cut_off_date)
+        data_base_index = data_base.index(cutoff_date)
         return data_base[:data_base_index + 1]
     except ValueError:
-        # cut_off_date not in data_base, return as is
+        # cutoff_date not in data_base, return as is
         return data_base
