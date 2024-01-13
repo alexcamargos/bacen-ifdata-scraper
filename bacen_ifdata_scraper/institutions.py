@@ -50,5 +50,6 @@ class InstitutionType(StrEnum):
 
     PRUDENTIAL_CONGLOMERATES = 'Conglomerados Prudenciais e Instituições Independentes'
     FINANCIAL_CONGLOMERATES = 'Conglomerados Financeiros e Instituições Independentes'
+    FINANCIAL_CONGLOMERATES_SCR = 'Conglomerados Financeiros e Instituições Independentes (SCR)'
     INDIVIDUAL_INSTITUTIONS = 'Instituições Individuais'
     FOREIGN_EXCHANGE = 'Instituições com Operações de Câmbio'

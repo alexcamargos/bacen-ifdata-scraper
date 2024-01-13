@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: reports_type.py
+#  Name: reports.py
 #  Version: 0.0.1
 #  Summary: Banco Central do Brasil IF.data Scraper
 #           Este sistema foi projetado para automatizar o download dos
@@ -44,11 +44,11 @@ Mappings:
 
 from enum import StrEnum
 
-from bacen_ifdata_scraper.institutions_type import InstitutionType
+from bacen_ifdata_scraper.institutions import InstitutionType
 
 
 # Type of report to download.
-class ReportTypeForPrudentialConglomerates(StrEnum):
+class ReportsPrudentialConglomerates(StrEnum):
     """Enumeration of the types of reports to download."""
 
     SUMMARY = 'Resumo'
@@ -59,13 +59,14 @@ class ReportTypeForPrudentialConglomerates(StrEnum):
     SEGMENTATION = 'Segmentação'
 
 
-class ReportTypeForFinancialConglomerates(StrEnum):
+class ReportsFinancialConglomerates(StrEnum):
     """Enumeration of the types of reports to download."""
 
     SUMMARY = 'Resumo'
     ASSETS = 'Ativo'
     LIABILITIES = 'Passivo'
     INCOME_STATEMENT = 'Demonstração de Resultado'
+    CAPITAL_INFORMATION = 'Informações de Capital'
     PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
         'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
     PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
@@ -81,7 +82,25 @@ class ReportTypeForFinancialConglomerates(StrEnum):
     PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
 
 
-class ReportTypeForIndividualInstitutions(StrEnum):
+class ReportsFinancialConglomeratesSCR(StrEnum):
+    """Enumeration of the types of reports to download."""
+
+    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
+        'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
+        'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
+        'Carteira de crédito ativa Pessoa Jurídica - por atividade econômica (CNAE)'
+    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
+        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
+    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
+        'Carteira de crédito ativa - quantidade de clientes e de operações'
+    PORTFOLIO_RISK_LEVEL = 'Carteira de crédito ativa - por nível de risco da operação'
+    PORTFOLIO_INDEXER = 'Carteira de Crédito Ativa - Por indexador'
+    PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
+
+
+class ReportsIndividualInstitutions(StrEnum):
     """Enumeration of the types of reports to download."""
 
     SUMMARY = 'Resumo'
@@ -90,16 +109,17 @@ class ReportTypeForIndividualInstitutions(StrEnum):
     INCOME_STATEMENT = 'Demonstração de Resultado'
 
 
-class ReportTypeForForeignExchange(StrEnum):
+class ReportsForeignExchange(StrEnum):
     """Enumeration of the types of reports to download."""
 
     QUARTERLY_FOREIGN_CURRENCY_FLOW = 'Movimentação de Câmbio no Trimestre'
 
 
 # Mapping of the report types to the institution types.
-REPORTS = {InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportTypeForPrudentialConglomerates,
-           InstitutionType.FINANCIAL_CONGLOMERATES: ReportTypeForFinancialConglomerates,
-           InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportTypeForIndividualInstitutions,
-           InstitutionType.FOREIGN_EXCHANGE: ReportTypeForForeignExchange}
+REPORTS = {InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportsPrudentialConglomerates,
+           InstitutionType.FINANCIAL_CONGLOMERATES: ReportsFinancialConglomerates,
+           InstitutionType.FINANCIAL_CONGLOMERATES_SCR: ReportsFinancialConglomeratesSCR,
+           InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportsIndividualInstitutions,
+           InstitutionType.FOREIGN_EXCHANGE: ReportsForeignExchange}
 
 __all__ = ['REPORTS']
