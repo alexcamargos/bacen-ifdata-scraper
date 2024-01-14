@@ -4,6 +4,16 @@
 
 O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestral, publica relatórios detalhados com uma vasta gama de dados sobre instituições financeiras, disponíveis através do [Portal IF.data](https://www3.bcb.gov.br/ifdata/). Estes dados, embora valiosos, exigem processamento e análise cuidadosa para extrair informações significativas. O objetivo central deste projeto é empregar técnicas de mineração de dados aos conjuntos de dados do Portal IF.data com o objetivo de criar insights sobre o sistema financeiro brasileiro.
 
+**Sumário**
+- [Bacen IF.data AutoScraper \& Data Manager](#bacen-ifdata-autoscraper--data-manager)
+  - [Motivação](#motivação)
+  - [O Portal IF.Data](#o-portal-ifdata)
+  - [O Banco Central do Brasil](#o-banco-central-do-brasil)
+  - [Objetivo Geral](#objetivo-geral)
+  - [Autor](#autor)
+  - [Copyright](#copyright)
+  - [License](#license)
+
 ## Motivação
 
 Embora o Bacen disponibilize dados para o público em geral, com o objetivo de atender ao disposto na Lei 12.527 de 2011 (popularmente conhecida como Lei de Acesso à Informação), a forma como esses dados são apresentados exige a aplicação de métodos especializados para sua interpretação. É necessário empregar uma série de procedimentos e técnicas para extrair informações mais sofisticadas desses dados. A utilização de algoritmos e técnicas de tratamento e mineração de dados é fundamental nesse contexto. Essas abordagens permitem a extração de insights mais complexos dos dados fornecidos pelo Bacen, facilitando análises mais profundas e detalhadas sobre o sistema financeiro brasileiro.
