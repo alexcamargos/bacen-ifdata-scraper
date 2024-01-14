@@ -4,7 +4,7 @@
 #  ------------------------------------------------------------------------------
 #  Name: exceptions.py
 #  Version: 0.0.1
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -16,6 +16,8 @@
 #
 #  License: MIT
 #  ------------------------------------------------------------------------------
+
+"""Exceptions for Bacen IF.data AutoScraper & Data Manager"""
 
 
 class IfDataScraperException(Exception):

@@ -4,7 +4,7 @@
 #  ------------------------------------------------------------------------------
 #  Name: utils.py
 #  Version: 0.0.1
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -18,7 +18,7 @@
 #  ------------------------------------------------------------------------------
 
 """
-Utility functions for Banco Central do Brasil IF.data Scraper
+Utility functions for Bacen IF.data AutoScraper & Data Manager
 
 This module provides utility functions for initializing a WebDriver session with Firefox,
 which is used to interact with web pages.
@@ -71,7 +71,6 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
     elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
             report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
         cutoff_date = '03/2015'
-
     elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
             report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
         cutoff_date = '03/2017'

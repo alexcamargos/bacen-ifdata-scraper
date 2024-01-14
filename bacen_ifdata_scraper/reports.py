@@ -4,7 +4,7 @@
 #  ------------------------------------------------------------------------------
 #  Name: reports.py
 #  Version: 0.0.1
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -18,7 +18,7 @@
 #  ------------------------------------------------------------------------------
 
 """
-Report Type Definitions for Banco Central do Brasil IF.data Scraper
+Report Type Definitions for Bacen IF.data AutoScraper & Data Manager
 
 This module defines enumerations for the various types of reports available for
 different types of institutions from the Banco Central do Brasil's IF.data tool.
@@ -32,10 +32,11 @@ identify and request the correct types of reports based on the institution
 ype being processed.
 
 Enumerations:
-- ReportTypeForPrudentialConglomerates: Reports for Prudential Conglomerates.
-- ReportTypeForFinancialConglomerates: Reports for Financial Conglomerates.
-- ReportTypeForIndividualInstitutions: Reports for Individual Institutions.
-- ReportTypeForForeignExchange: Reports for Foreign Exchange Institutions.
+- ReportsPrudentialConglomerates: Reports for Prudential Conglomerates.
+- ReportsFinancialConglomerates: Reports for Financial Conglomerates.
+- ReportsFinancialConglomeratesSCR: Reports for Financial Conglomerates (SCR).
+- ReportsIndividualInstitutions: Reports for Individual Institutions.
+- ReportsForeignExchange: Reports for Foreign Exchange Institutions.
 
 Mappings:
 - REPORTS: A dictionary mapping institution types to their respective

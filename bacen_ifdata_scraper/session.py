@@ -4,7 +4,7 @@
 #  ------------------------------------------------------------------------------
 #  Name: session.py
 #  Version: 0.0.2
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -18,7 +18,7 @@
 #  ------------------------------------------------------------------------------
 
 """
-Session management for Banco Central do Brasil IF.data Scraper
+Session management for Bacen IF.data AutoScraper & Data Manager
 
 This module defines the Session class which manages web interactions and report downloads
 from the IF.data tool of Banco Central do Brasil.

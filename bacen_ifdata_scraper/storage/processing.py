@@ -4,7 +4,7 @@
 #  ------------------------------------------------------------------------------
 #  Name: processing.py
 #  Version: 0.0.1
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -18,7 +18,7 @@
 #  ------------------------------------------------------------------------------
 
 """
-Banco Central do Brasil IF.data Scraper
+Bacen IF.data AutoScraper & Data Manager
 
 This script is designed to automate the download of reports from the Banco Central do Brasil's
 IF.data tool. It facilitates the integration with automated data analysis and visualization tools,

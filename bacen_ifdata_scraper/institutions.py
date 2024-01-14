@@ -2,9 +2,9 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: institutions_type.py
+#  Name: institutions.py
 #  Version: 0.0.1
-#  Summary: Banco Central do Brasil IF.data Scraper
+#  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
 #           Criado para facilitar a integração com ferramentas automatizadas de
@@ -18,7 +18,7 @@
 #  ------------------------------------------------------------------------------
 
 """
-Institution Type Definitions for Banco Central do Brasil IF.data Scraper
+Institution Type Definitions for Bacen IF.data AutoScraper & Data Manager
 
 This module defines the InstitutionType enumeration, which categorizes the
 different types of institutions that the Banco Central do Brasil's IF.data
