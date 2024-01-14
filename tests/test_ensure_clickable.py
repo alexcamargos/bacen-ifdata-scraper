@@ -21,7 +21,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-from bacen_ifdata_scraper.utils import ensure_clickable
+from bacen_ifdata.scraper.utils import ensure_clickable
 from tests.mocks.web_driver import MockWebDriver
 
 

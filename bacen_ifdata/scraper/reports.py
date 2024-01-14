@@ -45,7 +45,7 @@ Mappings:
 
 from enum import StrEnum
 
-from bacen_ifdata_scraper.institutions import InstitutionType
+from bacen_ifdata.scraper.institutions import InstitutionType
 
 
 # Type of report to download.

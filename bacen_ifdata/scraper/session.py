@@ -31,8 +31,8 @@ from time import time
 
 from selenium.webdriver.firefox.webdriver import WebDriver
 
-from bacen_ifdata_scraper import config
-from bacen_ifdata_scraper.interfaces.interacting import Browser
+from bacen_ifdata import config
+from bacen_ifdata.scraper.interfaces.interacting import Browser
 
 
 class Session:

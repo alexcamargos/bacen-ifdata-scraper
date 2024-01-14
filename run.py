@@ -28,17 +28,17 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-import bacen_ifdata_scraper.config as CONFIG
-from bacen_ifdata_scraper.exceptions import IfDataScraperException
-from bacen_ifdata_scraper.institutions import InstitutionType as INSTITUTIONS
-from bacen_ifdata_scraper.reports import REPORTS
-from bacen_ifdata_scraper.session import Session
-from bacen_ifdata_scraper.storage.processing import (process_downloaded_files,
+import bacen_ifdata.config as CONFIG
+from bacen_ifdata.scraper.exceptions import IfDataScraperException
+from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata.scraper.reports import REPORTS
+from bacen_ifdata.scraper.session import Session
+from bacen_ifdata.scraper.storage.processing import (process_downloaded_files,
                                                      build_directory_path,
                                                      ensure_directory,
                                                      wait_for_download_completion,
                                                      check_file_already_downloaded)
-from bacen_ifdata_scraper.utils import (initialize_webdriver,
+from bacen_ifdata.scraper.utils import (initialize_webdriver,
                                         validate_report_selection)
 
 
@@ -62,8 +62,8 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
 
     # Check if the file was already downloaded.
     if check_file_already_downloaded(report_file_path):
-        print(f'Report "{_report.name}" from "{_institution.name}" referring to "{
-            _data_base}" was already downloaded, skipping...')
+        print(f'Report "{_report.name}" from "{_institution.name}"'
+              f'referring to "{_data_base}" was already downloaded, skipping...')
     else:
         # Download the reports.
         _session.download_reports(_data_base, _institution, _report)
