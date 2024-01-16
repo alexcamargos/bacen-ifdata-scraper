@@ -122,3 +122,4 @@ ehthumbs.db
 # Add any additional files and directories you want to ignore in your project.
 
 if_data_content/
+if_data_processed/
