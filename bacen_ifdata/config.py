@@ -38,6 +38,11 @@ TIMEOUT = 120
 BASE_DIRECTORY = Path.cwd()
 DOWNLOAD_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_content'
 DOWNLOAD_FILE_NAME = 'dados.csv'
+PROCESSED_FILES_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_processed'
 
-
-__all__ = ['URL', 'TIMEOUT', 'BASE_DIRECTORY', 'DOWNLOAD_DIRECTORY', 'DOWNLOAD_FILE_NAME']
+__all__ = ['URL',
+           'TIMEOUT',
+           'BASE_DIRECTORY',
+           'DOWNLOAD_DIRECTORY',
+           'DOWNLOAD_FILE_NAME',
+           'PROCESSED_FILES_DIRECTORY']
