@@ -37,7 +37,6 @@ def main_process(institution: StrEnum, report: StrEnum) -> None:
     output_directory = build_directory_path(CONFIG.PROCESSED_FILES_DIRECTORY,
                                             institution.name.lower(),
                                             report.name.lower())
-    # ensure_directory(output_directory.parent)
     ensure_directory(output_directory)
 
     input_data_path = build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,

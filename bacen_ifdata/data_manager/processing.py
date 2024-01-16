@@ -20,10 +20,21 @@
 """Bacen IF.data AutoScraper & Data Manager"""
 
 from enum import StrEnum
+from pathlib import Path
 
 import bacen_ifdata.config as CONFIG
 
 from bacen_ifdata.scraper.storage.processing import (build_directory_path)
+
+
+def check_file_already_processed(output_directory: Path, file: str) -> bool:
+    """Checks if the file has already been processed."""
+
+    # Check if the file exists.
+    if (output_directory / file).exists():
+        return True
+    else:
+        return False
 
 
 def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
@@ -39,6 +50,12 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
                                        institution.name.lower(),
                                        report.name.lower())
 
+    # Check if the file has already been normalized.
+    if check_file_already_processed(output_path, file):
+        print(f'File {file} has already been normalized, skipping...')
+        return False
+
+    # Normalize the file.
     try:
         with open(f'{input_path}\\{file}', 'r', encoding='utf-8') as input_file, \
                 open(f'{output_path}\\{file}', 'w', encoding='utf-8') as output_file:
