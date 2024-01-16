@@ -4,12 +4,19 @@
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "IF.data Scraper",
             "type": "python",
             "request": "launch",
             "program": "run.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "IF.data Data Manager",
+            "type": "python",
+            "request": "launch",
+            "program": "process.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
