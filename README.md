@@ -13,6 +13,10 @@ O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestra
   - [O Banco Central do Brasil](#o-banco-central-do-brasil)
   - [Objetivo Geral](#objetivo-geral)
   - [Instalação](#instalação)
+    - [Usando Poetry](#usando-poetry)
+    - [Sem usar Poetry](#sem-usar-poetry)
+  - [Capturando os arquivos](#capturando-os-arquivos)
+  - [Processando os arquivos](#processando-os-arquivos)
   - [Autor](#autor)
   - [Copyright](#copyright)
   - [License](#license)
@@ -41,6 +45,53 @@ O resultado final será um conjunto de dados estruturado e de fácil acesso, pro
 
 ## Instalação
 
+```bash
+git clone https://github.com/alexcamargos/bacen-ifdata-scraper.git
+```
+
+### Usando Poetry
+
+```bash
+poetry install
+```
+
+### Sem usar Poetry
+
+Para criar e ativar um ambiente virtual de desenvolvimento, utilize o módulo [venv](https://docs.python.org/pt-br/3/library/venv.html) do Python. Este processo pode variar ligeiramente dependendo do sistema operacional que você está utilizando. Recomenda-se consultar a documentação oficial para orientações específicas caso não esteja usando um sistema GNU/Linux. Siga os comandos abaixo para configurar seu ambiente:
+
+```bash
+python -m venv .venv  
+
+.venv /bin/activate
+
+pip install -r requirements.txt
+```
+
+> Observação: No Windows, use .venv\Scripts\activate para ativar o ambiente virtual.
+
+## Capturando os arquivos
+
+> Antes de iniciar o processo de captura, certifique-se de que o GeckoDriver esteja devidamente instalado e configurado no seu sistema.
+
+```bash
+poetry run python scraping.py
+```
+
+> Observação: Caso não esteja utilizando Poetry, execute *python scraping.py*
+
+O script será inicializado e exibirá, em tempo real, quais arquivos estão sendo baixados. Após a conclusão, um relatório será gerado, detalhando o número total de arquivos baixados e o tempo total de execução.
+
+## Processando os arquivos
+
+Os desenvolvedores responsáveis pelo site do Bacen desviaram do formato padrão de CSV. Eles implementaram uma abordagem incomum ao incluir agrupamentos de cabeçalhos e informações consolidadas do tipo e segmentação das instituições financeiras, dentro do arquivo CSV. Para garantirmos que temos arquivos que podem ser facilmente trabalhados precisamos corrigir essas inconsistências.
+
+Os desenvolvedores do site do Bacen adotaram uma abordagem não convencional para o formato de arquivos CSV. Eles incorporaram agrupamentos de cabeçalhos e informações consolidadas do tipo e segmentação das instituições financeiras, diretamente nos arquivos CSV. Para assegurar que os arquivos sejam facilmente manuseáveis e úteis, é essencial corrigir essas inconsistências e alinhá-las com os padrões convencionais de CSV."
+
+```bash
+poetry run python process.py
+```
+
+> Observação: Caso não esteja utilizando Poetry, execute *python process.py*
 
 ## Autor
 
