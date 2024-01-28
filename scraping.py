@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: run.py
+#  Name: scraping.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
