@@ -51,11 +51,11 @@ def main_process(institution: StrEnum, report: StrEnum) -> None:
 
 
 if __name__ == '__main__':
-    institution = INSTITUTIONS.INDIVIDUAL_INSTITUTIONS
-    report = REPORTS[institution].SUMMARY
 
     # Ensure that the processed files directory exists.
     ensure_directory(build_directory_path(CONFIG.PROCESSED_FILES_DIRECTORY))
 
     # Run the main process.
-    main_process(institution, report)
+    for process_institution in INSTITUTIONS:
+        for process_report in REPORTS[process_institution]:
+            main_process(process_institution, process_report)
