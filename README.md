@@ -2,6 +2,8 @@
 
 [![LinkedIn](https://img.shields.io/badge/%40alexcamargos-230A66C2?style=social&logo=LinkedIn&label=LinkedIn&color=white)](https://www.linkedin.com/in/alexcamargos)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestral, publica relatórios detalhados com uma vasta gama de dados sobre instituições financeiras, disponíveis através do [Portal IF.data](https://www3.bcb.gov.br/ifdata/). Estes dados, embora valiosos, exigem processamento e análise cuidadosa para extrair informações significativas. O objetivo central deste projeto é empregar técnicas de mineração de dados aos conjuntos de dados do Portal IF.data com o objetivo de criar insights sobre o sistema financeiro brasileiro.
 
 **Sumário**
@@ -10,6 +12,7 @@ O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestra
   - [O Portal IF.Data](#o-portal-ifdata)
   - [O Banco Central do Brasil](#o-banco-central-do-brasil)
   - [Objetivo Geral](#objetivo-geral)
+  - [Instalação](#instalação)
   - [Autor](#autor)
   - [Copyright](#copyright)
   - [License](#license)
@@ -35,6 +38,9 @@ Este projeto visa aprimorar a coleta e o processamento de dados através da auto
 Essa abordagem não só economiza tempo e recursos, eliminando a necessidade de coleta manual de dados, mas também aumenta a precisão e a confiabilidade das informações obtidas. A fase de tratamento dos dados é crucial, pois envolve limpeza, normalização e consolidação de informações de múltiplas fontes, preparando-as para análises mais aprofundadas.
 
 O resultado final será um conjunto de dados estruturado e de fácil acesso, proporcionando uma base sólida para análises futuras. Este conjunto de dados permitirá aos analistas e pesquisadores extrair insights valiosos e realizar avaliações detalhadas em seus respectivos campos de estudo ou indústrias. Além disso, o uso de automação e tratamento avançado de dados representa um passo importante na direção da modernização e eficiência dos processos de coleta e análise de dados.
+
+## Instalação
+
 
 ## Autor
 
