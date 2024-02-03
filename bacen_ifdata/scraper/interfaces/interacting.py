@@ -116,7 +116,6 @@ class Browser:
         """Returns a list of options from a dropdown menu on a web page."""
 
         self.ensure_dropdown_content('btnDataBase', config.TIMEOUT)
-        # self.select_dropdown_option('03/2000', config.TIMEOUT)
 
         # Using __ensure_clickable() not working here.
         # Need to investigate further.
