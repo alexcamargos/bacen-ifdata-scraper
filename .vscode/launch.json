@@ -8,7 +8,7 @@
             "name": "IF.data Scraper",
             "type": "python",
             "request": "launch",
-            "program": "run.py",
+            "program": "scraping.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },
