@@ -28,8 +28,8 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from time import sleep
 import bacen_ifdata.utilities.config as config
-
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
@@ -41,6 +41,35 @@ from bacen_ifdata.scraper.storage.processing import (process_downloaded_files,
                                                      check_file_already_downloaded)
 from bacen_ifdata.scraper.utils import (initialize_webdriver,
                                         validate_report_selection)
+from bacen_ifdata.utilities.clean import (clean_empty_csv_files,
+                                          clean_download_base_directory)
+
+
+def __clean_download_directory():
+    """
+    Performs comprehensive cleaning operations on the download directory.
+
+    This function orchestrates a two-step cleaning process:
+    1. It first removes all empty CSV files from the download directory.
+       This step helps in eliminating files that were downloaded but contain
+       no data, possibly due to errors in the data scraping process.
+    2. Then, it cleans up the download base directory by removing any
+       remaining CSV files. This is typically done to prepare for a fresh start,
+       ensuring that no outdated or unnecessary files remain that could interfere
+       with subsequent scraping sessions.
+
+    The cleaning process targets the directory specified in the configuration's DOWNLOAD_DIRECTORY,
+    using paths built from the configuration settings. Messages are printed to the console to 
+    indicate the progress of cleaning operations.
+    """
+
+    # Clean up the empty CSV files in the download directory.
+    print('Cleaning up empty CSV files...')
+    clean_empty_csv_files(build_directory_path(config.DOWNLOAD_DIRECTORY))
+    # Clean up the download base directory.
+    print('Cleaning up the download base directory...')
+    clean_download_base_directory(
+        build_directory_path(config.DOWNLOAD_DIRECTORY))
 
 
 def main_scraper(_session: Session, _data_base: str, _institution, _report):
@@ -53,7 +82,8 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
     institution_directory = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                                  _institution.name.lower())
     ensure_directory(institution_directory)
-    report_directory = build_directory_path(institution_directory, _report.name.lower())
+    report_directory = build_directory_path(
+        institution_directory, _report.name.lower())
     ensure_directory(report_directory)
 
     report_file_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
@@ -72,6 +102,7 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
         # Wait for the download to finish before processing the file.
         if wait_for_download_completion(config.DOWNLOAD_DIRECTORY,
                                         config.DOWNLOAD_FILE_NAME):
+            sleep(3)
             process_downloaded_files(build_directory_path(config.DOWNLOAD_DIRECTORY,
                                                           config.DOWNLOAD_FILE_NAME),
                                      report_file_path)
@@ -108,3 +139,14 @@ if __name__ == '__main__':
         # Clean up the session, closing the browser and show report.
         if session:
             session.cleanup()
+
+    # BUG: The IF.data system generates CSV files for download in real-time,
+    # using the loaded data table as the foundation.
+    # Internally, it triggers the `downloadCsv` JavaScript function, which
+    # constructs a Blob object of type "text/csv" and saves this file.
+    # I have not been able to find a permanent solution to this issue.
+    #
+    # A temporary measure is to delete the empty files and rerun the
+    # data scraping process, repeating this step until there are no
+    # more content-less files remaining.
+    __clean_download_directory()

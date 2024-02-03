@@ -27,13 +27,13 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-
+from time import sleep
 from selenium.common.exceptions import (NoSuchElementException,
                                         TimeoutException,
                                         ElementClickInterceptedException,
                                         MoveTargetOutOfBoundsException)
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.edge.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -149,6 +149,11 @@ class Browser:
             print(f"Timeout: O elemento dataTable não se tornou visível após {
                   wait_time} segundos.")
             raise
+
+        # BUG: This workaround ensures that the Blob object is fully initialized
+        # before the button is clicked. For a detailed description of the
+        # underlying issue, please refer to the BUG comment in `scraping.py`.
+        sleep(3)
 
         # Click the "Exportar CSV" button.
         self.__ensure_clickable(wait_time, By.ID, 'aExportCsv')
