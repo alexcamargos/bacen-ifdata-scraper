@@ -82,7 +82,7 @@ def ensure_directory(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def wait_for_download_completion(directory: str, filename: str, timeout: int = 300) -> bool:
+def wait_for_download_completion(directory: Path, filename: str, timeout: int = 300) -> bool:
     """
     Waits until a file has been completely downloaded.
 

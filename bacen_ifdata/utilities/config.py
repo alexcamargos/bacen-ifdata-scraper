@@ -36,9 +36,9 @@ URL = 'https://www3.bcb.gov.br/ifdata/'
 TIMEOUT = 120
 
 BASE_DIRECTORY = Path.cwd()
-DOWNLOAD_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_content'
+DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'if_data_content'
 DOWNLOAD_FILE_NAME = 'dados.csv'
-PROCESSED_FILES_DIRECTORY = f'{BASE_DIRECTORY}\\if_data_processed'
+PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'if_data_processed'
 
 __all__ = ['URL',
            'TIMEOUT',
