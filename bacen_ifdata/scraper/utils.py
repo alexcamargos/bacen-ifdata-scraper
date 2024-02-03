@@ -49,7 +49,7 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir", DOWNLOAD_DIRECTORY)
+    options.set_preference("browser.download.dir", str(DOWNLOAD_DIRECTORY))
     options.set_preference(
         "browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
