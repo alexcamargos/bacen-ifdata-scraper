@@ -142,4 +142,14 @@ class Browser:
     def download_report(self, wait_time: int):
         """Downloads a report from a web page."""
 
+        # Wait for the dataTable element to be visible.
+        try:
+            WebDriverWait(self._driver, wait_time).until(
+                EC.visibility_of_element_located((By.ID, 'dataTable')))
+        except TimeoutException:
+            print(f"Timeout: O elemento dataTable não se tornou visível após {
+                  wait_time} segundos.")
+            raise
+
+        # Click the "Exportar CSV" button.
         self.__ensure_clickable(wait_time, By.ID, 'aExportCsv')
