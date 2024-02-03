@@ -77,6 +77,31 @@ def clean_empty_csv_files(path: Path) -> None:
     - path (Path): The path of the directory to be cleaned.
     """
 
-    for file in path.glob('*.csv'):
+    empty_files = False
+
+    for file in path.rglob('*.csv'):
         if __files_is_empty(file):
+            print(f'Removing empty file: {file.name}')
             file.unlink()
+            empty_files = True
+
+    if not empty_files:
+        print('No empty files found.')
+
+
+def clean_download_base_directory(path: Path) -> None:
+    """
+    Clean up the download base directory by removing CSV files that were
+    downloaded by scraping processes and have not been moved to the storage directory.
+
+    This function iterates over all CSV files in the specified directory and its subdirectories.
+    It removes each CSV file, assuming that any file in this directory is no longer needed.
+    This operation is intended for cleanup after files have been processed and should be used
+    with caution to avoid deleting files unintentionally.
+
+    Parameters:
+    - path (Path): The path of the download base directory to be cleaned.
+    """
+
+    for file in path.glob('*.csv'):
+        file.unlink()
