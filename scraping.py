@@ -59,7 +59,7 @@ def __clean_download_directory():
        with subsequent scraping sessions.
 
     The cleaning process targets the directory specified in the configuration's DOWNLOAD_DIRECTORY,
-    using paths built from the configuration settings. Messages are printed to the console to 
+    using paths built from the configuration settings. Messages are printed to the console to
     indicate the progress of cleaning operations.
     """
 
