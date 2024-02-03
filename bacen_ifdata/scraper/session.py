@@ -31,7 +31,7 @@ from time import time
 
 from selenium.webdriver.firefox.webdriver import WebDriver
 
-from bacen_ifdata import config
+from bacen_ifdata.utilities import config
 from bacen_ifdata.scraper.interfaces.interacting import Browser
 
 

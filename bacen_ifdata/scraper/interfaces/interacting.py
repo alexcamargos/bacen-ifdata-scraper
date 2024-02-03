@@ -37,7 +37,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from bacen_ifdata import config
+from bacen_ifdata.utilities import config
 
 
 class Browser:

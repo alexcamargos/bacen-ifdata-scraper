@@ -22,8 +22,6 @@
 from enum import StrEnum
 from pathlib import Path
 
-import bacen_ifdata.config as CONFIG
-
 from bacen_ifdata.scraper.storage.processing import (build_directory_path)
 
 
@@ -71,12 +69,12 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
     """
 
     # Diretório onde os arquivos CSV baixados são armazenados.
-    input_path = build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,
+    input_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                       institution.name.lower(),
                                       report.name.lower())
 
     # Diretório onde os arquivos CSV normalizados serão armazenados.
-    output_path = build_directory_path(CONFIG.PROCESSED_FILES_DIRECTORY,
+    output_path = build_directory_path(config.PROCESSED_FILES_DIRECTORY,
                                        institution.name.lower(),
                                        report.name.lower())
 

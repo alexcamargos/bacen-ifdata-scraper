@@ -45,7 +45,7 @@ def process_downloaded_files(src: Path, dst: Path) -> None:
         raise FileNotFoundError(f'File {src} does not exist.')
 
 
-def build_directory_path(base_dir, *parts):
+def build_directory_path(base_dir: Path, *parts):
     """
     Constructs a safe and absolute directory path from provided components.
 

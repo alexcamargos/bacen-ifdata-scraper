@@ -21,8 +21,6 @@
 
 from enum import StrEnum
 
-import bacen_ifdata.config as CONFIG
-
 from bacen_ifdata.data_manager.processing import normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
@@ -34,12 +32,12 @@ def main_process(institution: StrEnum, report: StrEnum) -> None:
     """Main process for Bacen IF.data AutoScraper & Data Manager"""
 
     # Ensure that the processed files directory exists.
-    output_directory = build_directory_path(CONFIG.PROCESSED_FILES_DIRECTORY,
+    output_directory = build_directory_path(config.PROCESSED_FILES_DIRECTORY,
                                             institution.name.lower(),
                                             report.name.lower())
     ensure_directory(output_directory)
 
-    input_data_path = build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,
+    input_data_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                            institution.name.lower(),
                                            report.name.lower())
     # List all CSV files in the input data directory.
@@ -53,7 +51,7 @@ def main_process(institution: StrEnum, report: StrEnum) -> None:
 if __name__ == '__main__':
 
     # Ensure that the processed files directory exists.
-    ensure_directory(build_directory_path(CONFIG.PROCESSED_FILES_DIRECTORY))
+    ensure_directory(build_directory_path(config.PROCESSED_FILES_DIRECTORY))
 
     # Run the main process.
     for process_institution in INSTITUTIONS:

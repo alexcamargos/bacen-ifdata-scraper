@@ -28,7 +28,8 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-import bacen_ifdata.config as CONFIG
+import bacen_ifdata.utilities.config as config
+
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
@@ -46,16 +47,16 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
     """Main function for the scraper."""
 
     # Ensure that the download directory exists.
-    ensure_directory(build_directory_path(CONFIG.DOWNLOAD_DIRECTORY))
+    ensure_directory(build_directory_path(config.DOWNLOAD_DIRECTORY))
 
     # Create the directory for the institution and report.
-    institution_directory = build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,
+    institution_directory = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                                  _institution.name.lower())
     ensure_directory(institution_directory)
     report_directory = build_directory_path(institution_directory, _report.name.lower())
     ensure_directory(report_directory)
 
-    report_file_path = build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,
+    report_file_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                             _institution.name.lower(),
                                             _report.name.lower(),
                                             f'{_data_base.replace('/', '_')}.csv')
@@ -69,10 +70,10 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
         _session.download_reports(_data_base, _institution, _report)
 
         # Wait for the download to finish before processing the file.
-        if wait_for_download_completion(CONFIG.DOWNLOAD_DIRECTORY,
-                                        CONFIG.DOWNLOAD_FILE_NAME):
-            process_downloaded_files(build_directory_path(CONFIG.DOWNLOAD_DIRECTORY,
-                                                          CONFIG.DOWNLOAD_FILE_NAME),
+        if wait_for_download_completion(config.DOWNLOAD_DIRECTORY,
+                                        config.DOWNLOAD_FILE_NAME):
+            process_downloaded_files(build_directory_path(config.DOWNLOAD_DIRECTORY,
+                                                          config.DOWNLOAD_FILE_NAME),
                                      report_file_path)
         else:
             print('Download was not completed in the expected time.')
@@ -83,7 +84,7 @@ if __name__ == '__main__':
     try:
         # Initialize the WebDriver session.
         with initialize_webdriver() as driver:
-            session = Session(driver, CONFIG.URL)
+            session = Session(driver, config.URL)
             session.open()
 
             # Get the available data bases.
@@ -92,7 +93,9 @@ if __name__ == '__main__':
             for institution in INSTITUTIONS:
                 for report in REPORTS[institution]:
                     # Validate the report selection.
-                    cutoff_data_base = validate_report_selection(institution, report, data_base)
+                    cutoff_data_base = validate_report_selection(institution,
+                                                                 report,
+                                                                 data_base)
 
                     for data in cutoff_data_base:
                         # Download the reports.
