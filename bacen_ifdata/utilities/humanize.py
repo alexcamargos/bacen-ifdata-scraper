@@ -34,7 +34,7 @@ License: MIT
 """
 
 
-def seconds_to_human_readable(seconds: int) -> tuple:
+def seconds_to_human_readable(seconds: float) -> tuple:
     """
     Converts a number of seconds to a tuple representing the time in hours, minutes, and seconds.
 

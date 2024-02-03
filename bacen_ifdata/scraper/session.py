@@ -33,6 +33,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata.utilities import config
 from bacen_ifdata.scraper.interfaces.interacting import Browser
+from bacen_ifdata.utilities.humanize import seconds_to_human_readable
 
 
 class Session:
@@ -79,11 +80,13 @@ class Session:
     def cleanup(self) -> None:
         """Cleans up the web session and prints details."""
 
+        # Calculate the session duration and print details.
         finished = time()
         self.session_data['duration'] = finished - self._started
+        hours, minutes, seconds = seconds_to_human_readable(self.session_data['duration'])
 
         print(f"Headless mode: {self.session_data['is_headless']}.")
-        print(f"Session duration: {self.session_data['duration']} seconds.")
+        print(f"Session duration: {hours}h {minutes}m {seconds}s.")
         print(f"Reports downloaded: {
               self.session_data['reports_downloaded']}.")
 
