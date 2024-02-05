@@ -86,10 +86,16 @@ def main_scraper(_session: Session, _data_base: str, _institution, _report):
         institution_directory, _report.name.lower())
     ensure_directory(report_directory)
 
+    # Build the name of the file that will contain the report,
+    # in the form 'year-month.csv'.
+    month, year = _data_base.split('/')
+    report_file_name = f'{year}-{month}.csv'
+
+    # Build the path to the report file.
     report_file_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
                                             _institution.name.lower(),
                                             _report.name.lower(),
-                                            f'{_data_base.replace('/', '_')}.csv')
+                                            report_file_name)
 
     # Check if the file was already downloaded.
     if check_file_already_downloaded(report_file_path):
