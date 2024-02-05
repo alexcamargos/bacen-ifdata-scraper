@@ -22,7 +22,8 @@
 from enum import StrEnum
 from pathlib import Path
 
-from bacen_ifdata.scraper.storage.processing import (build_directory_path)
+from bacen_ifdata.utilities import config
+from bacen_ifdata.scraper.storage.processing import build_directory_path
 
 
 def check_file_already_processed(output_directory: Path, file: str) -> bool:

@@ -29,7 +29,8 @@ License: MIT
 """
 
 from time import sleep
-import bacen_ifdata.utilities.config as config
+
+from bacen_ifdata.utilities import config
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS

@@ -21,6 +21,7 @@
 
 from enum import StrEnum
 
+from bacen_ifdata.utilities import config
 from bacen_ifdata.data_manager.processing import normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
