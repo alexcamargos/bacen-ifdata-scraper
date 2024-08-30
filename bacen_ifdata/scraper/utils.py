@@ -96,7 +96,14 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
 
         return data_base[data_base_index_end:data_base_index_start + 1]
     elif institution == INSTITUTIONS.FOREIGN_EXCHANGE:
-        cutoff_date = '12/2014'
+        cutoff_date_start = '12/2014'
+
+        data_base_index_start = data_base.index(cutoff_date_start)
+
+        cutoff_date_end = '06/2023'
+        data_base_index_end = data_base.index(cutoff_date_end)
+
+        return data_base[data_base_index_end:data_base_index_start]
     elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES_SCR:
         cutoff_date_start = '06/2012'
         data_base_index_start = data_base.index(cutoff_date_start)
