@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-#
-#  ------------------------------------------------------------------------------
-#  Name: __init__.py
+
+# ------------------------------------------------------------------------------
+#  Name: version.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,7 +28,12 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+__author__ = 'Alexsander Lopes Camargos'
+__email__ = 'alcamargos@vivaldi.net'
 
-from bacen_ifdata.pipeline import IfDataPipeline
+# Package version.
+MAJOR = 0
+MINOR = 0
+MICRO = 1
 
-__all__ = ['IfDataPipeline']
+__version__ = f'{MAJOR}.{MINOR}.{MICRO}'
