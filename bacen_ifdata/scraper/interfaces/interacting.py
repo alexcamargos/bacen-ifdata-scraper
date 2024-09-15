@@ -28,10 +28,12 @@ License: MIT
 """
 
 from time import sleep
-from selenium.common.exceptions import (NoSuchElementException,
-                                        TimeoutException,
-                                        ElementClickInterceptedException,
-                                        MoveTargetOutOfBoundsException)
+
+from loguru import logger
+from selenium.common.exceptions import (ElementClickInterceptedException,
+                                        MoveTargetOutOfBoundsException,
+                                        NoSuchElementException,
+                                        TimeoutException)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -80,20 +82,20 @@ class Browser:
             self._driver.execute_script('arguments[0].click();', element)
 
         except TimeoutException:
-            print(f"Timeout: O elemento {
-                locator} não se tornou clicável após {wait_time} segundos.")
+            logger.exception(f'Timeout: O elemento {
+                             locator} não se tornou clicável após {wait_time} segundos.')
             raise
         except NoSuchElementException:
-            print(f"Não encontrado: O elemento {
-                locator} não foi encontrado na página.")
+            logger.exception(f'Não encontrado: O elemento {
+                             locator} não foi encontrado na página.')
             raise
         except ElementClickInterceptedException:
-            print(f'Elemento interceptado: O elemento {
-                locator} foi interceptado por outro elemento.')
+            logger.exception(f'Elemento interceptado: O elemento {
+                             locator} foi interceptado por outro elemento.')
             raise
         except MoveTargetOutOfBoundsException:
-            print(f'Fora dos limites: O elemento {
-                locator} está fora dos limites da janela.')
+            logger.exception(f'Fora dos limites: O elemento {
+                             locator} está fora dos limites da janela.')
             raise
 
     def initialize(self, url: str) -> None:
@@ -146,8 +148,8 @@ class Browser:
             WebDriverWait(self._driver, wait_time).until(
                 EC.visibility_of_element_located((By.ID, 'dataTable')))
         except TimeoutException:
-            print(f"Timeout: O elemento dataTable não se tornou visível após {
-                  wait_time} segundos.")
+            logger.exception(f'Timeout: O elemento dataTable não se tornou visível após {
+                             wait_time} segundos.')
             raise
 
         # BUG: This workaround ensures that the Blob object is fully initialized
