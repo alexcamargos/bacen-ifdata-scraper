@@ -5,18 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "IF.data Scraper",
-            "type": "python",
+            "name": "Run the scraper.",
+            "type": "debugpy",
             "request": "launch",
-            "program": "scraping.py",
+            "program": "./ifdata.py",
+            "args": ["-s"],
             "console": "integratedTerminal",
             "justMyCode": true
         },
         {
-            "name": "IF.data Data Manager",
-            "type": "python",
+            "name": "Run the cleaner.",
+            "type": "debugpy",
             "request": "launch",
-            "program": "process.py",
+            "program": "./ifdata.py",
+            "args": ["-c"],
             "console": "integratedTerminal",
             "justMyCode": true
         }
