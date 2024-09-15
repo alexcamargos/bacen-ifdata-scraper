@@ -22,8 +22,10 @@
 from enum import StrEnum
 from pathlib import Path
 
-from bacen_ifdata.utilities import config
+from loguru import logger
+
 from bacen_ifdata.scraper.storage.processing import build_directory_path
+from bacen_ifdata.utilities import config
 
 
 def check_file_already_processed(output_directory: Path, file: str) -> bool:
@@ -81,7 +83,7 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
 
     # Check if the file has already been normalized.
     if check_file_already_processed(output_path, file):
-        print(f'File {file} has already been normalized, skipping...')
+        logger.info(f'File {file} has already been normalized, skipping...')
         return False
 
     # Normalize the file.
@@ -148,8 +150,8 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
 
     # Handle exceptions.
     except FileNotFoundError as error:
-        print(f'File not found: {error.filename}')
+        logger.error(f'File not found: {error.filename}')
         return False
     except IOError as error:
-        print(f'Input/output error: {error}\nFile: {error.filename}')
+        logger.error(f'Input/output error: {error}')
         return False
