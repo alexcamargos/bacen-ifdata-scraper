@@ -30,6 +30,8 @@ License: MIT
 
 from time import sleep
 
+from loguru import logger
+
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      check_file_already_downloaded,
@@ -76,8 +78,8 @@ def main(_session: Session, _data_base: str, _institution, _report):
 
     # Check if the file was already downloaded.
     if check_file_already_downloaded(report_file_path):
-        print(f'Report "{_report.name}" from "{_institution.name}"'
-              f'referring to "{_data_base}" was already downloaded, skipping...')
+        logger.info(f'Report "{_report.name}" from "{_institution.name}"'
+                    f'referring to "{_data_base}" was already downloaded, skipping...')
     else:
         # Download the reports.
         _session.download_reports(_data_base, _institution, _report)
@@ -90,4 +92,4 @@ def main(_session: Session, _data_base: str, _institution, _report):
                                                           config.DOWNLOAD_FILE_NAME),
                                      report_file_path)
         else:
-            print('Download was not completed in the expected time.')
+            logger.error('Download was not completed in the expected time.')

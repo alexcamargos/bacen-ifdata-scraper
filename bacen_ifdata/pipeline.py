@@ -30,6 +30,8 @@ License: MIT
 
 from enum import StrEnum
 
+from loguru import logger
+
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
@@ -101,8 +103,8 @@ class IfDataPipeline():
 
                 for data in cutoff_data_base:
                     # Download the reports.
-                    print(f'Downloading report "{report.name}" from "{institution.name}" '
-                          f'referring to "{data}"...')
+                    logger.info(f'Downloading report "{report.name}" from "{institution.name}" '
+                                f'referring to "{data}"...')
                     main_scraper(session, data, institution, report)
 
     def cleaner(self, process_institution: StrEnum, process_report: StrEnum) -> None:

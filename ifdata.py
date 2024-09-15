@@ -30,6 +30,8 @@ License: MIT
 
 import argparse
 
+from loguru import logger
+
 from bacen_ifdata import IfDataPipeline
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
@@ -61,11 +63,11 @@ def __clean_download_directory():
     """
 
     # Clean up the empty CSV files in the download directory.
-    print('Cleaning up empty CSV files...')
+    logger.info('Cleaning up empty CSV files...')
     clean_empty_csv_files(build_directory_path(config.DOWNLOAD_DIRECTORY))
 
     # Clean up the download base directory.
-    print('Cleaning up the download base directory...')
+    logger.info('Cleaning up the download base directory...')
     clean_download_base_directory(build_directory_path(config.DOWNLOAD_DIRECTORY))
 
 
@@ -117,11 +119,11 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
 
                 for data in cutoff_data_base:
                     # Download the reports.
-                    print(f'Downloading report "{report.name} from '
-                          f'{institution.name} referring to "{data}"...')
+                    logger.info(f'Downloading report "{report.name}" from '
+                                f'{institution.name} referring to "{data}"...')
                     scraper_pipeline.scraper(data, institution, report)
     except IfDataScraperException as error:
-        print(error.message)
+        logger.exception(error.message)
     finally:
         # Clean up the session, closing the browser and show report.
         if scraper_pipeline.session:
@@ -152,16 +154,24 @@ if __name__ == '__main__':
     # Get the arguments.
     args = get_arguments()
 
+    logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
+
     # Initialize the pipeline.
     pipeline = IfDataPipeline()
 
     if args.scraper:
+        logger.info('Running only the scraper...')
+
         # Run the scraper.
         ifdata_scraper(pipeline)
     elif args.cleaner:
+        logger.info('Running only the cleaner...')
+
         # Run the cleaner.
         ifdata_cleaner(pipeline)
     else:
         # Run the scraper and cleaner.
+        logger.info('Running the scraper and cleaner...')
+
         ifdata_scraper(pipeline)
         ifdata_cleaner(pipeline)

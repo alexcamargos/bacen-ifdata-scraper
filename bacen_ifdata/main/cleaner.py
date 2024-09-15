@@ -30,6 +30,8 @@ License: MIT
 
 from enum import StrEnum
 
+from loguru import logger
+
 from bacen_ifdata.data_manager.processing import normalize_csv
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory)
@@ -60,7 +62,6 @@ def main(institution: StrEnum, report: StrEnum) -> None:
 
     # List all CSV files in the input data directory.
     for file in input_data_path.glob('*.csv'):
-        print(f'Normalizing {report.name} ({
-              file.name}) from {institution.name}.')
+        logger.info(f'Normalizing {report.name} ({file.name}) from {institution.name}.')
         # Normalize the CSV file.
         normalize_csv(institution, report, file.name)
