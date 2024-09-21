@@ -38,9 +38,9 @@ from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities import config
 from bacen_ifdata.utilities.clean import (clean_download_base_directory,
                                           clean_empty_csv_files)
+from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -64,11 +64,11 @@ def __clean_download_directory():
 
     # Clean up the empty CSV files in the download directory.
     logger.info('Cleaning up empty CSV files...')
-    clean_empty_csv_files(build_directory_path(config.DOWNLOAD_DIRECTORY))
+    clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
     # Clean up the download base directory.
     logger.info('Cleaning up the download base directory...')
-    clean_download_base_directory(build_directory_path(config.DOWNLOAD_DIRECTORY))
+    clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
 
 def get_arguments() -> argparse.Namespace:

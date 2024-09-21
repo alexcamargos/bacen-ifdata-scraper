@@ -31,9 +31,9 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
 
-from bacen_ifdata.utilities.config import DOWNLOAD_DIRECTORY
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 def initialize_webdriver() -> WebDriver:
@@ -49,7 +49,7 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir", str(DOWNLOAD_DIRECTORY))
+    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY.value))
     options.set_preference(
         "browser.helperApps.neverAsk.saveToDisk", "text/csv")
 

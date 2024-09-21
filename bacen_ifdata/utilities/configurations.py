@@ -2,8 +2,8 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: config.py
-#  Version: 0.0.1
+#  Name: configurations.py
+#  Version: 0.0.2
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
@@ -27,22 +27,21 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from enum import Enum
 from pathlib import Path
 
-# URL of the page where the reports are located.
-URL = 'https://www3.bcb.gov.br/ifdata/'
 
-# Maximum waiting time for elements to load.
-TIMEOUT = 120
+class Config(Enum):
+    """Configuration settings for Bacen IF.data AutoScraper & Data Manager."""
 
-BASE_DIRECTORY = Path.cwd()
-DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'if_data_content'
-DOWNLOAD_FILE_NAME = 'dados.csv'
-PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'if_data_processed'
+    # URL of the page where the reports are located.
+    URL = 'https://www3.bcb.gov.br/ifdata/'
+    # Maximum waiting time for elements to load.
+    TIMEOUT = 120
+    BASE_DIRECTORY = Path.cwd()
+    DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'if_data_content'
+    DOWNLOAD_FILE_NAME = 'dados.csv'
+    PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'if_data_processed'
 
-__all__ = ['URL',
-           'TIMEOUT',
-           'BASE_DIRECTORY',
-           'DOWNLOAD_DIRECTORY',
-           'DOWNLOAD_FILE_NAME',
-           'PROCESSED_FILES_DIRECTORY']
+
+__all__ = ['Config']

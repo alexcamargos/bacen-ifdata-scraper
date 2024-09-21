@@ -39,7 +39,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from bacen_ifdata.utilities import config
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 class Browser:
@@ -117,12 +117,12 @@ class Browser:
     def get_dropdown_options(self, dropdown_id: str) -> list:
         """Returns a list of options from a dropdown menu on a web page."""
 
-        self.ensure_dropdown_content('btnDataBase', config.TIMEOUT)
+        self.ensure_dropdown_content('btnDataBase', Cfg.TIMEOUT.value)
 
         # Using __ensure_clickable() not working here.
         # Need to investigate further.
         # Solution is to use WebDriverWait() directly.
-        WebDriverWait(self._driver, config.TIMEOUT).until(
+        WebDriverWait(self._driver, Cfg.TIMEOUT.value).until(
             EC.element_to_be_clickable((By.XPATH,
                                         '//*[@id="ulDataBase"]/li[1]/a')
                                        )
@@ -136,7 +136,7 @@ class Browser:
             if item.text.strip() != ''
         ]
 
-        self.select_dropdown_option(dropdown_texts[0], config.TIMEOUT)
+        self.select_dropdown_option(dropdown_texts[0], Cfg.TIMEOUT.value)
 
         return dropdown_texts
 

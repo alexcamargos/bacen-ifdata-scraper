@@ -38,7 +38,7 @@ from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory,
                                                      process_downloaded_files,
                                                      wait_for_download_completion)
-from bacen_ifdata.utilities import config
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 def main(_session: Session, _data_base: str, _institution, _report):
@@ -55,10 +55,10 @@ def main(_session: Session, _data_base: str, _institution, _report):
     """
 
     # Ensure that the download directory exists.
-    ensure_directory(build_directory_path(config.DOWNLOAD_DIRECTORY))
+    ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
     # Create the directory for the institution and report.
-    institution_directory = build_directory_path(config.DOWNLOAD_DIRECTORY,
+    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
                                                  _institution.name.lower())
     ensure_directory(institution_directory)
     report_directory = build_directory_path(
@@ -71,7 +71,7 @@ def main(_session: Session, _data_base: str, _institution, _report):
     report_file_name = f'{year}-{month}.csv'
 
     # Build the path to the report file.
-    report_file_path = build_directory_path(config.DOWNLOAD_DIRECTORY,
+    report_file_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
                                             _institution.name.lower(),
                                             _report.name.lower(),
                                             report_file_name)
@@ -85,11 +85,11 @@ def main(_session: Session, _data_base: str, _institution, _report):
         _session.download_reports(_data_base, _institution, _report)
 
         # Wait for the download to finish before processing the file.
-        if wait_for_download_completion(config.DOWNLOAD_DIRECTORY,
-                                        config.DOWNLOAD_FILE_NAME):
+        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY.value,
+                                        Cfg.DOWNLOAD_FILE_NAME.value):
             sleep(3)
-            process_downloaded_files(build_directory_path(config.DOWNLOAD_DIRECTORY,
-                                                          config.DOWNLOAD_FILE_NAME),
+            process_downloaded_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
+                                                          Cfg.DOWNLOAD_FILE_NAME.value),
                                      report_file_path)
         else:
             logger.error('Download was not completed in the expected time.')

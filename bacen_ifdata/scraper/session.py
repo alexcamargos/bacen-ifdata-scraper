@@ -33,7 +33,7 @@ from loguru import logger
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata.scraper.interfaces.interacting import Browser
-from bacen_ifdata.utilities import config
+from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.humanize import seconds_to_human_readable
 
 
@@ -69,9 +69,9 @@ class Session:
         """Ensures the dropdown menu is clickable and selects the desired option."""
 
         # Ensuring the dropdown menu is clickable.
-        self.browser.ensure_dropdown_content(element_id, config.TIMEOUT)
+        self.browser.ensure_dropdown_content(element_id, Cfg.TIMEOUT.value)
         # Selecting the desired option in the "ulDataBase" dropdown menu.
-        self.browser.select_dropdown_option(option, config.TIMEOUT)
+        self.browser.select_dropdown_option(option, Cfg.TIMEOUT.value)
 
     def open(self) -> None:
         """Opens the URL in a web browser."""
@@ -122,7 +122,7 @@ class Session:
 
         # Ensure the report content is loaded before proceeding with
         # the download of the CSV file.
-        self.browser.download_report(config.TIMEOUT)
+        self.browser.download_report(Cfg.TIMEOUT.value)
 
         # Update the counter for downloaded reports.
         self.session_data['reports_downloaded'] += 1

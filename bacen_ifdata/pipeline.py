@@ -39,7 +39,7 @@ from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import (initialize_webdriver,
                                         validate_report_selection)
-from bacen_ifdata.utilities import config
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 class IfDataPipeline():
@@ -60,7 +60,7 @@ class IfDataPipeline():
 
         # Initialize the session.
         # pylint: disable=attribute-defined-outside-init
-        self.__session = Session(driver, config.URL)
+        self.__session = Session(driver, Cfg.URL.value)
 
         # Open the session.
         self.__session.open()
