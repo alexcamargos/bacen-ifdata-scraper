@@ -74,7 +74,7 @@ pip install -r requirements.txt
 > Antes de iniciar o processo de captura, certifique-se de que o GeckoDriver esteja devidamente instalado e configurado no seu sistema.
 
 ```bash
-poetry run python scraping.py
+poetry run .\ifdata.py -s
 ```
 
 > Observação: Caso não esteja utilizando Poetry, execute *python scraping.py*
@@ -88,7 +88,7 @@ Os desenvolvedores responsáveis pelo site do Bacen desviaram do formato padrão
 Os desenvolvedores do site do Bacen adotaram uma abordagem não convencional para o formato de arquivos CSV. Eles incorporaram agrupamentos de cabeçalhos e informações consolidadas do tipo e segmentação das instituições financeiras, diretamente nos arquivos CSV. Para assegurar que os arquivos sejam facilmente manuseáveis e úteis, é essencial corrigir essas inconsistências e alinhá-las com os padrões convencionais de CSV."
 
 ```bash
-poetry run python process.py
+poetry run .\ifdata.py -c
 ```
 
 > Observação: Caso não esteja utilizando Poetry, execute *python process.py*
