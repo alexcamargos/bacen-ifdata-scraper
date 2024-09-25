@@ -25,7 +25,11 @@ from pathlib import Path
 from loguru import logger
 
 from bacen_ifdata.scraper.storage.processing import build_directory_path
+<<<<<<< HEAD
 from bacen_ifdata.utilities.configurations import Config as Cfg
+=======
+from bacen_ifdata.utilities import config
+>>>>>>> Analytics
 
 
 def check_file_already_processed(output_directory: Path, file: str) -> bool:
