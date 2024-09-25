@@ -3,7 +3,7 @@
 #
 #  ------------------------------------------------------------------------------
 #  Name: configurations.py
-#  Version: 0.0.2
+#  Version: 0.0.3
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
@@ -39,9 +39,9 @@ class Config(Enum):
     # Maximum waiting time for elements to load.
     TIMEOUT = 120
     BASE_DIRECTORY = Path.cwd()
-    DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'if_data_content'
+    DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'data' / 'raw'
     DOWNLOAD_FILE_NAME = 'dados.csv'
-    PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'if_data_processed'
+    PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'data' / 'processed'
 
 
 __all__ = ['Config']
