@@ -33,11 +33,7 @@ from loguru import logger
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata.scraper.interfaces.interacting import Browser
-<<<<<<< HEAD
 from bacen_ifdata.utilities.configurations import Config as Cfg
-=======
-from bacen_ifdata.utilities import config
->>>>>>> Analytics
 from bacen_ifdata.utilities.humanize import seconds_to_human_readable
 
 
