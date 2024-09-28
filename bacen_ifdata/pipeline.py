@@ -3,7 +3,7 @@
 #
 #  ------------------------------------------------------------------------------
 #  Name: pipeline.py
-#  Version: 0.0.1
+#  Version: 0.0.2
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
@@ -30,15 +30,16 @@ License: MIT
 
 from enum import StrEnum
 
+import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.scraper import main as main_scraper
+from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
-from bacen_ifdata.scraper.reports import REPORTS
+from bacen_ifdata.scraper.reports import REPORTS, ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.utils import (initialize_webdriver,
-                                        validate_report_selection)
+from bacen_ifdata.scraper.utils import initialize_webdriver, validate_report_selection
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -116,3 +117,17 @@ class IfDataPipeline():
         """
 
         main_cleaner(process_institution, process_report)
+
+    def transformer(self,
+                    data_frame: pd.DataFrame,
+                    institution: Institutions,
+                    report: ReportsPrudentialConglomerates) -> None:
+        """Main process for transforming the data.
+
+        Args:
+            data_frame (pd.DataFrame): The data frame containing the report data.
+            institution (InstitutionType): The institution to be processed.
+            report (Reports): The report to be processed.
+        """
+
+        main_transformer(data_frame, institution, report)
