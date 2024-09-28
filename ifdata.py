@@ -3,7 +3,7 @@
 #
 #  ------------------------------------------------------------------------------
 #  Name: ifdata.py
-#  Version: 0.0.1
+#  Version: 0.0.2
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
@@ -30,8 +30,7 @@ License: MIT
 
 import argparse
 
-from loguru import logger
-
+import pandas as pd
 from loguru import logger
 
 from bacen_ifdata import IfDataPipeline
@@ -40,9 +39,15 @@ from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities.clean import (clean_download_base_directory,
-                                          clean_empty_csv_files)
+from bacen_ifdata.transformer.schemas.columns_names.prudential_summary import (
+    COLUMN_NAMES,
+)
+from bacen_ifdata.utilities.clean import (
+    clean_download_base_directory,
+    clean_empty_csv_files,
+)
 from bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -101,6 +106,11 @@ def get_arguments() -> argparse.Namespace:
                         action='version',
                         version=f'%(prog)s {version}')
 
+    parser.add_argument('-t',
+                        '--transformer',
+                        action='store_true',
+                        help='Transform the downloaded reports.')
+
     return parser.parse_args()
 
 
@@ -146,6 +156,33 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
         __clean_download_directory()
 
 
+def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
+    """Main function for executing the transformer."""
+
+    # Definindo o caminho do arquivo a ser carregado.
+    DATA_PATH = Cfg.PROCESSED_FILES_DIRECTORY.value
+    INSTITUTION_TYPE = 'prudential_conglomerates'
+    REPORT_TYPE = 'summary'
+    DATA_BASE = '2024-06.csv'
+    FILE_PATH = f'{DATA_PATH}\\{INSTITUTION_TYPE}\\{REPORT_TYPE}\\{DATA_BASE}'
+
+    # Load the data.
+    data_frame = pd.read_csv(FILE_PATH,
+                             sep=';',
+                             names=COLUMN_NAMES,
+                             dtype={'NumAgencias': object,
+                                    'NumPostosAtendimento': object})
+
+    # Create the region column based on the state column.
+    position_state = data_frame.columns.get_loc('UF')
+    data_frame.insert(position_state, 'Regiao', data_frame['UF'].map(REGION))
+
+    # Run the transformer.
+    transformer_pipeline.transformer(data_frame,
+                                     INSTITUTIONS.PRUDENTIAL_CONGLOMERATES,
+                                     REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SUMMARY)
+
+
 def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
     """Main function for executing the cleaner."""
 
@@ -180,6 +217,11 @@ if __name__ == '__main__':
 
         # Run the cleaner.
         ifdata_cleaner(pipeline)
+    elif args.transformer:
+        logger.info('Running the transformer...')
+
+        # Run the transformer.
+        ifdata_transformer(pipeline)
     else:
         # Run the scraper and cleaner.
         logger.info('Running the scraper and cleaner...')
