@@ -36,7 +36,7 @@ from loguru import logger
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
-from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS, ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import initialize_webdriver, validate_report_selection
@@ -95,7 +95,7 @@ class IfDataPipeline():
         # Get the available data bases.
         data_base = session.get_data_bases()
 
-        for institution in INSTITUTIONS:
+        for institution in Institutions:
             for report in REPORTS[institution]:
                 # Validate the report selection.
                 cutoff_data_base = validate_report_selection(institution,

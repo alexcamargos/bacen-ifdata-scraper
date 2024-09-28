@@ -14,6 +14,15 @@
             "justMyCode": true
         },
         {
+            "name": "Run the transformer.",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./ifdata.py",
+            "args": ["-t"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Run the cleaner.",
             "type": "debugpy",
             "request": "launch",

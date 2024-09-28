@@ -30,12 +30,11 @@ License: MIT
 
 import argparse
 
-import pandas as pd
 from loguru import logger
 
 from bacen_ifdata import IfDataPipeline
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
-from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
@@ -47,6 +46,7 @@ from bacen_ifdata.utilities.clean import (
     clean_empty_csv_files,
 )
 from bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 from bacen_ifdata.utilities.version import __version__ as version
 
@@ -75,7 +75,8 @@ def __clean_download_directory():
 
     # Clean up the download base directory.
     logger.info('Cleaning up the download base directory...')
-    clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
+    clean_download_base_directory(
+        build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
 
 def get_arguments() -> argparse.Namespace:
@@ -122,7 +123,7 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
         data_base = scraper_pipeline.session.get_data_bases()
 
         # Run the scraper...
-        for institution in INSTITUTIONS:
+        for institution in Institutions:
             for report in REPORTS[institution]:
                 # Validate the report selection.
                 cutoff_data_base = validate_report_selection(institution,
@@ -159,19 +160,22 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
 def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     """Main function for executing the transformer."""
 
-    # Definindo o caminho do arquivo a ser carregado.
-    DATA_PATH = Cfg.PROCESSED_FILES_DIRECTORY.value
-    INSTITUTION_TYPE = 'prudential_conglomerates'
-    REPORT_TYPE = 'summary'
-    DATA_BASE = '2024-06.csv'
-    FILE_PATH = f'{DATA_PATH}\\{INSTITUTION_TYPE}\\{REPORT_TYPE}\\{DATA_BASE}'
+    # Define the path to load the data.
+    data_path = Cfg.PROCESSED_FILES_DIRECTORY.value
+    institution_type = 'prudential_conglomerates'
+    report_type = 'summary'
+    data_base = '2024-06.csv'
+    file_path = f'{data_path}\\{institution_type}\\{report_type}\\{data_base}'
 
+    # Configurations for correctly loading the data.
+    options = {
+        'sep': ';',
+        'names': COLUMN_NAMES,
+        'dtype': {'NumAgencias': object,
+                  'NumPostosAtendimento': object}
+    }
     # Load the data.
-    data_frame = pd.read_csv(FILE_PATH,
-                             sep=';',
-                             names=COLUMN_NAMES,
-                             dtype={'NumAgencias': object,
-                                    'NumPostosAtendimento': object})
+    data_frame = load_csv_data(file_path, options)
 
     # Create the region column based on the state column.
     position_state = data_frame.columns.get_loc('UF')
@@ -179,15 +183,15 @@ def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
 
     # Run the transformer.
     transformer_pipeline.transformer(data_frame,
-                                     INSTITUTIONS.PRUDENTIAL_CONGLOMERATES,
-                                     REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SUMMARY)
+                                     Institutions.PRUDENTIAL_CONGLOMERATES,
+                                     REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY)
 
 
 def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
     """Main function for executing the cleaner."""
 
     # Run the cleaner.
-    for process_institution in INSTITUTIONS:
+    for process_institution in Institutions:
         for process_report in REPORTS[process_institution]:
             cleaner_pipeline.cleaner(process_institution, process_report)
 
