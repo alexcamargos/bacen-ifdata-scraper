@@ -66,35 +66,3 @@ class TransformerController:
         for _, row in data.iterrows():
             for transform in self.__prudential_conglomerates:
                 print(transform(row))
-
-
-if __name__ == '__main__':
-
-    # Importando as bibliotecas necessárias para o teste.
-
-    import pandas as pd
-    from bacen_ifdata.utilities.configurations import Config as Cfg
-    from bacen_ifdata.transformer.schemas.columns_names.prudential_summary import COLUMN_NAMES
-    from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
-
-    # Definindo o caminho do arquivo a ser carregado.
-    DATA_PATH = Cfg.PROCESSED_FILES_DIRECTORY.value
-    INSTITUTION_TYPE = 'prudential_conglomerates'
-    REPORT_TYPE = 'summary'
-    DATA_BASE = '2024-06.csv'
-    FILE_PATH = f'{DATA_PATH}\\{INSTITUTION_TYPE}\\{REPORT_TYPE}\\{DATA_BASE}'
-
-    # Importante: O arquivo CSV está separado por ponto e vírgula.
-    df = pd.read_csv(FILE_PATH,
-                     sep=';',
-                     names=COLUMN_NAMES,
-                     dtype={'NumAgencias': object,
-                            'NumPostosAtendimento': object})
-
-    # Criando uma nova coluna 'Regiao' com base na coluna 'UF'.
-    # Obtendo a posição da coluna 'Estado'.
-    position_state = df.columns.get_loc('UF')
-    df.insert(position_state, 'Regiao', df['UF'].map(REGION))
-
-    controller = TransformerController()
-    controller.transform_prudential_conglomerates(df)
