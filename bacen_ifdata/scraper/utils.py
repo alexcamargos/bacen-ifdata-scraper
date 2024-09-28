@@ -31,7 +31,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
 
-from bacen_ifdata.scraper.institutions import InstitutionType as INSTITUTIONS
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
@@ -49,7 +49,8 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY.value))
+    options.set_preference("browser.download.dir",
+                           str(Cfg.DOWNLOAD_DIRECTORY.value))
     options.set_preference(
         "browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
@@ -62,32 +63,32 @@ def initialize_webdriver() -> WebDriver:
 def validate_report_selection(institution: str, report: str, data_base: list) -> list:
     """Validates the report selection."""
 
-    if institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
-        report in (REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SUMMARY,
-                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].ASSETS,
-                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
-                   REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT):
+    if institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
+        report in (REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY,
+                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].ASSETS,
+                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
+                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT):
         cutoff_date = '03/2014'
-    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
-            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+    elif institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
+            report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
         cutoff_date = '03/2015'
-    elif institution == INSTITUTIONS.PRUDENTIAL_CONGLOMERATES and \
-            report == REPORTS[INSTITUTIONS.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
+    elif institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
+            report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
         cutoff_date = '03/2017'
-    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
-            report in (REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
-                       REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER):
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
+            report in (REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
+                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER):
         cutoff_date = '06/2014'
-    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
-            report == REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION:
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
+            report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION:
         cutoff_date = '09/2014'
-    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES and \
-            report == REPORTS[INSTITUTIONS.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
+            report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION:
         cutoff_date_start = '12/2000'
         data_base_index_start = data_base.index(cutoff_date_start)
 
@@ -95,7 +96,7 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
         data_base_index_end = data_base.index(cutoff_date_end)
 
         return data_base[data_base_index_end:data_base_index_start + 1]
-    elif institution == INSTITUTIONS.FOREIGN_EXCHANGE:
+    elif institution == Institutions.FOREIGN_EXCHANGE:
         cutoff_date_start = '12/2014'
 
         data_base_index_start = data_base.index(cutoff_date_start)
@@ -104,7 +105,7 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
         data_base_index_end = data_base.index(cutoff_date_end)
 
         return data_base[data_base_index_end:data_base_index_start]
-    elif institution == INSTITUTIONS.FINANCIAL_CONGLOMERATES_SCR:
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES_SCR:
         cutoff_date_start = '06/2012'
         data_base_index_start = data_base.index(cutoff_date_start)
 
