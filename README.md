@@ -4,10 +4,22 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestral, publica relatórios detalhados com uma vasta gama de dados sobre instituições financeiras, disponíveis através do [Portal IF.data](https://www3.bcb.gov.br/ifdata/). Estes dados, embora valiosos, exigem processamento e análise cuidadosa para extrair informações significativas. O objetivo central deste projeto é empregar técnicas de mineração de dados aos conjuntos de dados do Portal IF.data com o objetivo de criar insights sobre o sistema financeiro brasileiro.
+*Um scraper e processador de dados automatizado para extrair, limpar e organizar relatórios financeiros do portal IF.data do Banco Central do Brasil.*
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Poetry](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=poetry&logoColor=white)](https://python-poetry.org/)
+[![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=selenium&logoColor=white)](https://www.selenium.dev/)
+
+
+Este projeto automatiza a coleta e o processamento dos relatórios financeiros disponibilizados pelo Banco Central do Brasil através do portal IF.data. Diante do desafio de extrair dados valiosos de um formato de CSV não padronizado e de um processo de download manual, esta ferramenta utiliza **Selenium** para a automação da navegação e download, e scripts **Python** para a limpeza e estruturação dos dados.
+
+O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjunto de dados limpo, organizado e pronto para análise, eliminando a necessidade de trabalho manual e garantindo a precisão das informações.
+
 
 **Sumário**
 - [Bacen IF.data AutoScraper \& Data Manager](#bacen-ifdata-autoscraper--data-manager)
+  - [Tecnologias Utilizadas](#tecnologias-utilizadas)
+  - [Funcionalidades Principais](#funcionalidades-principais)
   - [Motivação](#motivação)
   - [O Portal IF.Data](#o-portal-ifdata)
   - [O Banco Central do Brasil](#o-banco-central-do-brasil)
@@ -17,9 +29,27 @@ O [Banco Central do Brasil](https://www.bcb.gov.br/) (Bacen), de forma trimestra
     - [Sem usar Poetry](#sem-usar-poetry)
   - [Capturando os arquivos](#capturando-os-arquivos)
   - [Processando os arquivos](#processando-os-arquivos)
+  - [Desafios e Aprendizados](#desafios-e-aprendizados)
   - [Autor](#autor)
   - [Copyright](#copyright)
   - [License](#license)
+
+
+## Tecnologias Utilizadas
+
+* **Linguagem Principal:** Python
+* **Gerenciador de Dependências:** Poetry
+* **Automação Web (Scraping):** Selenium
+* **Web Driver:** GeckoDriver (para Firefox)
+
+
+## Funcionalidades Principais
+
+- [x] **Automação de Download:** Realiza o download automático de todos os relatórios CSV do portal IF.data para um determinado período.
+- [x] **Setup Simplificado:** Suporte para instalação de dependências e execução com e sem Poetry.
+- [x] **Processamento e Limpeza de CSVs:** Corrige arquivos CSV com formatação não-padrão, removendo cabeçalhos e informações consolidadas indesejadas.
+- [x] **Relatório de Execução:** Gera um relatório ao final da execução com o total de arquivos baixados e o tempo de execução.
+
 
 ## Motivação
 
@@ -37,7 +67,7 @@ O Banco Central do Brasil, frequentemente referido como Bacen, é a autoridade m
 
 ## Objetivo Geral
 
-Este projeto visa aprimorar a coleta e o processamento de dados através da automação de atividades em navegadores web, utilizando a biblioteca [Selenium](https://www.selenium.dev). Selenium é uma ferramenta poderosa para a automação de browsers, permitindo a extração eficiente de dados de diversas fontes online. Após a coleta, o projeto focará no agrupamento e tratamento desses dados, organizando-os de maneira sistemática e coerente. 
+Este projeto visa aprimorar a coleta e o processamento de dados através da automação de atividades em navegadores web, utilizando a biblioteca [Selenium](https://www.selenium.dev). Selenium é uma ferramenta poderosa para a automação de browsers, permitindo a extração eficiente de dados de diversas fontes online. Após a coleta, o projeto focará no agrupamento e tratamento desses dados, organizando-os de maneira sistemática e coerente.
 
 Essa abordagem não só economiza tempo e recursos, eliminando a necessidade de coleta manual de dados, mas também aumenta a precisão e a confiabilidade das informações obtidas. A fase de tratamento dos dados é crucial, pois envolve limpeza, normalização e consolidação de informações de múltiplas fontes, preparando-as para análises mais aprofundadas.
 
@@ -60,7 +90,7 @@ poetry install
 Para criar e ativar um ambiente virtual de desenvolvimento, utilize o módulo [venv](https://docs.python.org/pt-br/3/library/venv.html) do Python. Este processo pode variar ligeiramente dependendo do sistema operacional que você está utilizando. Recomenda-se consultar a documentação oficial para orientações específicas caso não esteja usando um sistema GNU/Linux. Siga os comandos abaixo para configurar seu ambiente:
 
 ```bash
-python -m venv .venv  
+python -m venv .venv
 
 .venv /bin/activate
 
@@ -93,6 +123,22 @@ poetry run .\ifdata.py -c
 
 > Observação: Caso não esteja utilizando Poetry, execute *python process.py*
 
+
+## Desafios e Aprendizados
+
+* **Desafio: Construção de um Pipeline de Dados de Ponta a Ponta**
+    * **Problema:** As informações financeiras do Bacen, apesar de públicas, não são disponibilizadas através de uma API. Elas estão "presas" em um portal web que exige navegação manual e os arquivos para download estão em um formato inconsistente e "sujo". Para realizar qualquer análise séria e replicável, era necessário um sistema que superasse essas barreiras.
+    * **Solução:** Projetei e implementei um pipeline de dados em duas etapas:
+        1.  **Extração (Extract):** Um scraper automatizado com Selenium que simula a interação humana com o portal IF.data, navegando pelos menus e realizando o download sistemático de todos os relatórios necessários.
+        2.  **Transformação (Transform):** Um módulo de processamento em Python que recebe os arquivos brutos baixados, aplica as regras de limpeza para corrigir a formatação não-padrão e salva uma versão limpa e estruturada, pronta para ser carregada em ferramentas de análise.
+    * **Aprendizado:** Este projeto foi um exercício prático completo de **Engenharia de Dados (ETL - Extract, Transform, Load)**. Aprendi a decompor um problema complexo em etapas lógicas, selecionar as ferramentas adequadas para cada fase (Selenium para interação com UI, Python para manipulação de dados) e a construir um fluxo de trabalho automatizado e confiável. O resultado final não é apenas um conjunto de dados, mas um **sistema replicável que transforma uma fonte de dados manual e não confiável em um ativo de informação pronto para análise**.
+
+* **Desafio: Parsing de CSVs Não-Padronizados**
+    * **Problema:** Os arquivos CSV disponibilizados pelo Bacen não seguem o padrão convencional. Eles incluem múltiplos cabeçalhos, linhas de resumo e agrupamentos de dados dentro do mesmo arquivo, tornando a importação direta com bibliotecas padrão (como Pandas) inviável e resultando em dataframes corrompidos.
+    * **Solução:** Desenvolvi um script de processamento em Python que lê cada arquivo linha por linha. Utilizando lógica condicional, o script identifica e ignora os cabeçalhos secundários e as linhas de resumo. Ele localiza o cabeçalho principal correto e extrai apenas as linhas de dados pertencentes às instituições financeiras, reescrevendo um novo arquivo CSV limpo e bem formatado.
+    * **Aprendizado:** Este desafio aprofundou minhas habilidades em manipulação de arquivos e parsing de texto em baixo nível. Aprendi a importância de não confiar cegamente em formatos de arquivo e a desenvolver soluções robustas para lidar com dados sujos e inconsistentes, uma habilidade fundamental em qualquer projeto de engenharia ou ciência de dados.
+
+
 ## Autor
 
 Feito com :heart: por [Alexsander Lopes Camargos](https://github.com/alexcamargos) :wave: Entre em contato!
@@ -104,7 +150,7 @@ Feito com :heart: por [Alexsander Lopes Camargos](https://github.com/alexcamargo
 
 ## Copyright
 
-Copyright 2023 - 2024 by Alexsander Lopes Camargos.
+Copyright 2023 - 2025 by Alexsander Lopes Camargos.
 
 ## License
 
