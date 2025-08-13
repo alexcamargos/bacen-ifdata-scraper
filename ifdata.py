@@ -80,10 +80,10 @@ def __clean_download_directory():
 
 
 def get_arguments() -> argparse.Namespace:
-    """Argument parser.
+    """Parse command-line arguments.
 
     Returns:
-        argparse.Namespace: The parsed arguments.
+        argparse.Namespace: The command-line arguments parser.
     """
 
     # Create the parser.
