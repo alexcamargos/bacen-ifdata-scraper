@@ -20,6 +20,7 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
 - [Bacen IF.data AutoScraper \& Data Manager](#bacen-ifdata-autoscraper--data-manager)
   - [Tecnologias Utilizadas](#tecnologias-utilizadas)
   - [Funcionalidades Principais](#funcionalidades-principais)
+  - [Demonstração de Execução](#demonstração-de-execução)
   - [Motivação](#motivação)
   - [O Portal IF.Data](#o-portal-ifdata)
   - [O Banco Central do Brasil](#o-banco-central-do-brasil)
@@ -49,6 +50,15 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
 - [x] **Setup Simplificado:** Suporte para instalação de dependências e execução com e sem Poetry.
 - [x] **Processamento e Limpeza de CSVs:** Corrige arquivos CSV com formatação não-padrão, removendo cabeçalhos e informações consolidadas indesejadas.
 - [x] **Relatório de Execução:** Gera um relatório ao final da execução com o total de arquivos baixados e o tempo de execução.
+
+
+## Demonstração de Execução
+
+Veja o pipeline de automação em ação.
+
+![scraper running](assets/scraper_running.png)
+
+![Firefox Webdriver running](assets/scraper_webdriver.png)
 
 
 ## Motivação
