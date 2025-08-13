@@ -35,7 +35,7 @@ class Config(Enum):
     """Configuration settings for Bacen IF.data AutoScraper & Data Manager."""
 
     # URL of the page where the reports are located.
-    URL = 'https://www3.bcb.gov.br/ifdata/'
+    URL = 'https://www3.bcb.gov.br/ifdata/index2024.html'
     # Maximum waiting time for elements to load.
     TIMEOUT = 120
     BASE_DIRECTORY = Path.cwd()
