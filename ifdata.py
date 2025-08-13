@@ -134,11 +134,8 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
                     # Download the reports.
                     logger.info(f'Downloading report "{report.name}" from '
                                 f'{institution.name} referring to "{data}"...')
-                    logger.info(f'Downloading report "{report.name}" from '
-                                f'{institution.name} referring to "{data}"...')
                     scraper_pipeline.scraper(data, institution, report)
     except IfDataScraperException as error:
-        logger.exception(error.message)
         logger.exception(error.message)
     finally:
         # Clean up the session, closing the browser and show report.
@@ -202,35 +199,23 @@ if __name__ == '__main__':
 
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
 
-    logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
-
     # Initialize the pipeline.
     pipeline = IfDataPipeline()
 
     if args.scraper:
-        logger.info('Running only the scraper...')
-
-        logger.info('Running only the scraper...')
-
         # Run the scraper.
+        logger.info('Running only the scraper...')
         ifdata_scraper(pipeline)
     elif args.cleaner:
-        logger.info('Running only the cleaner...')
-
-        logger.info('Running only the cleaner...')
-
         # Run the cleaner.
+        logger.info('Running only the cleaner...')
         ifdata_cleaner(pipeline)
     elif args.transformer:
-        logger.info('Running the transformer...')
-
         # Run the transformer.
+        logger.info('Running the transformer...')
         ifdata_transformer(pipeline)
     else:
         # Run the scraper and cleaner.
         logger.info('Running the scraper and cleaner...')
-
-        logger.info('Running the scraper and cleaner...')
-
         ifdata_scraper(pipeline)
         ifdata_cleaner(pipeline)
