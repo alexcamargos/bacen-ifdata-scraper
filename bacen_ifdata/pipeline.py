@@ -28,12 +28,14 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from pathlib import Path
 from enum import StrEnum
 
 import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.main.cleaner import main as main_cleaner
+from bacen_ifdata.main.loader import main as main_loader
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
@@ -131,3 +133,12 @@ class IfDataPipeline():
         """
 
         main_transformer(data_frame, institution, report)
+
+    def loader(self, data_path: Path) -> None:
+        """Main process for loading the data.
+
+        Args:
+            data_path (Path): The path to the data file to be loaded.
+        """
+
+        main_loader(data_path)
