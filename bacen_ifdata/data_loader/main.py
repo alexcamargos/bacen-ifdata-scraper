@@ -37,7 +37,10 @@ from bacen_ifdata.data_loader.extractor import Extract
 class DataLoaderPipeline:
     """A pipeline for processing IF.data reports."""
 
-    def extract(self, data_path: Path):
+    def __init__(self, data_path: Path) -> None:
+        self.__data_path = data_path
+
+    def extract(self) -> None:
         """Runs the data extraction process."""
-        extractor = Extract(data_path)
+        extractor = Extract(self.__data_path)
         extractor.run()

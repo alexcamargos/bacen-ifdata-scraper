@@ -35,9 +35,9 @@ import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.main.cleaner import main as main_cleaner
-from bacen_ifdata.main.loader import main as main_loader
-from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
+from bacen_ifdata.main.scraper import main as main_scraper
+from bacen_ifdata.data_loader.main import DataLoaderPipeline
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS, ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.session import Session
@@ -141,4 +141,5 @@ class IfDataPipeline():
             data_path (Path): The path to the data file to be loaded.
         """
 
-        main_loader(data_path)
+        data_loader = DataLoaderPipeline(data_path)
+        data_loader.extract()
