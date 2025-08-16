@@ -112,6 +112,11 @@ def get_arguments() -> argparse.Namespace:
                         action='store_true',
                         help='Transform the downloaded reports.')
 
+    parser.add_argument('-l',
+                        '--loader',
+                        action='store_true',
+                        help='Load the processed reports.')
+
     return parser.parse_args()
 
 
@@ -193,6 +198,20 @@ def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
             cleaner_pipeline.cleaner(process_institution, process_report)
 
 
+def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
+    """Main function for executing the loader."""
+
+    # Define the path to load the data.
+    data_path = Cfg.PROCESSED_FILES_DIRECTORY.value
+    institution_type = 'individual_institutions'
+    report_type = 'summary'
+    data_base = '2024-06.csv'
+    file_path = data_path / institution_type / report_type / data_base
+
+    # Run the loader.
+    loader_pipeline.loader(file_path)
+
+
 if __name__ == '__main__':
     # Get the arguments.
     args = get_arguments()
@@ -214,6 +233,10 @@ if __name__ == '__main__':
         # Run the transformer.
         logger.info('Running the transformer...')
         ifdata_transformer(pipeline)
+    elif args.loader:
+        # Run the loader.
+        logger.info('Running the loader...')
+        ifdata_loader(pipeline)
     else:
         # Run the scraper and cleaner.
         logger.info('Running the scraper and cleaner...')
