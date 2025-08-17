@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 # ------------------------------------------------------------------------------
-#  Name: extractor.py
+#  Name: loader.py
 #  Version: 0.0.1
 #
 #  Summary: Bacen IF.data AutoScraper & Data Manager
@@ -18,16 +18,7 @@
 #  License: MIT
 # ------------------------------------------------------------------------------
 
-"""
-Bacen IF.data AutoScraper & Data Manager
-
-This script is designed to automate the download of reports from the Banco Central do Brasil's
-IF.data tool. It facilitates the integration with automated data analysis and visualization tools,
-ensuring easy and timely access to data.
-
-Author: Alexsander Lopes Camargos
-License: MIT
-"""
+"""Bacen IF.data AutoScraper & Data Manager"""
 
 from pathlib import Path
 from bacen_ifdata.utilities.csv_loader import load_csv_data
@@ -76,7 +67,7 @@ COLUMN_NAMES = [
 ]
 
 
-class Extract:
+class CsvDataLoader:
     """Lê um arquivo CSV do relatório do Banco Central e o carrega em um DataFrame Polars."""
 
     def __init__(self, data_path: Path):
@@ -90,7 +81,7 @@ class Extract:
                                         'sep': ";",
                                         "header": None,
                                         "names": COLUMN_NAMES
-                                    })
+        })
 
     def run(self):
         print('Loading data from:', self.__data_path.name)
