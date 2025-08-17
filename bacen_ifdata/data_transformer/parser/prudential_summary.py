@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: financial_institution.py
+#  Name: prudential_summary.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,10 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.schemas.financial_institution_model import FinancialInstitution
+from bacen_ifdata.data_transformer.schemas.prudential_summary_model import PrudentialSummaryInformation
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring, too-few-public-methods
-class FinancialInstitutionParser:
+class PrudentialSummaryInformationParser:
     def parser(self, data):
-        return FinancialInstitution(**data)
+        return PrudentialSummaryInformation(**data)

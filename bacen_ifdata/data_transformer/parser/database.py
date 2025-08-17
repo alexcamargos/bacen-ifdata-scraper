@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: consolidation.py
+#  Name: database.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,10 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.schemas.consolidation_model import ConsolidationType
+from bacen_ifdata.data_transformer.schemas.database_model import DataBase
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring, too-few-public-methods
-class ConsolidationTypeParser:
+class DataBaseParser:
     def parser(self, data):
-        return ConsolidationType(consolidation=data)
+        return DataBase(year=data[0], month=data[1])

@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: control.py
+#  Name: segment.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,10 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.schemas.control_model import ControlType
+from bacen_ifdata.data_transformer.schemas.segment_model import SegmentClassification
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring, too-few-public-methods
-class ControlTypeParser:
+class SegmentClassificationParser:
     def parser(self, data):
-        return ControlType(control=data)
+        return SegmentClassification(segment=data)

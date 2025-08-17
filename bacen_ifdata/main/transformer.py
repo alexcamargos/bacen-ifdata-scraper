@@ -32,7 +32,7 @@ import pandas as pd
 
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
-from bacen_ifdata.transformer.controller import TransformerController
+from bacen_ifdata.data_transformer.controller import TransformerController
 
 
 def main(data_frame: pd.DataFrame,

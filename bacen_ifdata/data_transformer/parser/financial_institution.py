@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: segment.py
+#  Name: financial_institution.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,10 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.schemas.segment_model import SegmentClassification
+from bacen_ifdata.data_transformer.schemas.financial_institution_model import FinancialInstitution
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring, too-few-public-methods
-class SegmentClassificationParser:
+class FinancialInstitutionParser:
     def parser(self, data):
-        return SegmentClassification(segment=data)
+        return FinancialInstitution(**data)

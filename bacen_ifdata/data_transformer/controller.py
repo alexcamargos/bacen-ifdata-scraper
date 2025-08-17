@@ -28,7 +28,7 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
+from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 
 
 # pylint: disable=too-few-public-methods, missing-function-docstring

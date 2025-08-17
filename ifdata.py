@@ -38,7 +38,7 @@ from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.transformer.schemas.columns_names.prudential_summary import (
+from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import (
     COLUMN_NAMES,
 )
 from bacen_ifdata.utilities.clean import (

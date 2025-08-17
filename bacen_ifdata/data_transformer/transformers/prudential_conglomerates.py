@@ -28,14 +28,14 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
-from bacen_ifdata.transformer.parser.bank_consolidation import BankConsolidationTypeParser
-from bacen_ifdata.transformer.parser.consolidation import ConsolidationTypeParser
-from bacen_ifdata.transformer.parser.control import ControlTypeParser
-from bacen_ifdata.transformer.parser.database import DataBaseParser
-from bacen_ifdata.transformer.parser.financial_institution import FinancialInstitutionParser
-from bacen_ifdata.transformer.parser.prudential_summary import PrudentialSummaryInformationParser
-from bacen_ifdata.transformer.parser.segment import SegmentClassificationParser
+from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
+from bacen_ifdata.data_transformer.parser.bank_consolidation import BankConsolidationTypeParser
+from bacen_ifdata.data_transformer.parser.consolidation import ConsolidationTypeParser
+from bacen_ifdata.data_transformer.parser.control import ControlTypeParser
+from bacen_ifdata.data_transformer.parser.database import DataBaseParser
+from bacen_ifdata.data_transformer.parser.financial_institution import FinancialInstitutionParser
+from bacen_ifdata.data_transformer.parser.prudential_summary import PrudentialSummaryInformationParser
+from bacen_ifdata.data_transformer.parser.segment import SegmentClassificationParser
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring

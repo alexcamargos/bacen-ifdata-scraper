@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: prudential_summary.py
+#  Name: control.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -28,10 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.transformer.schemas.prudential_summary_model import PrudentialSummaryInformation
+from bacen_ifdata.data_transformer.schemas.control_model import ControlType
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring, too-few-public-methods
-class PrudentialSummaryInformationParser:
+class ControlTypeParser:
     def parser(self, data):
-        return PrudentialSummaryInformation(**data)
+        return ControlType(control=data)
