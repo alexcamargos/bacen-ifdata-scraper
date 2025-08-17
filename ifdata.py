@@ -202,14 +202,11 @@ def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
     """Main function for executing the loader."""
 
     # Define the path to load the data.
-    data_path = Cfg.PROCESSED_FILES_DIRECTORY.value
-    institution_type = 'individual_institutions'
-    report_type = 'summary'
-    data_base = '2024-06.csv'
-    file_path = data_path / institution_type / report_type / data_base
+    loaded_institution = Institutions.INDIVIDUAL_INSTITUTIONS
+    loaded_report = REPORTS[Institutions.INDIVIDUAL_INSTITUTIONS].SUMMARY
 
     # Run the loader.
-    loader_pipeline.loader(file_path)
+    loader_pipeline.loader(loaded_institution, loaded_report)
 
 
 if __name__ == '__main__':

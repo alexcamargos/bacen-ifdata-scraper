@@ -37,7 +37,7 @@ from loguru import logger
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.main.scraper import main as main_scraper
-from bacen_ifdata.main.loader import DataLoaderPipeline
+from bacen_ifdata.main.loader import main as main_loader
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS, ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.session import Session
@@ -134,12 +134,14 @@ class IfDataPipeline():
 
         main_transformer(data_frame, institution, report)
 
-    def loader(self, data_path: Path) -> None:
+    def loader(self,
+               loaded_institution: Institutions,
+               loaded_report: ReportsPrudentialConglomerates) -> None:
         """Main process for loading the data.
 
         Args:
-            data_path (Path): The path to the data file to be loaded.
+            loaded_institution (Institutions): The institution to be loaded.
+            loaded_report (ReportsPrudentialConglomerates): The report to be loaded.
         """
 
-        data_loader = DataLoaderPipeline(data_path)
-        data_loader.perform_data_extraction()
+        main_loader(loaded_institution, loaded_report)

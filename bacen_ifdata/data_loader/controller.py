@@ -21,8 +21,8 @@
 """Bacen IF.data AutoScraper & Data Manager"""
 
 from pathlib import Path
-from bacen_ifdata.utilities.csv_loader import load_csv_data
 
+from bacen_ifdata.utilities.csv_loader import load_csv_data
 
 # Nomes das colunas definidos com base na ordem do arquivo CSV e nas descrições do PDF.
 COLUMN_NAMES = [
@@ -67,27 +67,36 @@ COLUMN_NAMES = [
 ]
 
 
-class CsvDataLoader:
-    """Lê um arquivo CSV do relatório do Banco Central e o carrega em um DataFrame Polars."""
+class LoaderController:
+    """Controller for loading data from reports.
 
-    def __init__(self, data_path: Path):
-        self.__data_path = data_path
+    This class is responsible for controlling the loading of data from reports.
+    """
+
+    def __init__(self):
         self.__data = None
 
-    def __load_data(self):
-        # Load data from the source
-        self.__data = load_csv_data(self.__data_path.as_posix(),
-                                    {
-                                        'sep': ";",
-                                        "header": None,
-                                        "names": COLUMN_NAMES
-        })
+        # CSV options for loading data.
+        self.__csv_options = {
+            'sep': ";",
+            "header": None,
+            "names": COLUMN_NAMES
+        }
 
-    def run(self):
-        print('Loading data from:', self.__data_path.name)
-        self.__load_data()
+    def __load_data(self, csv_file_path: Path):
+        """Load data from the source CSV file."""
 
+        self.__data = load_csv_data(csv_file_path.as_posix(), self.__csv_options)
+
+    def loader_sample_data(self, input_data: Path, sample_size: int = 5):
+        """Load a sample of the data."""
+
+        # Load the data from the input CSV file.
+        self.__load_data(input_data)
+
+        # Check if the data was loaded successfully.
         if self.__data is None:
             raise RuntimeError("Data loading failed: self.__data is None")
 
-        print(self.__data.sample(5))
+        # Print a sample of the loaded data.
+        print(self.__data.sample(sample_size))

@@ -29,18 +29,27 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from pathlib import Path
+from enum import StrEnum
 
-from bacen_ifdata.data_loader.loader import CsvDataLoader
+from loguru import logger
+
+from bacen_ifdata.data_loader.controller import LoaderController
+from bacen_ifdata.scraper.storage.processing import build_directory_path
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-class DataLoaderPipeline:
-    """A pipeline for processing IF.data reports."""
+def main(institution: StrEnum, report: StrEnum) -> None:
+    """Main function for the transformer."""
 
-    def __init__(self, data_path: Path) -> None:
-        self.__data_path = data_path
+    # Build the path to the input data directory.
+    input_data_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
+                                           institution.name.lower(),
+                                           report.name.lower())
+    # Create the controller object.
+    controller = LoaderController()
 
-    def perform_data_loading(self) -> None:
-        """Runs the data loading process."""
-        loader = CsvDataLoader(self.__data_path)
-        loader.run()
+    # List all CSV files in the input data directory.
+    for file in input_data_path.glob('*.csv'):
+        logger.info(f'Loading {report.name} ({file.name}) from {institution.name}.')
+        # Load and print the sample data.
+        controller.loader_sample_data(file, 3)
