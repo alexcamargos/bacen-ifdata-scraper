@@ -31,7 +31,7 @@ License: MIT
 
 from pathlib import Path
 
-from bacen_ifdata.data_loader.extractor import Extract
+from bacen_ifdata.data_loader.loader import CsvDataLoader
 
 
 class DataLoaderPipeline:
@@ -40,7 +40,7 @@ class DataLoaderPipeline:
     def __init__(self, data_path: Path) -> None:
         self.__data_path = data_path
 
-    def extract(self) -> None:
-        """Runs the data extraction process."""
-        extractor = Extract(self.__data_path)
-        extractor.run()
+    def perform_data_loading(self) -> None:
+        """Runs the data loading process."""
+        loader = CsvDataLoader(self.__data_path)
+        loader.run()
