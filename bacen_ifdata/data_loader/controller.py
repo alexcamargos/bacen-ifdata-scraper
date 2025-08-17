@@ -21,6 +21,9 @@
 """Bacen IF.data AutoScraper & Data Manager"""
 
 from pathlib import Path
+from typing import Any, Dict, Optional
+
+import pandas as pd
 
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 
@@ -74,10 +77,10 @@ class LoaderController:
     """
 
     def __init__(self):
-        self.__data = None
+        self.__data: Optional[pd.DataFrame] = None
 
         # CSV options for loading data.
-        self.__csv_options = {
+        self.__csv_options: Dict[str, Any] = {
             'sep': ";",
             "header": None,
             "names": COLUMN_NAMES
