@@ -32,7 +32,7 @@ from enum import StrEnum
 
 from loguru import logger
 
-from bacen_ifdata.data_manager.processing import normalize_csv
+from bacen_ifdata.data_cleaner.processing import normalize_csv
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory)
 from bacen_ifdata.utilities.configurations import Config as Cfg
