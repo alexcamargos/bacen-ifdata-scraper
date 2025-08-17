@@ -159,6 +159,15 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
         __clean_download_directory()
 
 
+def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
+    """Main function for executing the cleaner."""
+
+    # Run the cleaner.
+    for process_institution in Institutions:
+        for process_report in REPORTS[process_institution]:
+            cleaner_pipeline.cleaner(process_institution, process_report)
+
+
 def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     """Main function for executing the transformer."""
 
@@ -187,15 +196,6 @@ def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     transformer_pipeline.transformer(data_frame,
                                      Institutions.PRUDENTIAL_CONGLOMERATES,
                                      REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY)
-
-
-def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
-    """Main function for executing the cleaner."""
-
-    # Run the cleaner.
-    for process_institution in Institutions:
-        for process_report in REPORTS[process_institution]:
-            cleaner_pipeline.cleaner(process_institution, process_report)
 
 
 def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
