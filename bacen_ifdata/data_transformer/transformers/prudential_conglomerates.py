@@ -65,6 +65,19 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         return pd.to_numeric(series, errors='coerce')
 
+    def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Applies specific business rules to the DataFrame."""
+
+        # Capitalizes the city name
+        if 'cidade' in data_frame.columns:
+            data_frame['cidade'] = data_frame['cidade'].str.title()
+
+        # Fills null values in the segment column
+        if 'segmento' in data_frame.columns:
+            data_frame['segmento'] = data_frame['segmento'].fillna('Não informado')
+
+        return data_frame
+
     def __transform_numeric_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms numeric columns in the DataFrame to a standard numeric format."""
 
@@ -115,5 +128,8 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         data_frame = self.__transform_categorical_columns(data_frame)
         # Transforms text columns in the DataFrame to a string dtype.
         data_frame = self.__transform_text_columns(data_frame)
+
+        # Applies specific business rules to the DataFrame.
+        data_frame = self.__apply_business_rules(data_frame)
 
         return data_frame
