@@ -28,39 +28,170 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-# Definindo os nomes das colunas do DataFrame, conforme a descrição das colunas.
-COLUMN_NAMES = [
-    # Nome da instituição ou conglomerado no cadastro do Banco Central.
-    'Instituicao',
-    # Código da instituição ou conglomerado no cadastro do Banco Central.
-    'Codigo',
-    'TipoConsBancario',  # Tipo de Consolidado Bancário.
-    'Segmento',  # Segmento conforme Resolução n.º 4.553/2017.
-    # Tipo de Consolidação (I) Instituição Independente, (C) Conglomerado.
-    'TipoConsolidacao',
-    # Tipo de Controle (1) Público, (2) Privado Nacional, (3) Controle Estrangeiro.
-    'TipoControle',
-    'Cidade',  # # Cidade da sede da instituição.
-    'UF',  # Unidade da Federação onde fica a sede da instituição.
-    'DataBase',  # Data-base do relatório.
-    # Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.
-    'AtivoTotal',
-    'CarteiraCredito',  # Carteira de Crédito Classificada.
-    # Passivo Circulante e Exigível a Longo Prazo e Resultado de Exercícios Futuros.
-    'PassivoExigivel',
-    'Captacoes',  # Captações de depósitos + Obrigações por Operações Compromissadas
-    # + Recursos de Aceites Cambiais, Letras Imobiliárias e Hipotecárias,
-    # Debêntures e Similares + Obrigações por Empréstimos e Repasses.
-    'PatrimonioLiquido',  # Patrimônio Líquido + Contas de Resultado Credoras
-    # + Contas de Resultado Devedoras.
-    # Lucro Líquido, excluindo despesas de juros sobre capital.
-    'LucroLiquido',
-    'PatrimonioReferencia',  # Montante de capital regulatório formado pela soma
-    # das parcelas de Capital Nível I e Capital Nível II.
-    # Relação entre o Patrimônio de Referência e Ativos ponderados pelo risco.
-    'IndiceBasileia',
-    # Relação entre Ativo Permanente e Patrimônio de Referência.
-    'IndiceImobilizacao',
-    'NumAgencias',  # Número de agências incluídas as sedes
-    'NumPostosAtendimento'  # Número de postos de atendimento da instituição ou conglomerado
-]
+
+class PrudentialSummarySchema:
+    """
+    Define e categoriza os nomes das colunas para os relatórios de
+    conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
+    """
+
+    SCHEMA_DEFINITION = {
+        'instituicao': {
+            'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
+            'type': 'text'
+        },
+        'codigo': {
+            'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
+            'type': 'numeric'
+        },
+        'tcb': {
+            'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
+            'type': 'categorical',
+            'mapping': {
+                'b1': ('Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
+                       'ou caixas econômicas e Conglomerado composto de pelo menos uma instituição do tipo Banco '
+                       'Comercial, Banco Múltiplo com Carteira Comercial ou caixas econômicas.'),
+                'b2': ('Instituição individual do tipo Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio '
+                       'ou Banco de Investimento e Conglomerado composto de pelo menos uma instituição do tipo '
+                       'Banco Múltiplo sem Carteira Comercial ou Banco de Investimento, mas sem conter instituições '
+                       'do tipo Banco Comercial e Banco Múltiplo com Carteira Comercial.'),
+                'b3s': 'Cooperativa de Crédito Singular.',
+                'b3c': 'Central e Confederação de Cooperativas de Crédito.',
+                'b4': 'Banco de Desenvolvimento',
+                'n1': 'Instituição não bancária atuante no mercado de crédito.',
+                'n2': 'Instituição não bancária atuante no mercado de capitais.',
+                'n4': 'Instituições de pagamento.'
+            }
+        },
+        'segmento': {
+            'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
+            'type': 'categorical'
+        },
+        'td': {
+            'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
+            'type': 'categorical',
+            'mapping': {
+                'i': 'Instituição Independente',
+                'c': 'Conglomerado',
+            }
+        },
+        'tc': {
+            'description': 'Tipo de Controle.',
+            'type': 'categorical',
+            'mapping': {
+                '1': 'Público',
+                '2': 'Privado Nacional',
+                '3': 'Controle Estrangeiro'
+            }
+        },
+        'cidade': {
+            'description': 'Cidade da sede da instituição.',
+            'type': 'text'
+        },
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da instituição.',
+            'type': 'categorical'
+        },
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date'
+        },
+        'ativo_total': {
+            'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
+            'type': 'numeric'
+        },
+        'carteira_de_credito_classificada': {
+            'description': 'Carteira de Crédito Classificada.',
+            'type': 'numeric'
+        },
+        'passivo_circulante_e_exigivel_a_longo_prazo': {
+            'description': 'Passivo Circulante e Exigível a Longo Prazo + Resultados de Exercícios Futuros.',
+            'type': 'numeric'
+        },
+        'captacoes': {
+            'description': ('Depósitos + Obrigações por Operações Compromissadas + Recursos de Aceites Cambiais, '
+                            'Letras Imobiliárias e Hipotecárias, Debêntures e Similares + Obrigações por Empréstimos e Repasses.'),
+            'type': 'numeric'
+        },
+        'patrimonio_liquido': {
+            'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
+            'type': 'numeric'
+        },
+        'lucro_liquido': {
+            'description': ('Lucro Líquido, excluindo despesas de juros sobre capital '
+                            '(Contas de Resultado Credoras + Contas de Resultado Devedoras - '
+                            'Despesas de Juros sobre o Capital Social de Cooperativas).'),
+            'type': 'numeric'
+        },
+        'patrimonio_de_referencia': {
+            'description': 'Montante de capital regulatório formado pela soma das parcelas de Capital Nível I e Capital Nível II.',
+            'type': 'numeric'
+        },
+        'indice_de_basileia': {
+            'description': 'Relação entre o Patrimônio de Referência e Ativos ponderados pelo risco.',
+            'type': 'numeric'
+        },
+        'indice_de_imobilizacao': {
+            'description': 'Relação entre Ativo Permanente e Patrimônio de Referência.',
+            'type': 'numeric'
+        },
+        'numero_de_agencias': {
+            'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',
+            'type': 'numeric'
+        },
+        'numero_de_postos_de_atendimento': {
+            'description': 'Número de postos de atendimento da instituição ou do conglomerado.',
+            'type': 'numeric'
+        }
+    }
+
+    def __get_columns_by_type(self, data_type: str) -> list[str]:
+        """Auxiliary function to filter columns by type."""
+
+        return [col for col, meta in self.SCHEMA_DEFINITION.items() if meta['type'] == data_type]
+
+    @property
+    def column_names(self) -> list[str]:
+        """Return all column names defined in the schema."""
+
+        return list(self.SCHEMA_DEFINITION.keys())
+
+    @property
+    def numeric_columns(self) -> list[str]:
+        """Return dynamically the numeric columns."""
+
+        return self.__get_columns_by_type('numeric')
+
+    @property
+    def date_columns(self) -> list[str]:
+        """Return dynamically the date columns."""
+
+        return self.__get_columns_by_type('date')
+
+    @property
+    def categorical_columns(self) -> list[str]:
+        """Return dynamically the categorical columns."""
+
+        return self.__get_columns_by_type('categorical')
+
+    @property
+    def text_columns(self) -> list[str]:
+        """Return dynamically the text columns."""
+
+        return self.__get_columns_by_type('text')
+
+    def get_description(self, column_name: str) -> str | None:
+        """Return the description of a specific column."""
+
+        return self.SCHEMA_DEFINITION.get(column_name, {}).get('description')
+
+    def get_mapping(self, column_name: str) -> dict | None:
+        """Return the mapping dictionary for a categorical column if it exists."""
+
+        return self.SCHEMA_DEFINITION.get(column_name, {}).get('mapping')
+
+
+# Instância única para ser importada em outras partes do projeto
+PRUDENTIAL_SUMMARY_SCHEMA = PrudentialSummarySchema()
+
+__all__ = ['PRUDENTIAL_SUMMARY_SCHEMA']
