@@ -65,30 +65,55 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         return pd.to_numeric(series, errors='coerce')
 
+    def __transform_numeric_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms numeric columns in the DataFrame to a standard numeric format."""
+
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.numeric_columns:
+            if col in data_frame.columns:
+                data_frame[col] = self.__clean_and_convert_numerical_data(data_frame[col])
+
+        return data_frame
+
+    def __transform_date_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms date columns in the DataFrame to a standard datetime format."""
+
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.date_columns:
+            if col in data_frame.columns:
+                data_frame[col] = pd.to_datetime(data_frame[col], format='%Y-%m', errors='coerce')
+
+        return data_frame
+
+    def __transform_categorical_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms categorical columns in the DataFrame to a category dtype."""
+
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.categorical_columns:
+            if col in data_frame.columns:
+                data_frame[col] = data_frame[col].astype('category')
+
+        return data_frame
+
+    def __transform_text_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms text columns in the DataFrame to a string dtype."""
+
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.text_columns:
+            if col in data_frame.columns:
+                data_frame[col] = data_frame[col].astype('string').str.strip()
+
+        return data_frame
+
     def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the input DataFrame into a structured format for prudential conglomerates."""
 
         # Create a backup copy of the original DataFrame.
         backup_data_frame = data_frame.copy()
 
-        # Cleaning and converting numerical data.
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.numeric_columns:
-            if col in data_frame.columns:
-                data_frame[col] = self.__clean_and_convert_numerical_data(data_frame[col])
-
-        # Cleaning and converting date data.
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.date_columns:
-            if col in data_frame.columns:
-                data_frame[col] = pd.to_datetime(data_frame[col], format='%Y-%m', errors='coerce')
-
-        # Cleaning and converting categorical data.
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.categorical_columns:
-            if col in data_frame.columns:
-                data_frame[col] = data_frame[col].astype('category')
-
-        # Cleaning and converting text data.
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.text_columns:
-            if col in data_frame.columns:
-                data_frame[col] = data_frame[col].astype('string').str.strip()
+        # Transforms numeric columns in the DataFrame to a standard numeric format.
+        data_frame = self.__transform_numeric_columns(data_frame)
+        # Transforms date columns in the DataFrame to a standard datetime format.
+        data_frame = self.__transform_date_columns(data_frame)
+        # Transforms categorical columns in the DataFrame to a category dtype.
+        data_frame = self.__transform_categorical_columns(data_frame)
+        # Transforms text columns in the DataFrame to a string dtype.
+        data_frame = self.__transform_text_columns(data_frame)
 
         return data_frame
