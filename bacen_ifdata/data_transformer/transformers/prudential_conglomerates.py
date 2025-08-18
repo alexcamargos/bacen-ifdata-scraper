@@ -42,12 +42,23 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     tailored for prudential conglomerates.
     """
 
+    def __normalize_percentage_to_float(self, series: pd.Series) -> pd.Series:
+        """Removes the '%' sign from a pandas Series and converts it to float."""
+
+        series = series.str.replace('%', '', regex=False)
+
+        return pd.to_numeric(series, errors='coerce') / 100
+
     def __normalize_and_parse_numeric_series(self, series: pd.Series) -> pd.Series:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
         # Remove non-numeric characters and convert to float.
         if pd.api.types.is_string_dtype(series):
             series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+
+        # Remove the '%' sign for specific columns.
+        if series.name in ['indice_de_basileia', 'indice_de_imobilizacao']:
+            series = self.__normalize_percentage_to_float(series)
 
         return pd.to_numeric(series, errors='coerce')
 
