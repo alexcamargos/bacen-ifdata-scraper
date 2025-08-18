@@ -41,19 +41,6 @@ class TransformerController:
         # Initializing the PrudentialConglomeratesTransformer interface.
         self.prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
 
-    @property
-    def __prudential_conglomerates(self) -> list:
-        """List of transformations for prudential conglomerates."""
-
-        return [self.prudential_conglomerates_transformer.transform_financial_institution,
-                self.prudential_conglomerates_transformer.transform_data_base,
-                self.prudential_conglomerates_transformer.transform_control_type,
-                self.prudential_conglomerates_transformer.transform_bank_consolidation_type,
-                self.prudential_conglomerates_transformer.transform_consolidation_type,
-                self.prudential_conglomerates_transformer.transform_prudential_summary_information,
-                self.prudential_conglomerates_transformer.transform_segment_classification
-                ]
-
     def transform_prudential_conglomerates(self, data):
         """Transforms data from prudential conglomerates reports.
 
@@ -63,6 +50,4 @@ class TransformerController:
             data (DataFrame): The data to be transformed.
         """
 
-        for _, row in data.iterrows():
-            for transform in self.__prudential_conglomerates:
-                print(transform(row))
+        return self.prudential_conglomerates_transformer.transform(data)
