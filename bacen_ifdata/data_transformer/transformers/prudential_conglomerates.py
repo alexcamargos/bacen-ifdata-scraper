@@ -71,6 +71,8 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Applies specific business rules to the DataFrame."""
 
+        #TODO: Avaliar a possibilidade de converter os valores numéricos para milhões.
+
         # Capitalizes the city name
         if 'cidade' in data_frame.columns:
             data_frame['cidade'] = data_frame['cidade'].str.title()
@@ -95,7 +97,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         for col in PRUDENTIAL_SUMMARY_SCHEMA.date_columns:
             if col in data_frame.columns:
-                data_frame[col] = pd.to_datetime(data_frame[col], format='%Y-%m', errors='coerce')
+                data_frame[col] = pd.to_datetime(data_frame[col], format='%m/%Y', errors='coerce')
 
         return data_frame
 
