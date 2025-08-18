@@ -29,10 +29,11 @@ License: MIT
 """
 
 import pandas as pd
+from loguru import logger
 
+from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
-from bacen_ifdata.data_transformer.controller import TransformerController
 
 
 def main(data_frame: pd.DataFrame,
@@ -53,4 +54,10 @@ def main(data_frame: pd.DataFrame,
     # Run the transformation process.
     if institution.value == Institutions.PRUDENTIAL_CONGLOMERATES:
         if report.value == ReportsPrudentialConglomerates.SUMMARY:
-            controller.transform_prudential_conglomerates(data_frame)
+            logger.info(f'Transforming {report.name} from {institution.name}.')
+
+            transformed_data = controller.transform_prudential_conglomerates(data_frame)
+
+            # Logging a sample of the transformed data. Only in development.
+            logger.info(transformed_data.sample(3))
+            transformed_data.to_csv("prudential_conglomerates_transformed.csv")
