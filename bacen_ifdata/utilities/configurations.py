@@ -42,6 +42,7 @@ class Config(Enum):
     DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'data' / 'raw'
     DOWNLOAD_FILE_NAME = 'dados.csv'
     PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'data' / 'processed'
+    TRANSFORMED_FILES_DIRECTORY = BASE_DIRECTORY / 'data' / 'transformed'
 
 
 __all__ = ['Config']
