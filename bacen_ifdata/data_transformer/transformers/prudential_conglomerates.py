@@ -27,18 +27,13 @@ ensuring easy and timely access to data.
 Author: Alexsander Lopes Camargos
 License: MIT
 """
+
 import pandas as pd
 
-from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
-from bacen_ifdata.data_transformer.parser.bank_consolidation import BankConsolidationTypeParser
-from bacen_ifdata.data_transformer.parser.consolidation import ConsolidationTypeParser
-from bacen_ifdata.data_transformer.parser.control import ControlTypeParser
-from bacen_ifdata.data_transformer.parser.database import DataBaseParser
-from bacen_ifdata.data_transformer.parser.financial_institution import FinancialInstitutionParser
-from bacen_ifdata.data_transformer.parser.prudential_summary import PrudentialSummaryInformationParser
-from bacen_ifdata.data_transformer.parser.segment import SegmentClassificationParser
-
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import PRUDENTIAL_SUMMARY_SCHEMA
+from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import \
+    PrudentialConglomeratesInterface
+from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import \
+    PRUDENTIAL_SUMMARY_SCHEMA
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
@@ -46,15 +41,6 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     """Converts raw input data into well-organized, structured information
     tailored for prudential conglomerates.
     """
-
-    def __init__(self):
-        self.bank_consolidation_type_parser = BankConsolidationTypeParser()
-        self.consolidation_type_parser = ConsolidationTypeParser()
-        self.control_type_parser = ControlTypeParser()
-        self.database_parser = DataBaseParser()
-        self.financial_institution_parser = FinancialInstitutionParser()
-        self.prudential_summary_information_parser = PrudentialSummaryInformationParser()
-        self.segment_classification_parser = SegmentClassificationParser()
 
     def __normalize_and_parse_numeric_series(self, series: pd.Series) -> pd.Series:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
@@ -120,6 +106,9 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         # Create a backup copy of the original DataFrame.
         backup_data_frame = data_frame.copy()
 
+        # Applies specific business rules to the DataFrame.
+        data_frame = self.__apply_business_rules(data_frame)
+
         # Transforms numeric columns in the DataFrame to a standard numeric format.
         data_frame = self.__transform_numeric_columns(data_frame)
         # Transforms date columns in the DataFrame to a standard datetime format.
@@ -128,8 +117,5 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         data_frame = self.__transform_categorical_columns(data_frame)
         # Transforms text columns in the DataFrame to a string dtype.
         data_frame = self.__transform_text_columns(data_frame)
-
-        # Applies specific business rules to the DataFrame.
-        data_frame = self.__apply_business_rules(data_frame)
 
         return data_frame
