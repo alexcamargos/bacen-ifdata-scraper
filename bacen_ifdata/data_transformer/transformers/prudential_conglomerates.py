@@ -27,6 +27,7 @@ ensuring easy and timely access to data.
 Author: Alexsander Lopes Camargos
 License: MIT
 """
+import pandas as pd
 
 from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
 from bacen_ifdata.data_transformer.parser.bank_consolidation import BankConsolidationTypeParser
@@ -37,9 +38,15 @@ from bacen_ifdata.data_transformer.parser.financial_institution import Financial
 from bacen_ifdata.data_transformer.parser.prudential_summary import PrudentialSummaryInformationParser
 from bacen_ifdata.data_transformer.parser.segment import SegmentClassificationParser
 
+from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import PRUDENTIAL_SUMMARY_SCHEMA
+
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
 class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
+    """Converts raw input data into well-organized, structured information
+    tailored for prudential conglomerates.
+    """
+
     def __init__(self):
         self.bank_consolidation_type_parser = BankConsolidationTypeParser()
         self.consolidation_type_parser = ConsolidationTypeParser()
@@ -49,35 +56,39 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         self.prudential_summary_information_parser = PrudentialSummaryInformationParser()
         self.segment_classification_parser = SegmentClassificationParser()
 
-    def transform_bank_consolidation_type(self, data):
-        consolidation_type = data['TipoConsBancario']
+    def __clean_and_convert_numerical_data(self, series: pd.Series) -> pd.Series:
+        """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
-        return self.bank_consolidation_type_parser.parser(consolidation_type)
+        # Remove non-numeric characters and convert to float.
+        if pd.api.types.is_string_dtype(series):
+            series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
 
-    def transform_consolidation_type(self, data):
-        consolidation_type = data['TipoConsolidacao']
+        return pd.to_numeric(series, errors='coerce')
 
-        return self.consolidation_type_parser.parser(consolidation_type)
+    def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the input DataFrame into a structured format for prudential conglomerates."""
 
-    def transform_control_type(self, data):
-        control_type = data['TipoControle']
+        # Create a backup copy of the original DataFrame.
+        backup_data_frame = data_frame.copy()
 
-        return self.control_type_parser.parser(control_type)
+        # Cleaning and converting numerical data.
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.numeric_columns:
+            if col in data_frame.columns:
+                data_frame[col] = self.__clean_and_convert_numerical_data(data_frame[col])
 
-    def transform_data_base(self, data):
-        database = data['DataBase'].split('/')
+        # Cleaning and converting date data.
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.date_columns:
+            if col in data_frame.columns:
+                data_frame[col] = pd.to_datetime(data_frame[col], format='%Y-%m', errors='coerce')
 
-        return self.database_parser.parser(database)
+        # Cleaning and converting categorical data.
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.categorical_columns:
+            if col in data_frame.columns:
+                data_frame[col] = data_frame[col].astype('category')
 
-    def transform_financial_institution(self, data):
+        # Cleaning and converting text data.
+        for col in PRUDENTIAL_SUMMARY_SCHEMA.text_columns:
+            if col in data_frame.columns:
+                data_frame[col] = data_frame[col].astype('string').str.strip()
 
-        return self.financial_institution_parser.parser(data)
-
-    def transform_prudential_summary_information(self, data):
-
-        return self.prudential_summary_information_parser.parser(data)
-
-    def transform_segment_classification(self, data):
-        segment = data['Segmento']
-
-        return self.segment_classification_parser.parser(segment)
+        return data_frame

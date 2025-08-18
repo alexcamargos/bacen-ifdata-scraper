@@ -30,35 +30,13 @@ License: MIT
 
 from abc import ABC, abstractmethod
 
+import pandas as pd
+
 
 # pylint: disable=too-few-public-methods, missing-function-docstring
 class PrudentialConglomeratesInterface(ABC):
     """Represents the interface for the PrudentialConglomeratesTransformer class."""
 
     @abstractmethod
-    def transform_bank_consolidation_type(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_consolidation_type(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_control_type(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_data_base(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_financial_institution(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_prudential_summary_information(self, data):
-        raise NotImplementedError("You should implement this method.")
-
-    @abstractmethod
-    def transform_segment_classification(self, data):
+    def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         raise NotImplementedError("You should implement this method.")
