@@ -82,7 +82,8 @@ class TransformerController:
         # Load the data.
         data = self.__load_data(file_path, options)
 
-        # Create the region column based on the state column.
-        data['regiao'] = data['uf'].map(REGION)
+        # Create the region column based on the state column and insert it after the "uf" column.
+        uf_column_index = data.columns.get_loc('uf') + 1
+        data.insert(uf_column_index, 'regiao', data['uf'].map(REGION))
 
         return self.prudential_conglomerates_transformer.transform(data)
