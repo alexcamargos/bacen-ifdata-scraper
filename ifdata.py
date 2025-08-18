@@ -173,15 +173,14 @@ def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     data_path = Cfg.PROCESSED_FILES_DIRECTORY.value
     institution_type = 'prudential_conglomerates'
     report_type = 'summary'
-    data_base = '2024-06.csv'
+    data_base = '2024-12.csv'
     file_path = f'{data_path}\\{institution_type}\\{report_type}\\{data_base}'
 
     # Configurations for correctly loading the data.
     options = {
         'sep': ';',
         'names': PRUDENTIAL_SUMMARY_SCHEMA.column_names,
-        'dtype': {'NumAgencias': object,
-                  'NumPostosAtendimento': object}
+        'dtype': str
     }
     # Load the data.
     data_frame = load_csv_data(file_path, options)

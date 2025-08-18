@@ -58,7 +58,13 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Remove the '%' sign for specific columns.
         if series.name in ['indice_de_basileia', 'indice_de_imobilizacao']:
-            series = self.__normalize_percentage_to_float(series)
+            return self.__normalize_percentage_to_float(series)
+
+        # Ensure the value is an integer for specific columns.
+        if series.name in ['numero_de_agencias', 'numero_de_postos_de_atendimento']:
+            numeric_series = pd.to_numeric(series, errors='coerce')
+            # Using 'Int64' to allow for missing values.
+            return numeric_series.round().astype('Int64')
 
         return pd.to_numeric(series, errors='coerce')
 
