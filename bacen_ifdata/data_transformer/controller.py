@@ -32,8 +32,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_conglomerate_summary import \
-    PRUDENTIAL_SUMMARY_SCHEMA
+from bacen_ifdata.data_transformer.schemas import PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import \
     PrudentialConglomeratesTransformer
 from bacen_ifdata.utilities.csv_loader import load_csv_data
@@ -75,7 +74,7 @@ class TransformerController:
         # Configurations for correctly loading the data from prudential conglomerates CSV file.
         options = {
             'sep': ';',
-            'names': PRUDENTIAL_SUMMARY_SCHEMA.column_names,
+            'names': PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.column_names,
             'dtype': str
         }
 

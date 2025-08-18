@@ -32,8 +32,7 @@ import pandas as pd
 
 from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import \
     PrudentialConglomeratesInterface
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_conglomerate_summary import \
-    PRUDENTIAL_SUMMARY_SCHEMA
+from bacen_ifdata.data_transformer.schemas import PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
@@ -54,7 +53,8 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Remove non-numeric characters and convert to float.
         if pd.api.types.is_string_dtype(series):
-            series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+            series = series.str.replace(
+                '.', '', regex=False).str.replace(',', '.', regex=False)
 
         # Remove the '%' sign for specific columns.
         if series.name in ['indice_de_basileia', 'indice_de_imobilizacao']:
@@ -71,7 +71,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Applies specific business rules to the DataFrame."""
 
-        #TODO: Avaliar a possibilidade de converter os valores numéricos para milhões.
+        # TODO: Avaliar a possibilidade de converter os valores numéricos para milhões.
 
         # Capitalizes the city name
         if 'cidade' in data_frame.columns:
@@ -79,32 +79,35 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Fills null values in the segment column
         if 'segmento' in data_frame.columns:
-            data_frame['segmento'] = data_frame['segmento'].fillna('Não informado')
+            data_frame['segmento'] = data_frame['segmento'].fillna(
+                'Não informado')
 
         return data_frame
 
     def __transform_numeric_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms numeric columns in the DataFrame to a standard numeric format."""
 
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.numeric_columns:
+        for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.numeric_columns:
             if col in data_frame.columns:
-                data_frame[col] = self.__normalize_and_parse_numeric_series(data_frame[col])
+                data_frame[col] = self.__normalize_and_parse_numeric_series(
+                    data_frame[col])
 
         return data_frame
 
     def __transform_date_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms date columns in the DataFrame to a standard datetime format."""
 
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.date_columns:
+        for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.date_columns:
             if col in data_frame.columns:
-                data_frame[col] = pd.to_datetime(data_frame[col], format='%m/%Y', errors='coerce')
+                data_frame[col] = pd.to_datetime(
+                    data_frame[col], format='%m/%Y', errors='coerce')
 
         return data_frame
 
     def __transform_categorical_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms categorical columns in the DataFrame to a category dtype."""
 
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.categorical_columns:
+        for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.categorical_columns:
             if col in data_frame.columns:
                 data_frame[col] = data_frame[col].astype('category')
 
@@ -113,7 +116,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     def __transform_text_columns(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms text columns in the DataFrame to a string dtype."""
 
-        for col in PRUDENTIAL_SUMMARY_SCHEMA.text_columns:
+        for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.text_columns:
             if col in data_frame.columns:
                 data_frame[col] = data_frame[col].astype('string').str.strip()
 

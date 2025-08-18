@@ -27,3 +27,10 @@ ensuring easy and timely access to data.
 Author: Alexsander Lopes Camargos
 License: MIT
 """
+
+import bacen_ifdata.data_transformer.schemas.prudential_conglomerate_summary as prudential_conglomerate_summary
+
+# Instance a schema for report summary of prudential conglomerate.
+PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = prudential_conglomerate_summary.PrudentialConglomerateSummarySchema()
+
+__all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA']

@@ -29,7 +29,7 @@ License: MIT
 """
 
 
-class PrudentialSummarySchema:
+class PrudentialConglomerateSummarySchema:
     """
     Define e categoriza os nomes das colunas para os relatórios de
     conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
@@ -189,9 +189,3 @@ class PrudentialSummarySchema:
         """Return the mapping dictionary for a categorical column if it exists."""
 
         return self.SCHEMA_DEFINITION.get(column_name, {}).get('mapping')
-
-
-# Instância única para ser importada em outras partes do projeto
-PRUDENTIAL_SUMMARY_SCHEMA = PrudentialSummarySchema()
-
-__all__ = ['PRUDENTIAL_SUMMARY_SCHEMA']
