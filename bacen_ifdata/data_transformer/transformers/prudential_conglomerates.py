@@ -56,7 +56,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         self.prudential_summary_information_parser = PrudentialSummaryInformationParser()
         self.segment_classification_parser = SegmentClassificationParser()
 
-    def __clean_and_convert_numerical_data(self, series: pd.Series) -> pd.Series:
+    def __normalize_and_parse_numeric_series(self, series: pd.Series) -> pd.Series:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
         # Remove non-numeric characters and convert to float.
@@ -70,7 +70,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         for col in PRUDENTIAL_SUMMARY_SCHEMA.numeric_columns:
             if col in data_frame.columns:
-                data_frame[col] = self.__clean_and_convert_numerical_data(data_frame[col])
+                data_frame[col] = self.__normalize_and_parse_numeric_series(data_frame[col])
 
         return data_frame
 
