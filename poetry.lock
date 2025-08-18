@@ -524,6 +524,18 @@ files = [
 traitlets = "*"
 
 [[package]]
+name = "mypy-extensions"
+version = "1.1.0"
+description = "Type system extensions for programs checked with the mypy type checker."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "mypy_extensions-1.1.0-py3-none-any.whl", hash = "sha256:1be4cccdb0f2482337c4743e60421de3a356cd97508abadd57d47403e94f5505"},
+    {file = "mypy_extensions-1.1.0.tar.gz", hash = "sha256:52e68efc3284861e772bbcd66823fde5ae21fd2fdb51c62a211403730b916558"},
+]
+
+[[package]]
 name = "nest-asyncio"
 version = "1.6.0"
 description = "Patch asyncio to allow nested event loops"
@@ -640,7 +652,7 @@ version = "25.0"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
     {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
@@ -728,6 +740,42 @@ spss = ["pyreadstat (>=1.2.0)"]
 sql-other = ["SQLAlchemy (>=2.0.0)", "adbc-driver-postgresql (>=0.8.0)", "adbc-driver-sqlite (>=0.8.0)"]
 test = ["hypothesis (>=6.46.1)", "pytest (>=7.3.2)", "pytest-xdist (>=2.2.0)"]
 xml = ["lxml (>=4.9.2)"]
+
+[[package]]
+name = "pandera"
+version = "0.26.0"
+description = "A light-weight and flexible data validation and testing tool for statistical data objects."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pandera-0.26.0-py3-none-any.whl", hash = "sha256:85e4ab058e8e6c1f13f364450e080fcb52c8320bb40ca952342ac8709d1a7a4e"},
+    {file = "pandera-0.26.0.tar.gz", hash = "sha256:37dbca1e53d12f70e576c45d886a31e454b48990c40d92c3466c26d28141b07b"},
+]
+
+[package.dependencies]
+packaging = ">=20.0"
+pydantic = "*"
+typeguard = "*"
+typing_extensions = "*"
+typing_inspect = ">=0.6.0"
+
+[package.extras]
+all = ["black", "dask[dataframe]", "distributed", "fastapi", "frictionless (<=4.40.8)", "geopandas (<1.1.0)", "hypothesis (>=6.92.7)", "ibis-framework (>=9.0.0)", "modin", "pandas-stubs", "polars (>=0.20.0)", "pyspark[connect] (>=3.2.0,<4.0.0)", "pyyaml (>=5.1)", "ray", "scipy", "shapely"]
+dask = ["dask[dataframe]", "distributed"]
+fastapi = ["fastapi"]
+geopandas = ["geopandas (<1.1.0)", "shapely"]
+hypotheses = ["scipy"]
+ibis = ["ibis-framework (>=9.0.0)"]
+io = ["black", "frictionless (<=4.40.8)", "pyyaml (>=5.1)"]
+modin = ["dask[dataframe]", "distributed", "modin", "ray"]
+modin-dask = ["dask[dataframe]", "distributed", "modin"]
+modin-ray = ["modin", "ray"]
+mypy = ["pandas-stubs"]
+pandas = ["numpy (>=1.24.4)", "pandas (>=2.1.1)"]
+polars = ["polars (>=0.20.0)"]
+pyspark = ["pyspark[connect] (>=3.2.0,<4.0.0)"]
+strategies = ["hypothesis (>=6.92.7)"]
 
 [[package]]
 name = "parso"
@@ -1535,6 +1583,21 @@ trio = ">=0.11"
 wsproto = ">=0.14"
 
 [[package]]
+name = "typeguard"
+version = "4.4.4"
+description = "Run-time type checker for Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "typeguard-4.4.4-py3-none-any.whl", hash = "sha256:b5f562281b6bfa1f5492470464730ef001646128b180769880468bd84b68b09e"},
+    {file = "typeguard-4.4.4.tar.gz", hash = "sha256:3a7fd2dffb705d4d0efaed4306a704c89b9dee850b688f060a8b1615a79e5f74"},
+]
+
+[package.dependencies]
+typing_extensions = ">=4.14.0"
+
+[[package]]
 name = "typing-extensions"
 version = "4.14.1"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -1545,6 +1608,22 @@ files = [
     {file = "typing_extensions-4.14.1-py3-none-any.whl", hash = "sha256:d1e1e3b58374dc93031d6eda2420a48ea44a36c2b4766a4fdeb3710755731d76"},
     {file = "typing_extensions-4.14.1.tar.gz", hash = "sha256:38b39f4aeeab64884ce9f74c94263ef78f3c22467c8724005483154c26648d36"},
 ]
+
+[[package]]
+name = "typing-inspect"
+version = "0.9.0"
+description = "Runtime inspection utilities for typing module."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "typing_inspect-0.9.0-py3-none-any.whl", hash = "sha256:9ee6fc59062311ef8547596ab6b955e1b8aa46242d854bfc78f4f6b0eff35f9f"},
+    {file = "typing_inspect-0.9.0.tar.gz", hash = "sha256:b23fc42ff6f6ef6954e4852c1fb512cdd18dbea03134f91f856a95ccc9461f78"},
+]
+
+[package.dependencies]
+mypy-extensions = ">=0.3.0"
+typing-extensions = ">=3.7.4"
 
 [[package]]
 name = "typing-inspection"
@@ -1657,4 +1736,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "3ebd7be2e9218970bd677db45ccf5ba84033215d56082fd108ef3206cdfd09c2"
+content-hash = "39b32b623786016b733070e3ba1e8ac5b6d34d18207bb493e13d38f97faf05f5"
