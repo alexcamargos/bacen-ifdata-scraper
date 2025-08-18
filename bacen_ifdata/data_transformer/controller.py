@@ -32,7 +32,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import \
+from bacen_ifdata.data_transformer.schemas.columns_names.prudential_conglomerate_summary import \
     PRUDENTIAL_SUMMARY_SCHEMA
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import \
     PrudentialConglomeratesTransformer

@@ -32,7 +32,7 @@ import pandas as pd
 
 from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import \
     PrudentialConglomeratesInterface
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import \
+from bacen_ifdata.data_transformer.schemas.columns_names.prudential_conglomerate_summary import \
     PRUDENTIAL_SUMMARY_SCHEMA
 
 
