@@ -38,14 +38,9 @@ from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.data_transformer.schemas.columns_names.prudential_summary import PRUDENTIAL_SUMMARY_SCHEMA
-from bacen_ifdata.utilities.clean import (
-    clean_download_base_directory,
-    clean_empty_csv_files,
-)
+from bacen_ifdata.utilities.clean import (clean_download_base_directory,
+                                          clean_empty_csv_files)
 from bacen_ifdata.utilities.configurations import Config as Cfg
-from bacen_ifdata.utilities.csv_loader import load_csv_data
-from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -169,29 +164,8 @@ def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
 def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     """Main function for executing the transformer."""
 
-    # Define the path to load the data.
-    data_path = Cfg.PROCESSED_FILES_DIRECTORY.value
-    institution_type = 'prudential_conglomerates'
-    report_type = 'summary'
-    data_base = '2024-12.csv'
-    file_path = f'{data_path}\\{institution_type}\\{report_type}\\{data_base}'
-
-    # Configurations for correctly loading the data.
-    options = {
-        'sep': ';',
-        'names': PRUDENTIAL_SUMMARY_SCHEMA.column_names,
-        'dtype': str
-    }
-    # Load the data.
-    data_frame = load_csv_data(file_path, options)
-
-    # Create the region column based on the state column.
-    position_state = data_frame.columns.get_loc('uf')
-    data_frame.insert(position_state, 'regiao', data_frame['uf'].map(REGION))
-
     # Run the transformer.
-    transformer_pipeline.transformer(data_frame,
-                                     Institutions.PRUDENTIAL_CONGLOMERATES,
+    transformer_pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES,
                                      REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY)
 
 

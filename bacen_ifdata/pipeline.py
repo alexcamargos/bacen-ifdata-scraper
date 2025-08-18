@@ -28,20 +28,21 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from pathlib import Path
 from enum import StrEnum
 
 import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.main.cleaner import main as main_cleaner
-from bacen_ifdata.main.transformer import main as main_transformer
-from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.loader import main as main_loader
+from bacen_ifdata.main.scraper import main as main_scraper
+from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import REPORTS, ReportsPrudentialConglomerates
+from bacen_ifdata.scraper.reports import (REPORTS,
+                                          ReportsPrudentialConglomerates)
 from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.utils import initialize_webdriver, validate_report_selection
+from bacen_ifdata.scraper.utils import (initialize_webdriver,
+                                        validate_report_selection)
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -120,10 +121,7 @@ class IfDataPipeline():
 
         main_cleaner(process_institution, process_report)
 
-    def transformer(self,
-                    data_frame: pd.DataFrame,
-                    institution: Institutions,
-                    report: ReportsPrudentialConglomerates) -> None:
+    def transformer(self, institution: Institutions, report: StrEnum) -> None:
         """Main process for transforming the data.
 
         Args:
@@ -132,7 +130,7 @@ class IfDataPipeline():
             report (Reports): The report to be processed.
         """
 
-        main_transformer(data_frame, institution, report)
+        main_transformer(institution, report)
 
     def loader(self,
                loaded_institution: Institutions,

@@ -28,17 +28,20 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from enum import StrEnum
+
 import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
+from bacen_ifdata.scraper.storage.processing import (build_directory_path,
+                                                     ensure_directory)
+from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(data_frame: pd.DataFrame,
-         institution: Institutions,
-         report: ReportsPrudentialConglomerates) -> None:
+def main(institution: Institutions, report: StrEnum) -> None:
     """Main function for the transformer.
 
     This function orchestrates the transformation process for the reports
@@ -48,16 +51,30 @@ def main(data_frame: pd.DataFrame,
         data_frame (pd.DataFrame): The data frame containing the report data.
     """
 
-    # Create the controller object.
+    # Create the controller instance.
     controller = TransformerController()
+
+    # Ensure that the transformed files directory exists.
+    output_directory = build_directory_path(Cfg.TRANSFORMED_FILES_DIRECTORY.value,
+                                            institution.name.lower(),
+                                            report.name.lower())
+    ensure_directory(output_directory)
+
+    # Build the path to the input data directory.
+    input_data_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
+                                           institution.name.lower(),
+                                           report.name.lower())
 
     # Run the transformation process.
     if institution.value == Institutions.PRUDENTIAL_CONGLOMERATES:
         if report.value == ReportsPrudentialConglomerates.SUMMARY:
-            logger.info(f'Transforming {report.name} from {institution.name}.')
+            # Transform process for Prudential Conglomerates Summary.
+            # List all CSV files in the input data directory.
+            for file in input_data_path.glob('*.csv'):
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
-            transformed_data = controller.transform_prudential_conglomerates(data_frame)
+                # Transform the CSV file.
+                transformed_data = controller.transform_prudential_conglomerates(file)
 
-            # Logging a sample of the transformed data. Only in development.
-            logger.info(transformed_data.sample(3))
-            transformed_data.to_csv("prudential_conglomerates_transformed.csv")
+                # Save the transformed data to the output directory.
+                transformed_data.to_csv(output_directory / file.name, index=False)
