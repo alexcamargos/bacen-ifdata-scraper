@@ -30,9 +30,7 @@ License: MIT
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import \
-    PrudentialConglomeratesInterface
-from bacen_ifdata.data_transformer.schemas import PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA
+from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
@@ -72,8 +70,6 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
     def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Applies specific business rules to the DataFrame."""
-
-        # TODO: Avaliar a possibilidade de converter os valores numéricos para milhões.
 
         # Capitalizes the city name
         if 'cidade' in data_frame.columns:
