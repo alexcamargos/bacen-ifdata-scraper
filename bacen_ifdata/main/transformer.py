@@ -80,9 +80,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 
-                # Save the transformed data to the output directory.
-                transformed_data.to_csv(output_directory / file.name, index=False)
-
         # Transform process for Prudential Conglomerates Assets.
         if report.value == ReportsPrudentialConglomerates.ASSETS:
             # List all CSV files in the input data directory.
@@ -91,9 +88,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                transformed_data.to_csv(output_directory / file.name, index=False)
 
         # Transform process for Prudential Conglomerates Liabilities.
         if report.value == ReportsPrudentialConglomerates.LIABILITIES:
@@ -104,9 +98,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA)
 
-                # Save the transformed data to the output directory.
-                transformed_data.to_csv(output_directory / file.name, index=False)
-
         # Transform process for Prudential Conglomerates Income Statement.
         if report.value == ReportsPrudentialConglomerates.INCOME_STATEMENT:
             # List all CSV files in the input data directory.
@@ -115,9 +106,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                transformed_data.to_csv(output_directory / file.name, index=False)
 
         # Transform process for Prudential Conglomerates Capital Information.
         if report.value == ReportsPrudentialConglomerates.CAPITAL_INFORMATION:
@@ -128,5 +116,5 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA)
 
-                # Save the transformed data to the output directory.
-                transformed_data.to_csv(output_directory / file.name, index=False)
+        # Save the transformed data to the output directory.
+        transformed_data.to_csv(output_directory / file.name, index=False)
