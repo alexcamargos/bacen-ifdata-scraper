@@ -39,34 +39,25 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     tailored for prudential conglomerates.
     """
 
-    def __normalize_percentage_to_float(self, series: pd.Series) -> pd.Series:
+    def __normalize_percentage_series(self, series: pd.Series) -> pd.Series:
         """Removes the '%' sign from a pandas Series and converts it to float."""
 
-        series = series.str.replace('%', '', regex=False)
+        series_cleaned = series.str.replace('%', '', regex=False) \
+                               .str.replace(',', '.', regex=False)
 
-        return pd.to_numeric(series, errors='coerce') / 100
+        return pd.to_numeric(series_cleaned, errors='coerce') / 100
 
-    def __normalize_and_parse_numeric_series(self, series: pd.Series) -> pd.Series:
+    def __normalize_numeric_series(self, series: pd.Series) -> pd.Series:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
-        # Identify if the series contains percentage values.
-        is_percentage = series.str.contains('%', na=False).any()
+        # If the series contains decimal values, normalize them.
+        series_cleaned = series.str.replace('.', '', regex=False) \
+                               .str.replace(',', '.', regex=False)
 
-        # Normalize percentage values.
-        if is_percentage:
-            return self.__normalize_percentage_to_float(series)
+        # Convert the cleaned series to numeric, rounding and converting to Int64.
+        numeric_series = pd.to_numeric(series_cleaned, errors='coerce')
 
-        # Remove non-numeric characters and convert to float.
-        if pd.api.types.is_string_dtype(series):
-            series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
-
-        # Ensure the value is an integer for specific columns.
-        if series.name in ['numero_de_agencias', 'numero_de_postos_de_atendimento']:
-            numeric_series = pd.to_numeric(series, errors='coerce')
-            # Using 'Int64' to allow for missing values.
-            return numeric_series.round().astype('Int64')
-
-        return pd.to_numeric(series, errors='coerce')
+        return numeric_series.round().astype('Int64')
 
     def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Applies specific business rules to the DataFrame."""
@@ -86,7 +77,16 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         for col in schema.numeric_columns:
             if col in data_frame.columns:
-                data_frame[col] = self.__normalize_and_parse_numeric_series(data_frame[col])
+                data_frame[col] = self.__normalize_numeric_series(data_frame[col])
+
+        return data_frame
+
+    def __transform_percentage_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+        """Transforms percentage columns in the DataFrame to a standard float format."""
+
+        for col in schema.percentage_columns:
+            if col in data_frame.columns:
+                data_frame[col] = self.__normalize_percentage_series(data_frame[col])
 
         return data_frame
 
@@ -128,6 +128,8 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Transforms numeric columns in the DataFrame to a standard numeric format.
         data_frame = self.__transform_numeric_columns(data_frame, schema)
+        # Transforms percentage columns in the DataFrame to a standard float format.
+        data_frame = self.__transform_percentage_columns(data_frame, schema)
         # Transforms date columns in the DataFrame to a standard datetime format.
         data_frame = self.__transform_date_columns(data_frame, schema)
         # Transforms categorical columns in the DataFrame to a category dtype.

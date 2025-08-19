@@ -253,6 +253,12 @@ class PrudentialConglomerateCapitalInformationSchema:
         return list(self.SCHEMA_DEFINITION.keys())
 
     @property
+    def percentage_columns(self) -> list[str]:
+        """Return dynamically the percentage columns."""
+
+        return self.__get_columns_by_type('percentage')
+
+    @property
     def numeric_columns(self) -> list[str]:
         """Return dynamically the numeric columns."""
 
