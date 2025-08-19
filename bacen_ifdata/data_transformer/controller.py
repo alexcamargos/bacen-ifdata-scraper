@@ -32,9 +32,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.schemas import PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA
-from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import \
-    PrudentialConglomeratesTransformer
+from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
+from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 
@@ -103,3 +103,27 @@ class TransformerController:
         data = self.__create_region_column(data)
 
         return self.prudential_conglomerates_transformer.transform_summary(data)
+
+    def transform_prudential_conglomerate_assets(self, file_path: Path) -> pd.DataFrame:
+        """Transforms data from prudential conglomerates reports.
+
+        This method is responsible for transforming the data from prudential conglomerates reports.
+
+        Args:
+            file_path (Path): The path to the CSV file to be transformed.
+        """
+
+        # Configurations for correctly loading the data from prudential conglomerates CSV file.
+        options = {
+            'sep': ';',
+            'names': PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA.column_names,
+            'dtype': str
+        }
+
+        # Load the data.
+        data = self.__load_data(file_path, options)
+
+        # Create the region column based on the state column and insert it after the "uf" column.
+        data = self.__create_region_column(data)
+
+        return self.prudential_conglomerates_transformer.transform_assets(data)

@@ -141,3 +141,23 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
         data_frame = self.__transform_text_columns(data_frame)
 
         return data_frame
+
+    def transform_assets(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the input data of assets reports into a structured format for prudential conglomerates."""
+
+        # Create a backup copy of the original DataFrame.
+        backup_data_frame = data_frame.copy()
+
+        # Applies specific business rules to the DataFrame.
+        data_frame = self.__apply_business_rules(data_frame)
+
+        # Transforms numeric columns in the DataFrame to a standard numeric format.
+        data_frame = self.__transform_numeric_columns(data_frame)
+        # Transforms date columns in the DataFrame to a standard datetime format.
+        data_frame = self.__transform_date_columns(data_frame)
+        # Transforms categorical columns in the DataFrame to a category dtype.
+        data_frame = self.__transform_categorical_columns(data_frame)
+        # Transforms text columns in the DataFrame to a string dtype.
+        data_frame = self.__transform_text_columns(data_frame)
+
+        return data_frame

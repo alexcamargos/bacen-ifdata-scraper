@@ -29,8 +29,13 @@ License: MIT
 """
 
 import bacen_ifdata.data_transformer.schemas.prudential_conglomerate_summary as prudential_conglomerate_summary
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerates_assets import PrudentialConglomeratesAssetsSchema
 
 # Instance a schema for report summary of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = prudential_conglomerate_summary.PrudentialConglomerateSummarySchema()
 
-__all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA']
+
+# Instância única para ser importada em outras partes do projeto
+PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA = PrudentialConglomeratesAssetsSchema()
+
+__all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA', 'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA']

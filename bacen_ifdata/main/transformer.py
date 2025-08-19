@@ -30,7 +30,6 @@ License: MIT
 
 from enum import StrEnum
 
-import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.data_transformer.controller import TransformerController
@@ -67,15 +66,26 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
     # Run the transformation process.
     if institution.value == Institutions.PRUDENTIAL_CONGLOMERATES:
+        # Transform process for Prudential Conglomerates Summary.
         if report.value == ReportsPrudentialConglomerates.SUMMARY:
-            # Transform process for Prudential Conglomerates Summary.
             # List all CSV files in the input data directory.
             for file in input_data_path.glob('*.csv'):
-                logger.info(
-                    f'Transforming {report.name} ({file.name}) from {institution.name}.')
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
                 # Transform the CSV file.
                 transformed_data = controller.transform_prudential_conglomerate_summary(file)
+
+                # Save the transformed data to the output directory.
+                transformed_data.to_csv(output_directory / file.name, index=False)
+
+        # Transform process for Prudential Conglomerates Assets.
+        if report.value == ReportsPrudentialConglomerates.ASSETS:
+            # List all CSV files in the input data directory.
+            for file in input_data_path.glob('*.csv'):
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+
+                # Transform the CSV file.
+                transformed_data = controller.transform_prudential_conglomerate_assets(file)
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)
