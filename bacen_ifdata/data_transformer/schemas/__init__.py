@@ -28,13 +28,12 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-import bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary as summary
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import PrudentialConglomerateLiabilitiesSchema
-
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
 
 # Instance a schema for report summary of prudential conglomerate.
-PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = summary.PrudentialConglomerateSummarySchema()
+PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
 
 # Instância única para ser importada em outras partes do projeto
 PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA = PrudentialConglomeratesAssetsSchema()
