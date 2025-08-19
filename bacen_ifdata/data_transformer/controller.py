@@ -85,4 +85,4 @@ class TransformerController:
         uf_column_index = data.columns.get_loc('uf') + 1
         data.insert(uf_column_index, 'regiao', data['uf'].map(REGION))
 
-        return self.prudential_conglomerates_transformer.transform(data)
+        return self.prudential_conglomerates_transformer.transform_summary(data)

@@ -122,7 +122,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         return data_frame
 
-    def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+    def transform_summary(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the input DataFrame into a structured format for prudential conglomerates."""
 
         # Create a backup copy of the original DataFrame.
