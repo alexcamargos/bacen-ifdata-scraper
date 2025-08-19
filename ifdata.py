@@ -166,7 +166,7 @@ def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
 
     # Run the transformer.
     transformer_pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES,
-                                     REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT)
+                                     REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION)
 
 
 def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
