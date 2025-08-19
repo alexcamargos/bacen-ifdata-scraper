@@ -71,10 +71,11 @@ def main(institution: Institutions, report: StrEnum) -> None:
             # Transform process for Prudential Conglomerates Summary.
             # List all CSV files in the input data directory.
             for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+                logger.info(
+                    f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
                 # Transform the CSV file.
-                transformed_data = controller.transform_prudential_conglomerates(file)
+                transformed_data = controller.transform_prudential_conglomerate_summary(file)
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)

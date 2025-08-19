@@ -80,7 +80,7 @@ class TransformerController:
 
         return data
 
-    def transform_prudential_conglomerates(self, file_path: Path) -> pd.DataFrame:
+    def transform_prudential_conglomerate_summary(self, file_path: Path) -> pd.DataFrame:
         """Transforms data from prudential conglomerates reports.
 
         This method is responsible for transforming the data from prudential conglomerates reports.
