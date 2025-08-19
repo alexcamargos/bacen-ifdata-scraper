@@ -65,7 +65,23 @@ class PrudentialConglomerateSummarySchema:
         },
         'segmento': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
-            'type': 'categorical'
+            'type': 'categorical',
+            'mapping': {
+                's1': ('Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
+                       'econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) '
+                       'exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões).'),
+                's2': ('Composto por: (i) bancos múltiplos, bancos comerciais, bancos de investimento, '
+                       'bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior '
+                       'a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do '
+                       'Brasil de porte igual ou superior a 1% do PIB.'),
+                's3': 'Instituições de porte inferior a 1% e igual ou superior a 0,1%.',
+                's4': 'Instituições de porte inferior a 0,1%.',
+                's5': ('Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia '
+                       'facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio '
+                       'de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, '
+                       'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
+                       'e (ii) não sujeitas a apuração de PR.'),
+            }
         },
         'td': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
