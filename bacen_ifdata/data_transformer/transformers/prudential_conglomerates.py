@@ -51,13 +51,16 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
     def __normalize_and_parse_numeric_series(self, series: pd.Series) -> pd.Series:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
+        # Identify if the series contains percentage values.
+        is_percentage = series.str.contains('%', na=False).any()
+
+        # Normalize percentage values.
+        if is_percentage:
+            return self.__normalize_percentage_to_float(series)
+
         # Remove non-numeric characters and convert to float.
         if pd.api.types.is_string_dtype(series):
             series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
-
-        # Remove the '%' sign for specific columns.
-        if series.name in ['indice_de_basileia', 'indice_de_imobilizacao']:
-            return self.__normalize_percentage_to_float(series)
 
         # Ensure the value is an integer for specific columns.
         if series.name in ['numero_de_agencias', 'numero_de_postos_de_atendimento']:
