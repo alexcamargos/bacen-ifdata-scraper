@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
-# ------------------------------------------------------------------------------
-#  Name: prudential_conglomerates_assets.py
+#
+#  ------------------------------------------------------------------------------
+#  Name: liabilities.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -29,19 +29,19 @@ License: MIT
 """
 
 
-class PrudentialConglomeratesAssetsSchema:
+class PrudentialConglomerateLiabilitiesSchema:
     """
-    Define e categoriza os nomes das colunas para os relatórios de ATIVOS
-    de conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
+    Define e categoriza os nomes das colunas para os relatórios de
+    conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
     """
 
     SCHEMA_DEFINITION = {
-        'instituicao_financeira': {
-            'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
+        'instituicao': {
+            'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text'
         },
         'codigo': {
-            'description': 'Código da instituição ou do conglomerado no cadastro do Banco Central.',
+            'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'numeric'
         },
         'tcb': {
@@ -92,8 +92,7 @@ class PrudentialConglomeratesAssetsSchema:
             }
         },
         'tc': {
-            'description': ('Tipo de Controle: Identifica a origem do controle de capital dos conglomerados '
-                            'bancários ou das instituições independentes.'),
+            'description': 'Tipo de Controle.',
             'type': 'categorical',
             'mapping': {
                 '1': 'Público',
@@ -102,92 +101,112 @@ class PrudentialConglomeratesAssetsSchema:
             }
         },
         'cidade': {
-            'description': 'Cidade onde fica localizada a sede da instituição.',
+            'description': 'Cidade da sede da instituição.',
             'type': 'text'
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical'
         },
-        'data': {
-            'description': 'Data-base do Relatório.',
+        'data_base': {
+            'description': 'Data-base do relatório.',
             'type': 'date'
         },
-        'disponibilidades': {
-            'description': 'Disponibilidades.',
+        'depositos_vista': {
+            'description': 'Depósitos à vista.',
             'type': 'numeric'
         },
-        'aplicacoes_interfinanceiras_liquidez': {
-            'description': 'Aplicações Interfinanceiras de Liquidez.',
+        'depositos_poupanca': {
+            'description': 'Depósitos Poupança.',
             'type': 'numeric'
         },
-        'tvm_e_instrumentos_financeiros_derivativos': {
-            'description': 'Títulos e Valores Mobiliários e Instrumentos Financeiros Derivativos.',
+        'depositos_interfinanceiros': {
+            'description': 'Depósitos interfinanceiros.',
             'type': 'numeric'
         },
-        'operacoes_de_credito': {
-            'description': 'Operações de Crédito - Provisão para Operações de Crédito.',
+        'depositos_a_prazo': {
+            'description': 'Depósitos a prazo.',
             'type': 'numeric'
         },
-        'provisao_operacoes_de_credito': {
-            'description': 'Provisão para Operações de Crédito.',
+        'conta_de_pagamento_pre_paga': {
+            'description': 'Conta de pagamento pré-paga.',
             'type': 'numeric'
         },
-        'operacoes_de_credito_liquidas_provisao': {
-            'description': 'Operações de Crédito Líquidas de Provisão.',
+        'depositos_outros': {
+            'description': ('(+) Depósitos sob aviso (+) Obrigações por depósitos especiais e de fundos e '
+                            'programas (+) APE - Depósitos especiais (+) Depósitos em moedas estrangeiras '
+                            '(+) Outros depósitos (-) Conta de pagamento pré-paga.'),
             'type': 'numeric'
         },
-        'arrendamento_mercantil_a_receber': {
-            'description': 'Operações de Arrendamento Mercantil - Provisões para Operações de Arrendamento Mercantil.',
+        'deposito_total': {
+            'description': 'Depósito Totais.',
             'type': 'numeric'
         },
-        'imobilizado_de_arrendamento': {
-            'description': 'Imobilizado de Arrendamento.',
+        'obrigações_operações_compromissadas': {
+            'description': 'Obrigações por Operações Compromissadas.',
             'type': 'numeric'
         },
-        'credores_antecipacao_valor_residual': {
-            'description': 'Credores por Antecipação de Valor Residual.',
+        'letras_de_credito_imobiliario': {
+            'description': 'LCI - Obrigações por Emissão de Letras de Crédito Imobiliário.',
             'type': 'numeric'
         },
-        'provisao_arrendamento_mercantil': {
-            'description': 'Provisões para Operações de Arrendamento Mercantil.',
+        'letras_de_credito_agronegocio': {
+            'description': 'LCA - Obrigações por Emissão de Letras de Crédito do Agronegócio.',
             'type': 'numeric'
         },
-        'arrendamento_mercantil_liquido_de_provisao': {
-            'description': 'Operações de Arrendamento Mercantil + Imobilizado de Arrendamento + Credores por Antecipação de Valor Residual.',
+        'letras_financeiras': {
+            'description': 'LF - Obrigações por Emissão de Letras Financeiras.',
             'type': 'numeric'
         },
-        'outros_creditos_liquido_de_provisao': {
-            'description': 'Outros Créditos - Líquido de Provisão.',
+        'obrigacoes_titulos_e_valores_mobiliarios_exterior': {
+            'description': 'Obrigações por Títulos e Valores Mobiliários no Exterior.',
             'type': 'numeric'
         },
-        'outros_ativos_realizaveis': {
-            'description': 'Outros Valores e Bens + Relações Interfinanceiras + Relações Interdependências.',
+        'outros_recursos_de_aceites_e_emissao_de_titulos': {
+            'description': ('(+) Recursos de aceites cambiais, letras imobiliárias e hipotecárias, debêntures, '
+                            'e similares (-) Obrigações por Emissão de Letras de Crédito Imobiliário (-) '
+                            'Obrigações por Emissão de Letras de Crédito do Agronegócio (-) Obrigações por '
+                            'Emissão de Letras Financeiras (-) Obrigações por Títulos e Valores Mobiliários no Exterior.'),
             'type': 'numeric'
         },
-        'permanente_ajustado': {
-            'description': 'Ativo Permanente - Imobilizado de Arrendamento.',
+        'recursos_de_aceites_e_emissao_de_titulos': {
+            'description': 'Recursos de aceites cambiais, letras imobiliárias e hipotecárias, debêntures, e similares.',
             'type': 'numeric'
         },
-        'ativo_total_ajustado': {
-            'description': ('Disponibilidades + Aplicações Interfinanceiras de Liquidez + Títulos e Valores '
-                            'Mobiliários e Instrumentos Financeiros Derivativos + Operações de Crédito + '
-                            'Operações de Arrendamento Mercantil + Credores por Antecipação de Valor Residual + '
-                            'Outros Créditos + Outros Valores e Bens + Relações Interfinanceiras + Relações '
-                            'Interdependências + Ativo Permanente.'),
+        'obrigacoes_emprestimos_e_repasses': {
+            'description': 'Obrigações por empréstimos e repasses.',
             'type': 'numeric'
         },
-        'credores_antecipacao_valor_residual_j': {
-            'description': 'Credores por Antecipação de Valor Residual.',
+        'captacoes': {
+            'description': ('(+) Depósitos (+) Obrigações por Operações Compromissadas (+) Recursos de aceites '
+                            'cambiais, letras imobiliárias e hipotecárias, debêntures, e similares (+) Obrigações '
+                            'por empréstimos e repasses.'),
             'type': 'numeric'
         },
-        'ativo_total': {
-            'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
+        'instrumentos_derivativos': {
+            'description': 'Instrumentos financeiros derivativos.',
+            'type': 'numeric'
+        },
+        'outras_obrigações': {
+            'description': '(+) Relações Interfinanceiras (+) Relações interdependências (+) Outras obrigações.',
+            'type': 'numeric'
+        },
+        'passivo_circulante_exigível_a_longo_prazo': {
+            'description': 'Passivo circulante e exigível a longo prazo.',
+            'type': 'numeric'
+        },
+        'patrimonio_liquido': {
+            'description': '(+) Patrimônio Líquido (+) Contas de resultado credoras (+) Contas de resultado devedoras',
+            'type': 'numeric'
+        },
+        'passivo_total': {
+            'description': ('(+) Passivo circulante e exigível a longo prazo (+) Patrimônio Líquido (+) '
+                            'Contas de resultado credoras (+) Contas de resultado devedoras.'),
             'type': 'numeric'
         }
     }
 
-    def _get_columns_by_type(self, data_type: str) -> list[str]:
+    def __get_columns_by_type(self, data_type: str) -> list[str]:
         """Auxiliary function to filter columns by type."""
 
         return [col for col, meta in self.SCHEMA_DEFINITION.items() if meta['type'] == data_type]
@@ -202,25 +221,25 @@ class PrudentialConglomeratesAssetsSchema:
     def numeric_columns(self) -> list[str]:
         """Return dynamically the numeric columns."""
 
-        return self._get_columns_by_type('numeric')
+        return self.__get_columns_by_type('numeric')
 
     @property
     def date_columns(self) -> list[str]:
         """Return dynamically the date columns."""
 
-        return self._get_columns_by_type('date')
+        return self.__get_columns_by_type('date')
 
     @property
     def categorical_columns(self) -> list[str]:
         """Return dynamically the categorical columns."""
 
-        return self._get_columns_by_type('categorical')
+        return self.__get_columns_by_type('categorical')
 
     @property
     def text_columns(self) -> list[str]:
         """Return dynamically the text columns."""
 
-        return self._get_columns_by_type('text')
+        return self.__get_columns_by_type('text')
 
     def get_description(self, column_name: str) -> str | None:
         """Return the description of a specific column."""

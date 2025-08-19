@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: prudential_conglomerates_liabilities.py
+#  Name: summary.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -29,7 +29,7 @@ License: MIT
 """
 
 
-class PrudentialConglomerateLiabilitiesSchema:
+class PrudentialConglomerateSummarySchema:
     """
     Define e categoriza os nomes das colunas para os relatórios de
     conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
@@ -112,96 +112,51 @@ class PrudentialConglomerateLiabilitiesSchema:
             'description': 'Data-base do relatório.',
             'type': 'date'
         },
-        'depositos_vista': {
-            'description': 'Depósitos à vista.',
+        'ativo_total': {
+            'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
             'type': 'numeric'
         },
-        'depositos_poupanca': {
-            'description': 'Depósitos Poupança.',
+        'carteira_de_credito_classificada': {
+            'description': 'Carteira de Crédito Classificada.',
             'type': 'numeric'
         },
-        'depositos_interfinanceiros': {
-            'description': 'Depósitos interfinanceiros.',
-            'type': 'numeric'
-        },
-        'depositos_a_prazo': {
-            'description': 'Depósitos a prazo.',
-            'type': 'numeric'
-        },
-        'conta_de_pagamento_pre_paga': {
-            'description': 'Conta de pagamento pré-paga.',
-            'type': 'numeric'
-        },
-        'depositos_outros': {
-            'description': ('(+) Depósitos sob aviso (+) Obrigações por depósitos especiais e de fundos e '
-                            'programas (+) APE - Depósitos especiais (+) Depósitos em moedas estrangeiras '
-                            '(+) Outros depósitos (-) Conta de pagamento pré-paga.'),
-            'type': 'numeric'
-        },
-        'deposito_total': {
-            'description': 'Depósito Totais.',
-            'type': 'numeric'
-        },
-        'obrigações_operações_compromissadas': {
-            'description': 'Obrigações por Operações Compromissadas.',
-            'type': 'numeric'
-        },
-        'letras_de_credito_imobiliario': {
-            'description': 'LCI - Obrigações por Emissão de Letras de Crédito Imobiliário.',
-            'type': 'numeric'
-        },
-        'letras_de_credito_agronegocio': {
-            'description': 'LCA - Obrigações por Emissão de Letras de Crédito do Agronegócio.',
-            'type': 'numeric'
-        },
-        'letras_financeiras': {
-            'description': 'LF - Obrigações por Emissão de Letras Financeiras.',
-            'type': 'numeric'
-        },
-        'obrigacoes_titulos_e_valores_mobiliarios_exterior': {
-            'description': 'Obrigações por Títulos e Valores Mobiliários no Exterior.',
-            'type': 'numeric'
-        },
-        'outros_recursos_de_aceites_e_emissao_de_titulos': {
-            'description': ('(+) Recursos de aceites cambiais, letras imobiliárias e hipotecárias, debêntures, '
-                            'e similares (-) Obrigações por Emissão de Letras de Crédito Imobiliário (-) '
-                            'Obrigações por Emissão de Letras de Crédito do Agronegócio (-) Obrigações por '
-                            'Emissão de Letras Financeiras (-) Obrigações por Títulos e Valores Mobiliários no Exterior.'),
-            'type': 'numeric'
-        },
-        'recursos_de_aceites_e_emissao_de_titulos': {
-            'description': 'Recursos de aceites cambiais, letras imobiliárias e hipotecárias, debêntures, e similares.',
-            'type': 'numeric'
-        },
-        'obrigacoes_emprestimos_e_repasses': {
-            'description': 'Obrigações por empréstimos e repasses.',
+        'passivo_circulante_e_exigivel_a_longo_prazo': {
+            'description': 'Passivo Circulante e Exigível a Longo Prazo + Resultados de Exercícios Futuros.',
             'type': 'numeric'
         },
         'captacoes': {
-            'description': ('(+) Depósitos (+) Obrigações por Operações Compromissadas (+) Recursos de aceites '
-                            'cambiais, letras imobiliárias e hipotecárias, debêntures, e similares (+) Obrigações '
-                            'por empréstimos e repasses.'),
-            'type': 'numeric'
-        },
-        'instrumentos_derivativos': {
-            'description': 'Instrumentos financeiros derivativos.',
-            'type': 'numeric'
-        },
-        'outras_obrigações': {
-            'description': '(+) Relações Interfinanceiras (+) Relações interdependências (+) Outras obrigações.',
-            'type': 'numeric'
-        },
-        'passivo_circulante_exigível_a_longo_prazo': {
-            'description': 'Passivo circulante e exigível a longo prazo.',
+            'description': ('Depósitos + Obrigações por Operações Compromissadas + Recursos de Aceites Cambiais, '
+                            'Letras Imobiliárias e Hipotecárias, Debêntures e Similares + Obrigações por Empréstimos e Repasses.'),
             'type': 'numeric'
         },
         'patrimonio_liquido': {
-            'description': '(+) Patrimônio Líquido (+) Contas de resultado credoras (+) Contas de resultado devedoras',
+            'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
             'type': 'numeric'
         },
-        'passivo_total': {
-            'description': ('(+) Passivo circulante e exigível a longo prazo (+) Patrimônio Líquido (+) '
-                            'Contas de resultado credoras (+) Contas de resultado devedoras.'),
+        'lucro_liquido': {
+            'description': ('Lucro Líquido, excluindo despesas de juros sobre capital '
+                            '(Contas de Resultado Credoras + Contas de Resultado Devedoras - '
+                            'Despesas de Juros sobre o Capital Social de Cooperativas).'),
+            'type': 'numeric'
+        },
+        'patrimonio_de_referencia': {
+            'description': 'Montante de capital regulatório formado pela soma das parcelas de Capital Nível I e Capital Nível II.',
+            'type': 'numeric'
+        },
+        'indice_de_basileia': {
+            'description': 'Relação entre o Patrimônio de Referência e Ativos ponderados pelo risco.',
+            'type': 'numeric'
+        },
+        'indice_de_imobilizacao': {
+            'description': 'Relação entre Ativo Permanente e Patrimônio de Referência.',
+            'type': 'numeric'
+        },
+        'numero_de_agencias': {
+            'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',
+            'type': 'numeric'
+        },
+        'numero_de_postos_de_atendimento': {
+            'description': 'Número de postos de atendimento da instituição ou do conglomerado.',
             'type': 'numeric'
         }
     }
