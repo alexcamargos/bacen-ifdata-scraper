@@ -38,6 +38,10 @@ from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory)
 from bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 
 
 def main(institution: Institutions, report: StrEnum) -> None:
@@ -73,7 +77,7 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
                 # Transform the CSV file.
-                transformed_data = controller.transform_prudential_conglomerate_summary(file)
+                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)
@@ -85,7 +89,7 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
                 # Transform the CSV file.
-                transformed_data = controller.transform_prudential_conglomerate_assets(file)
+                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA)
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)
@@ -97,7 +101,19 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
 
                 # Transform the CSV file.
-                transformed_data = controller.transform_prudential_conglomerate_liabilities(file)
+                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA)
+
+                # Save the transformed data to the output directory.
+                transformed_data.to_csv(output_directory / file.name, index=False)
+
+        # Transform process for Prudential Conglomerates Income Statement.
+        if report.value == ReportsPrudentialConglomerates.INCOME_STATEMENT:
+            # List all CSV files in the input data directory.
+            for file in input_data_path.glob('*.csv'):
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+
+                # Transform the CSV file.
+                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA)
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)

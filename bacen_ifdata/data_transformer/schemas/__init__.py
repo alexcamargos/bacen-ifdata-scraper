@@ -29,6 +29,7 @@ License: MIT
 """
 
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statement import PrudentialConglomerateIncomeStatementSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import PrudentialConglomerateLiabilitiesSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
 
@@ -41,7 +42,11 @@ PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA = PrudentialConglomeratesAssetsSchema()
 # Instance a schema for report liabilities of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA = PrudentialConglomerateLiabilitiesSchema()
 
+# Instance a schema for report income statement of prudential conglomerate.
+PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = PrudentialConglomerateIncomeStatementSchema()
+
 
 __all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
-           'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA']
+           'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
+           'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA']
