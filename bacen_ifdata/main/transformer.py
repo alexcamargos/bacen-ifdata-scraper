@@ -89,3 +89,15 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
                 # Save the transformed data to the output directory.
                 transformed_data.to_csv(output_directory / file.name, index=False)
+
+        # Transform process for Prudential Conglomerates Liabilities.
+        if report.value == ReportsPrudentialConglomerates.LIABILITIES:
+            # List all CSV files in the input data directory.
+            for file in input_data_path.glob('*.csv'):
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+
+                # Transform the CSV file.
+                transformed_data = controller.transform_prudential_conglomerate_liabilities(file)
+
+                # Save the transformed data to the output directory.
+                transformed_data.to_csv(output_directory / file.name, index=False)
