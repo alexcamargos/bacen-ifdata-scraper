@@ -53,8 +53,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Remove non-numeric characters and convert to float.
         if pd.api.types.is_string_dtype(series):
-            series = series.str.replace(
-                '.', '', regex=False).str.replace(',', '.', regex=False)
+            series = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
 
         # Remove the '%' sign for specific columns.
         if series.name in ['indice_de_basileia', 'indice_de_imobilizacao']:
@@ -79,8 +78,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         # Fills null values in the segment column
         if 'segmento' in data_frame.columns:
-            data_frame['segmento'] = data_frame['segmento'].fillna(
-                'Não informado')
+            data_frame['segmento'] = data_frame['segmento'].fillna('Não informado')
 
         return data_frame
 
@@ -89,8 +87,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.numeric_columns:
             if col in data_frame.columns:
-                data_frame[col] = self.__normalize_and_parse_numeric_series(
-                    data_frame[col])
+                data_frame[col] = self.__normalize_and_parse_numeric_series(data_frame[col])
 
         return data_frame
 
@@ -99,8 +96,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         for col in PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA.date_columns:
             if col in data_frame.columns:
-                data_frame[col] = pd.to_datetime(
-                    data_frame[col], format='%m/%Y', errors='coerce')
+                data_frame[col] = pd.to_datetime(data_frame[col], format='%m/%Y', errors='coerce')
 
         return data_frame
 
