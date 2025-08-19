@@ -38,5 +38,5 @@ class PrudentialConglomeratesInterface(ABC):
     """Represents the interface for the PrudentialConglomeratesTransformer class."""
 
     @abstractmethod
-    def transform_summary(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+    def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         raise NotImplementedError("You should implement this method.")

@@ -103,7 +103,7 @@ class TransformerController:
         # Create the region column based on the state column and insert it after the "uf" column.
         data = self.__create_region_column(data)
 
-        return self.prudential_conglomerates_transformer.transform_summary(data)
+        return self.prudential_conglomerates_transformer.transform(data)
 
     def transform_prudential_conglomerate_assets(self, file_path: Path) -> pd.DataFrame:
         """Transforms data from prudential conglomerates reports.
@@ -127,7 +127,7 @@ class TransformerController:
         # Create the region column based on the state column and insert it after the "uf" column.
         data = self.__create_region_column(data)
 
-        return self.prudential_conglomerates_transformer.transform_assets(data)
+        return self.prudential_conglomerates_transformer.transform(data)
 
     def transform_prudential_conglomerate_liabilities(self, file_path: Path) -> pd.DataFrame:
         """Transforms data from prudential conglomerates reports.
@@ -151,4 +151,4 @@ class TransformerController:
         # Create the region column based on the state column and insert it after the "uf" column.
         data = self.__create_region_column(data)
 
-        return self.prudential_conglomerates_transformer.transform_liabilities(data)
+        return self.prudential_conglomerates_transformer.transform(data)
