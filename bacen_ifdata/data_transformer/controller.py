@@ -62,6 +62,24 @@ class TransformerController:
 
         return load_csv_data(file_path.as_posix(), options)
 
+    def __create_region_column(self, data: pd.DataFrame) -> pd.DataFrame:
+        """Creates the region column based on the state column.
+
+        This method is responsible for creating the region column in the DataFrame.
+
+        Args:
+            data (pd.DataFrame): The DataFrame to be modified.
+
+        Returns:
+            pd.DataFrame: The modified DataFrame with the region column.
+        """
+
+        # Create the region column based on the state column.
+        uf_column_index = data.columns.get_loc('uf') + 1
+        data.insert(uf_column_index, 'regiao', data['uf'].map(REGION))
+
+        return data
+
     def transform_prudential_conglomerates(self, file_path: Path) -> pd.DataFrame:
         """Transforms data from prudential conglomerates reports.
 
@@ -82,7 +100,6 @@ class TransformerController:
         data = self.__load_data(file_path, options)
 
         # Create the region column based on the state column and insert it after the "uf" column.
-        uf_column_index = data.columns.get_loc('uf') + 1
-        data.insert(uf_column_index, 'regiao', data['uf'].map(REGION))
+        data = self.__create_region_column(data)
 
         return self.prudential_conglomerates_transformer.transform_summary(data)
