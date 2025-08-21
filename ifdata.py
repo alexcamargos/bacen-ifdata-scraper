@@ -180,7 +180,8 @@ def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
     loader_pipeline.loader(loaded_institution, loaded_report)
 
 
-if __name__ == '__main__':
+def main():
+    """Main function to run the IF.data pipeline."""
     # Get the arguments.
     args = get_arguments()
 
@@ -189,24 +190,37 @@ if __name__ == '__main__':
     # Initialize the pipeline.
     pipeline = IfDataPipeline()
 
+    # A flag to check if any specific action was requested.
+    action_requested = any([args.scraper, args.cleaner, args.transformer, args.loader])
+
+    # Run the scraper.
     if args.scraper:
-        # Run the scraper.
-        logger.info('Running only the scraper...')
+        logger.info('Running the scraper...')
         ifdata_scraper(pipeline)
-    elif args.cleaner:
-        # Run the cleaner.
-        logger.info('Running only the cleaner...')
+
+    # Run the cleaner.
+    if args.cleaner:
+        logger.info('Running the cleaner...')
         ifdata_cleaner(pipeline)
-    elif args.transformer:
-        # Run the transformer.
+
+    # Run the transformer.
+    if args.transformer:
         logger.info('Running the transformer...')
         ifdata_transformer(pipeline)
-    elif args.loader:
-        # Run the loader.
+
+    # Run the loader.
+    if args.loader:
         logger.info('Running the loader...')
         ifdata_loader(pipeline)
-    else:
-        # Run the scraper and cleaner.
-        logger.info('Running the scraper and cleaner...')
-        ifdata_scraper(pipeline)
+
+    # If no specific action was requested, run the default pipeline.
+    if not action_requested:
+        logger.info('No specific action requested, running default pipeline (cleaner and transformer)...')
+        # Run the cleaner.
         ifdata_cleaner(pipeline)
+        # Run the transformer.
+        ifdata_transformer(pipeline)
+
+
+if __name__ == '__main__':
+    main()
