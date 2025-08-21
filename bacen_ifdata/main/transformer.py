@@ -88,76 +88,27 @@ def main(institution: Institutions, report: StrEnum) -> None:
                                            institution.name.lower(),
                                            report.name.lower())
 
+    # Map report types to their schemas.
+    schema_by_report = {
+        ReportsPrudentialConglomerates.SUMMARY: PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA,
+        ReportsPrudentialConglomerates.ASSETS: PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+        ReportsPrudentialConglomerates.LIABILITIES: PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
+        ReportsPrudentialConglomerates.INCOME_STATEMENT: PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
+        ReportsPrudentialConglomerates.CAPITAL_INFORMATION: PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
+        ReportsPrudentialConglomerates.SEGMENTATION: PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
+    }
+
     # Run the transformation process.
-    if institution.value == Institutions.PRUDENTIAL_CONGLOMERATES:
-        # Transform process for Prudential Conglomerates Summary.
-        if report.value == ReportsPrudentialConglomerates.SUMMARY:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+    if institution == Institutions.PRUDENTIAL_CONGLOMERATES:
+        # Get the schema for the report.
+        report_schema = schema_by_report.get(ReportsPrudentialConglomerates(report))
+        if report_schema is None:
+            raise ValueError(f'No schema found for report: {report.name}')
 
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
-
-        # Transform process for Prudential Conglomerates Assets.
-        if report.value == ReportsPrudentialConglomerates.ASSETS:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
-
-        # Transform process for Prudential Conglomerates Liabilities.
-        if report.value == ReportsPrudentialConglomerates.LIABILITIES:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
-
-        # Transform process for Prudential Conglomerates Income Statement.
-        if report.value == ReportsPrudentialConglomerates.INCOME_STATEMENT:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
-
-        # Transform process for Prudential Conglomerates Capital Information.
-        if report.value == ReportsPrudentialConglomerates.CAPITAL_INFORMATION:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
-
-        # Transform process for Prudential Conglomerates Segmentation.
-        if report.value == ReportsPrudentialConglomerates.SEGMENTATION:
-            # List all CSV files in the input data directory.
-            for file in input_data_path.glob('*.csv'):
-                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-
-                # Transform the CSV file.
-                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA)
-
-                # Save the transformed data to the output directory.
-                persist_transformed_data(transformed_data, output_directory, file.name)
+        # List all CSV files in the input data directory.
+        for file in input_data_path.glob('*.csv'):
+            logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+            # Transform the CSV file.
+            transformed_data = controller.transform(file, report_schema)
+            # Save the transformed data to the output directory.
+            persist_transformed_data(transformed_data, output_directory, file.name)
