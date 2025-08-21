@@ -28,10 +28,11 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-import pandas as pd
 from typing import List
 
-from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
+import pandas as pd
+
+from bacen_ifdata.data_transformer.transformers.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
 
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
