@@ -165,8 +165,8 @@ def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
     """Main function for executing the transformer."""
 
     # Run the transformer.
-    transformer_pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES,
-                                     REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SEGMENTATION)
+    for process_report in REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES]:
+        transformer_pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
 
 
 def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
