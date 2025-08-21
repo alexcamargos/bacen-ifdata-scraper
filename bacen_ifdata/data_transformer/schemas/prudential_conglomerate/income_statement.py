@@ -271,6 +271,11 @@ class PrudentialConglomerateIncomeStatementSchema:
 
         return self.__get_columns_by_type('text')
 
+    def get_type(self, column_name: str) -> str | None:
+        """Return the type of a specific column from the schema definition."""
+
+        return self.SCHEMA_DEFINITION.get(column_name, {}).get('type')
+
     def get_description(self, column_name: str) -> str | None:
         """Return the description of a specific column."""
 

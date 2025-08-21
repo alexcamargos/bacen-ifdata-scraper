@@ -32,6 +32,7 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import PrudentialConglomerateCapitalInformationSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statement import PrudentialConglomerateIncomeStatementSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import PrudentialConglomerateLiabilitiesSchema
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import PrudentialConglomerateSegmentationSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
 
 # Instance a schema for report summary of prudential conglomerate.
@@ -48,6 +49,9 @@ PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = PrudentialConglomerateIncomeSt
 
 # Instance a schema for report capital information of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = PrudentialConglomerateCapitalInformationSchema()
+
+# Instance a schema for report segmentation of prudential conglomerate.
+PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentationSchema()
 
 
 __all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',

@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 #  ------------------------------------------------------------------------------
-#  Name: summary.py
+#  Name: segmentation.py
 #  Version: 0.0.1
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
@@ -29,10 +29,10 @@ License: MIT
 """
 
 
-class PrudentialConglomerateSummarySchema:
+class PrudentialConglomerateSegmentationSchema:
     """
-    Define e categoriza os nomes das colunas para os relatórios de
-    conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
+    Define e categoriza os nomes das colunas para os relatórios de Segmentação
+    de conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
     """
 
     SCHEMA_DEFINITION = {
@@ -61,26 +61,6 @@ class PrudentialConglomerateSummarySchema:
                 'n1': 'Instituição não bancária atuante no mercado de crédito.',
                 'n2': 'Instituição não bancária atuante no mercado de capitais.',
                 'n4': 'Instituições de pagamento.'
-            }
-        },
-        'segmento': {
-            'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
-            'type': 'categorical',
-            'mapping': {
-                's1': ('Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
-                       'econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) '
-                       'exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões).'),
-                's2': ('Composto por: (i) bancos múltiplos, bancos comerciais, bancos de investimento, '
-                       'bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior '
-                       'a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do '
-                       'Brasil de porte igual ou superior a 1% do PIB.'),
-                's3': 'Instituições de porte inferior a 1% e igual ou superior a 0,1%.',
-                's4': 'Instituições de porte inferior a 0,1%.',
-                's5': ('Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia '
-                       'facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio '
-                       'de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, '
-                       'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
-                       'e (ii) não sujeitas a apuração de PR.'),
             }
         },
         'td': {
@@ -112,52 +92,78 @@ class PrudentialConglomerateSummarySchema:
             'description': 'Data-base do relatório.',
             'type': 'date'
         },
-        'ativo_total': {
-            'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
+        'instituicao_sujeita_apuracao_exposicao_total': {
+            'description': ('Para cálculo do porte da instituição é considerada a exposição total, calculada '
+                            'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
+                            'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
+                            '(art 3º, Res 4553/2017).'),
+            'type': 'text'
+        },
+        'instituicao_sujeita_apuracao_patrimonio_referencia': {
+            'description': 'Informação se a instituição é sujeita à apuração do Patrimônio de Referência (art. 2º, Res 4553/2007).',
+            'type': 'text'
+        },
+        'instituicao_utiliza_metodologia_simplificada': {
+            'description': (
+                'Informação se a instituição utiliza a metodologia facultativa simplificada para apuração '
+                'dos requerimentos mínimos de Patrimônio de Referência, de Nível I e de Capital Principal (art. 2º, Res 4553/2007).'),
+            'type': 'text'
+        },
+        'exposicao_total_ou_ativo_total': {
+            'description': ('Para cálculo do porte da instituição é considerada a exposição total, calculada '
+                            'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
+                            'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
+                            '(art 3º, Res 4553/2017). Exposição total é definida segundo a metodologia expressa '
+                            'na Circular n° 3.748, de 27 de fevereiro de 2015'),
             'type': 'numeric'
         },
-        'carteira_de_credito_classificada': {
-            'description': 'Carteira de Crédito Classificada.',
+        'total_ativos_consolidados_exterior': {
+            'description': ('Valor total de ativos consolidados no exterior, convertido em dólares com base na taxa '
+                            'de câmbio de venda informada pelo Banco Central do Brasil para efeito de balancete ou '
+                            'balanço patrimonial (art. 4º Res 4553/2017).'),
             'type': 'numeric'
         },
-        'passivo_circulante_e_exigivel_a_longo_prazo': {
-            'description': 'Passivo Circulante e Exigível a Longo Prazo + Resultados de Exercícios Futuros.',
-            'type': 'numeric'
+        'data_ultima_alteracao_segmento': {
+            'description': 'Data da última alteração do segmento da instituição.',
+            'type': 'date'
         },
-        'captacoes': {
-            'description': ('Depósitos + Obrigações por Operações Compromissadas + Recursos de Aceites Cambiais, '
-                            'Letras Imobiliárias e Hipotecárias, Debêntures e Similares + Obrigações por Empréstimos e Repasses.'),
-            'type': 'numeric'
+        'segmento': {
+            'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
+            'type': 'categorical',
+            'mapping': {
+                's1': ('Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
+                       'econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) '
+                       'exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões).'),
+                's2': ('Composto por: (i) bancos múltiplos, bancos comerciais, bancos de investimento, '
+                       'bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior '
+                       'a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do '
+                       'Brasil de porte igual ou superior a 1% do PIB.'),
+                's3': 'Instituições de porte inferior a 1% e igual ou superior a 0,1%.',
+                's4': 'Instituições de porte inferior a 0,1%.',
+                's5': ('Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia '
+                       'facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio '
+                       'de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, '
+                       'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
+                       'e (ii) não sujeitas a apuração de PR.'),
+            }
         },
-        'patrimonio_liquido': {
-            'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
-            'type': 'numeric'
-        },
-        'lucro_liquido': {
-            'description': ('Lucro Líquido, excluindo despesas de juros sobre capital '
-                            '(Contas de Resultado Credoras + Contas de Resultado Devedoras - '
-                            'Despesas de Juros sobre o Capital Social de Cooperativas).'),
-            'type': 'numeric'
-        },
-        'patrimonio_de_referencia': {
-            'description': 'Montante de capital regulatório formado pela soma das parcelas de Capital Nível I e Capital Nível II.',
-            'type': 'numeric'
-        },
-        'indice_de_basileia': {
-            'description': 'Relação entre o Patrimônio de Referência e Ativos ponderados pelo risco.',
-            'type': 'percentage'
-        },
-        'indice_de_imobilizacao': {
-            'description': 'Relação entre Ativo Permanente e Patrimônio de Referência.',
-            'type': 'percentage'
-        },
-        'numero_de_agencias': {
-            'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',
-            'type': 'numeric'
-        },
-        'numero_de_postos_de_atendimento': {
-            'description': 'Número de postos de atendimento da instituição ou do conglomerado.',
-            'type': 'numeric'
+        'tcip': {
+            'description': 'Classificação das instituições conforme Resolução nº 197/2022 (Tipo 1, Tipo 2, Tipo 3).',
+            'type': 'categorical',
+            'mapping': {
+                '1': ('Tipo 1: conglomerado prudencial cuja instituição líder seja instituição financeira ou'
+                      ' outra instituição autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei'
+                      ' nº 4.595, de 31 de dezembro de 1964.'),
+                '2': ('Tipo 2: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                      ' e que não seja integrado por instituição financeira ou por outra instituição'
+                      ' autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964,'
+                      ' ou sujeita à Lei nº 10.194, de 14 de fevereiro de 2001.'),
+                '3': ('Tipo 3: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                      ' e que seja integrado por instituição financeira ou por outra instituição autorizada'
+                      ' a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964, ou sujeita'
+                      ' à Lei nº 10.194, de 2001.'),
+                'Em branco': 'Conglomerados ou instituições que não realizem serviços de pagamento.'
+            }
         }
     }
 
