@@ -119,7 +119,7 @@ class PrudentialConglomerateCapitalInformationSchema:
                 'c': 'Conglomerado',
             }
         },
-        'tc': {
+        'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
             'mapping': {

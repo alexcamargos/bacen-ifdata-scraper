@@ -91,7 +91,7 @@ class PrudentialConglomeratesAssetsSchema:
                 'c': 'Conglomerado',
             }
         },
-        'tc': {
+        'tipo_de_controle': {
             'description': ('Tipo de Controle: Identifica a origem do controle de capital dos conglomerados '
                             'bancários ou das instituições independentes.'),
             'type': 'categorical',
