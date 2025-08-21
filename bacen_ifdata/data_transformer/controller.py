@@ -29,6 +29,7 @@ License: MIT
 """
 
 from pathlib import Path
+from typing import Dict, Callable, List
 
 import pandas as pd
 
@@ -47,6 +48,15 @@ class TransformerController:
     def __init__(self):
         # Initializing the PrudentialConglomeratesTransformer interface.
         self.prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
+
+        # Mapping of transformation types to their corresponding methods.
+        self.transformation_map: Dict[str, Callable[[pd.DataFrame, List[str]], pd.DataFrame]] = {
+            'numeric': self.prudential_conglomerates_transformer.transform_numeric_columns,
+            'percentage': self.prudential_conglomerates_transformer.transform_percentage_columns,
+            'date': self.prudential_conglomerates_transformer.transform_date_columns,
+            'categorical': self.prudential_conglomerates_transformer.transform_categorical_columns,
+            'text': self.prudential_conglomerates_transformer.transform_text_columns,
+        }
 
     def __load_data(self, file_path: Path, options: dict) -> pd.DataFrame:
         """Loads the data for transformation.
@@ -97,8 +107,25 @@ class TransformerController:
         # Load the data.
         data = self.__load_data(file_path, options)
 
-        # Transform the data.
-        data = self.prudential_conglomerates_transformer.transform(data, schema)
+        # Apply business rules, if any.
+        data = self.prudential_conglomerates_transformer.apply_business_rules(data)
+
+        # Group dataframe columns by type, consulting the schema.
+        columns_by_type: Dict[str, List[str]] = {}
+        for column_name in data.columns:
+            column_type = schema.get_type(column_name)
+
+            # Map column types to their corresponding transformation functions.
+            if column_type:
+                columns_by_type.setdefault(column_type, []).append(column_name)
+
+        # Iterate over the grouped column types and apply the correct transformation.
+        for column_type, columns in columns_by_type.items():
+            transform_function = self.transformation_map.get(column_type)
+
+            # Call the transformation function, passing the relevant columns
+            if transform_function:
+                data = transform_function(data, columns)
 
         # Create the region column based on the state column and insert it after the "uf" column.
         if 'cidade' in data.columns:

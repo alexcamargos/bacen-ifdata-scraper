@@ -29,6 +29,7 @@ License: MIT
 """
 
 import pandas as pd
+from typing import List
 
 from bacen_ifdata.data_transformer.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
 
@@ -59,7 +60,7 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         return numeric_series.round().astype('Int64')
 
-    def __apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+    def apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Applies specific business rules to the DataFrame."""
 
         # Capitalizes the city name
@@ -72,69 +73,47 @@ class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
 
         return data_frame
 
-    def __transform_numeric_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+    def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """Transforms numeric columns in the DataFrame to a standard numeric format."""
 
-        for col in schema.numeric_columns:
-            if col in data_frame.columns:
-                data_frame[col] = self.__normalize_numeric_series(data_frame[col])
+        for column in columns:
+            if column in data_frame.columns:
+                data_frame[column] = self.__normalize_numeric_series(data_frame[column])
 
         return data_frame
 
-    def __transform_percentage_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+    def transform_percentage_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """Transforms percentage columns in the DataFrame to a standard float format."""
 
-        for col in schema.percentage_columns:
-            if col in data_frame.columns:
-                data_frame[col] = self.__normalize_percentage_series(data_frame[col])
+        for column in columns:
+            if column in data_frame.columns:
+                data_frame[column] = self.__normalize_percentage_series(data_frame[column])
 
         return data_frame
 
-    def __transform_date_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+    def transform_date_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """Transforms date columns in the DataFrame to a standard datetime format."""
 
-        for col in schema.date_columns:
-            if col in data_frame.columns:
-                data_frame[col] = pd.to_datetime(data_frame[col], format='%m/%Y', errors='coerce')
+        for column in columns:
+            if column in data_frame.columns:
+                data_frame[column] = pd.to_datetime(data_frame[column], format='%m/%Y', errors='coerce')
 
         return data_frame
 
-    def __transform_categorical_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+    def transform_categorical_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """Transforms categorical columns in the DataFrame to a category dtype."""
 
-        for col in schema.categorical_columns:
-            if col in data_frame.columns:
-                data_frame[col] = data_frame[col].astype('category')
+        for column in columns:
+            if column in data_frame.columns:
+                data_frame[column] = data_frame[column].astype('category')
 
         return data_frame
 
-    def __transform_text_columns(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
+    def transform_text_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """Transforms text columns in the DataFrame to a string dtype."""
 
-        for col in schema.text_columns:
-            if col in data_frame.columns:
-                data_frame[col] = data_frame[col].astype('string').str.strip()
-
-        return data_frame
-
-    def transform(self, data_frame: pd.DataFrame, schema: object) -> pd.DataFrame:
-        """Transforms the input DataFrame into a structured format for prudential conglomerates."""
-
-        # Create a backup copy of the original DataFrame.
-        backup_data_frame = data_frame.copy()
-
-        # Applies specific business rules to the DataFrame.
-        data_frame = self.__apply_business_rules(data_frame)
-
-        # Transforms numeric columns in the DataFrame to a standard numeric format.
-        data_frame = self.__transform_numeric_columns(data_frame, schema)
-        # Transforms percentage columns in the DataFrame to a standard float format.
-        data_frame = self.__transform_percentage_columns(data_frame, schema)
-        # Transforms date columns in the DataFrame to a standard datetime format.
-        data_frame = self.__transform_date_columns(data_frame, schema)
-        # Transforms categorical columns in the DataFrame to a category dtype.
-        data_frame = self.__transform_categorical_columns(data_frame, schema)
-        # Transforms text columns in the DataFrame to a string dtype.
-        data_frame = self.__transform_text_columns(data_frame, schema)
+        for column in columns:
+            if column in data_frame.columns:
+                data_frame[column] = data_frame[column].astype('string').str.strip()
 
         return data_frame

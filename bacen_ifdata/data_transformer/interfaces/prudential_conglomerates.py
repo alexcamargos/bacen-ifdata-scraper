@@ -29,6 +29,7 @@ License: MIT
 """
 
 from abc import ABC, abstractmethod
+from typing import List
 
 import pandas as pd
 
@@ -38,5 +39,25 @@ class PrudentialConglomeratesInterface(ABC):
     """Represents the interface for the PrudentialConglomeratesTransformer class."""
 
     @abstractmethod
-    def transform(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+    def apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        raise NotImplementedError("You should implement this method.")
+
+    @abstractmethod
+    def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+        raise NotImplementedError("You should implement this method.")
+
+    @abstractmethod
+    def transform_percentage_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+        raise NotImplementedError("You should implement this method.")
+
+    @abstractmethod
+    def transform_date_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+        raise NotImplementedError("You should implement this method.")
+
+    @abstractmethod
+    def transform_categorical_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+        raise NotImplementedError("You should implement this method.")
+
+    @abstractmethod
+    def transform_text_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         raise NotImplementedError("You should implement this method.")
