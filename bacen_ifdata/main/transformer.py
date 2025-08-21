@@ -48,7 +48,7 @@ from bacen_ifdata.scraper.storage.processing import (build_directory_path,
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def persist_transformed_data(transformed_data: pd.DataFrame, output_directory: Path, file_name: str) -> None:
+def store_transformed_data(transformed_data: pd.DataFrame, output_directory: Path, file_name: str) -> None:
     """Save the transformed data to the output directory.
 
     This function saves the transformed data to a CSV file in the specified
@@ -111,4 +111,4 @@ def main(institution: Institutions, report: StrEnum) -> None:
             # Transform the CSV file.
             transformed_data = controller.transform(file, report_schema)
             # Save the transformed data to the output directory.
-            persist_transformed_data(transformed_data, output_directory, file.name)
+            store_transformed_data(transformed_data, output_directory, file.name)
