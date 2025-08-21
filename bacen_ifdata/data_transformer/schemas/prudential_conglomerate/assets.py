@@ -83,7 +83,7 @@ class PrudentialConglomeratesAssetsSchema:
                        'e (ii) não sujeitas a apuração de PR.'),
             }
         },
-        'td': {
+        'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
             'mapping': {

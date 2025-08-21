@@ -63,7 +63,7 @@ class PrudentialConglomerateSegmentationSchema:
                 'n4': 'Instituições de pagamento.'
             }
         },
-        'td': {
+        'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
             'mapping': {
