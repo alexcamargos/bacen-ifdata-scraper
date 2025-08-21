@@ -30,7 +30,6 @@ License: MIT
 
 from enum import StrEnum
 
-import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.main.cleaner import main as main_cleaner

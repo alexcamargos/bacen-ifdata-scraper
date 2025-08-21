@@ -29,20 +29,39 @@ License: MIT
 """
 
 from enum import StrEnum
+from pathlib import Path
 
+import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.data_transformer.controller import TransformerController
+from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory)
 from bacen_ifdata.utilities.configurations import Config as Cfg
-from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
+
+
+def persist_transformed_data(transformed_data: pd.DataFrame, output_directory: Path, file_name: str) -> None:
+    """Save the transformed data to the output directory.
+
+    This function saves the transformed data to a CSV file in the specified
+    output directory.
+
+    Arguments:
+        transformed_data (pd.DataFrame): The transformed data to be saved.
+        output_directory (Path): The directory where the data should be saved.
+        file_name (str): The name of the file to save the data as.
+    """
+
+    transformed_data.to_csv(output_directory / file_name, index=False)
+    logger.info(f'Successfully transformed: {output_directory / file_name}')
 
 
 def main(institution: Institutions, report: StrEnum) -> None:
@@ -80,6 +99,9 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
+
         # Transform process for Prudential Conglomerates Assets.
         if report.value == ReportsPrudentialConglomerates.ASSETS:
             # List all CSV files in the input data directory.
@@ -88,6 +110,9 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA)
+
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
 
         # Transform process for Prudential Conglomerates Liabilities.
         if report.value == ReportsPrudentialConglomerates.LIABILITIES:
@@ -98,6 +123,9 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA)
 
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
+
         # Transform process for Prudential Conglomerates Income Statement.
         if report.value == ReportsPrudentialConglomerates.INCOME_STATEMENT:
             # List all CSV files in the input data directory.
@@ -106,6 +134,9 @@ def main(institution: Institutions, report: StrEnum) -> None:
 
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA)
+
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
 
         # Transform process for Prudential Conglomerates Capital Information.
         if report.value == ReportsPrudentialConglomerates.CAPITAL_INFORMATION:
@@ -116,5 +147,17 @@ def main(institution: Institutions, report: StrEnum) -> None:
                 # Transform the CSV file.
                 transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA)
 
-        # Save the transformed data to the output directory.
-        transformed_data.to_csv(output_directory / file.name, index=False)
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
+
+        # Transform process for Prudential Conglomerates Segmentation.
+        if report.value == ReportsPrudentialConglomerates.SEGMENTATION:
+            # List all CSV files in the input data directory.
+            for file in input_data_path.glob('*.csv'):
+                logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+
+                # Transform the CSV file.
+                transformed_data = controller.transform(file, PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA)
+
+                # Save the transformed data to the output directory.
+                persist_transformed_data(transformed_data, output_directory, file.name)
