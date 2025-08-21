@@ -89,6 +89,7 @@ class IfDataPipeline():
             IfDataScraperException: If an error occurs during the scraping process.
         """
 
+        # Get the session.
         session = self.session
 
         # Ensure that session is initialized.
