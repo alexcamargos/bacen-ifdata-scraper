@@ -112,7 +112,6 @@ class PrudentialConglomerateIncomeStatementSchema:
             'description': 'Data-base do relatório.',
             'type': 'date'
         },
-
         'rendas_operacoes_de_credito': {
             'description': 'Rendas de Operações de Crédito.',
             'type': 'numeric'

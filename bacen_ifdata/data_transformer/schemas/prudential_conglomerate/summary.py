@@ -145,11 +145,11 @@ class PrudentialConglomerateSummarySchema:
         },
         'indice_de_basileia': {
             'description': 'Relação entre o Patrimônio de Referência e Ativos ponderados pelo risco.',
-            'type': 'numeric'
+            'type': 'percentage'
         },
         'indice_de_imobilizacao': {
             'description': 'Relação entre Ativo Permanente e Patrimônio de Referência.',
-            'type': 'numeric'
+            'type': 'percentage'
         },
         'numero_de_agencias': {
             'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',

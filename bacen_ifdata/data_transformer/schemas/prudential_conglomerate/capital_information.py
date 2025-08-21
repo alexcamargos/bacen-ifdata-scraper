@@ -140,8 +140,6 @@ class PrudentialConglomerateCapitalInformationSchema:
             'description': 'Data-base do relatório.',
             'type': 'date'
         },
-
-
         'capital_principal_para_comparacao_com_rwa': {
             'description': 'Parcela do capital de melhor qualidade e imediatamente disponível para absorver perdas.',
             'type': 'numeric'
@@ -172,8 +170,6 @@ class PrudentialConglomerateCapitalInformationSchema:
             'description': 'Parcela do RWA referente a exposições em ouro, moeda estrangeira e variação cambial.',
             'type': 'numeric'
         },
-
-
         'rwacom': {
             'description': 'Parcela do RWA referente ao risco de variação do preço de mercadorias (commodities).',
             'type': 'numeric'
