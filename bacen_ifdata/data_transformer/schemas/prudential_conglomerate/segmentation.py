@@ -44,7 +44,7 @@ class PrudentialConglomerateSegmentationSchema:
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'numeric'
         },
-        'tcb': {
+        'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
             'mapping': {
