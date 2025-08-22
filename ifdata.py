@@ -42,6 +42,7 @@ from bacen_ifdata.utilities.clean import (clean_download_base_directory,
                                           clean_empty_csv_files)
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.version import __version__ as version
+from bacen_ifdata.data_transformer.controller import TransformerController
 
 
 def __clean_download_directory():
@@ -180,15 +181,21 @@ def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
     loader_pipeline.loader(loaded_institution, loaded_report)
 
 
-def main():
-    """Main function to run the IF.data pipeline."""
+def main(pipeline: IfDataPipeline):
+    """Main function to run the IF.data pipeline.
+
+    This function orchestrates the execution of the various stages
+    of the IfDataPipeline, including scraping, cleaning, transforming,
+    and loading data.
+
+    Arguments:
+        pipeline (IfDataPipeline): The pipeline instance to run.
+    """
+
     # Get the arguments.
     args = get_arguments()
 
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
-
-    # Initialize the pipeline.
-    pipeline = IfDataPipeline()
 
     # A flag to check if any specific action was requested.
     action_requested = any([args.scraper, args.cleaner, args.transformer, args.loader])
@@ -223,4 +230,12 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+
+    # Create the transformer controller instance.
+    transformer_controller = TransformerController()
+
+    # Initialize the main pipeline.
+    pipeline = IfDataPipeline(transformer_controller)
+
+    # Run the main pipeline.
+    main(pipeline)
