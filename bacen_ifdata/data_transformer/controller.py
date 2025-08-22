@@ -45,17 +45,17 @@ class TransformerController:
     This class is responsible for controlling the transformation of data from reports.
     """
 
-    def __init__(self, prudential_conglomerates_transformer: DataFrameTransformerProtocol):
+    def __init__(self, data_frame_transformer: DataFrameTransformerProtocol):
         # Initializing the transformer interface.
-        self.prudential_conglomerates_transformer = prudential_conglomerates_transformer
+        self.data_frame_transformer = data_frame_transformer
 
         # Mapping of transformation types to their corresponding methods.
         self.transformation_map: Dict[str, Callable[[pd.DataFrame, List[str]], pd.DataFrame]] = {
-            'numeric': self.prudential_conglomerates_transformer.transform_numeric_columns,
-            'percentage': self.prudential_conglomerates_transformer.transform_percentage_columns,
-            'date': self.prudential_conglomerates_transformer.transform_date_columns,
-            'categorical': self.prudential_conglomerates_transformer.transform_categorical_columns,
-            'text': self.prudential_conglomerates_transformer.transform_text_columns,
+            'numeric': self.data_frame_transformer.transform_numeric_columns,
+            'percentage': self.data_frame_transformer.transform_percentage_columns,
+            'date': self.data_frame_transformer.transform_date_columns,
+            'categorical': self.data_frame_transformer.transform_categorical_columns,
+            'text': self.data_frame_transformer.transform_text_columns,
         }
 
     def __load_data(self, file_path: Path, options: dict) -> pd.DataFrame:
@@ -108,7 +108,7 @@ class TransformerController:
         data = self.__load_data(file_path, options)
 
         # Apply business rules, if any.
-        data = self.prudential_conglomerates_transformer.apply_business_rules(data)
+        data = self.data_frame_transformer.apply_business_rules(data)
 
         # Group dataframe columns by type, consulting the schema.
         columns_by_type: Dict[str, List[str]] = {}
