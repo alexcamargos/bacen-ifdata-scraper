@@ -32,46 +32,15 @@ import argparse
 
 from loguru import logger
 
-from bacen_ifdata import IfDataPipeline
+from bacen_ifdata import Pipeline
+from bacen_ifdata.manager import PipelineManager
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
-from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities.clean import (clean_download_base_directory,
-                                          clean_empty_csv_files)
-from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.version import __version__ as version
 from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
-
-
-def __clean_download_directory():
-    """
-    Performs comprehensive cleaning operations on the download directory.
-
-    This function orchestrates a two-step cleaning process:
-    1. It first removes all empty CSV files from the download directory.
-       This step helps in eliminating files that were downloaded but contain
-       no data, possibly due to errors in the data scraping process.
-    2. Then, it cleans up the download base directory by removing any
-       remaining CSV files. This is typically done to prepare for a fresh start,
-       ensuring that no outdated or unnecessary files remain that could interfere
-       with subsequent scraping sessions.
-
-    The cleaning process targets the directory specified in the configuration's DOWNLOAD_DIRECTORY,
-    using paths built from the configuration settings. Messages are printed to the console to
-    indicate the progress of cleaning operations.
-    """
-
-    # Clean up the empty CSV files in the download directory.
-    logger.info('Cleaning up empty CSV files...')
-    clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
-
-    # Clean up the download base directory.
-    logger.info('Cleaning up the download base directory...')
-    clean_download_base_directory(
-        build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
 
 def get_arguments() -> argparse.Namespace:
@@ -115,7 +84,7 @@ def get_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
+def ifdata_scraper(scraper_pipeline: Pipeline) -> None:
     """Main function for executing the scraper."""
 
     try:
@@ -154,7 +123,7 @@ def ifdata_scraper(scraper_pipeline: IfDataPipeline) -> None:
         __clean_download_directory()
 
 
-def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
+def ifdata_cleaner(cleaner_pipeline: Pipeline) -> None:
     """Main function for executing the cleaner."""
 
     # Run the cleaner.
@@ -163,15 +132,16 @@ def ifdata_cleaner(cleaner_pipeline: IfDataPipeline) -> None:
             cleaner_pipeline.cleaner(process_institution, process_report)
 
 
-def ifdata_transformer(transformer_pipeline: IfDataPipeline) -> None:
+def ifdata_transformer(transformer_pipeline: Pipeline) -> None:
     """Main function for executing the transformer."""
 
     # Run the transformer.
     for process_report in REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES]:
-        transformer_pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
+        transformer_pipeline.transformer(
+            Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
 
 
-def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
+def ifdata_loader(loader_pipeline: Pipeline) -> None:
     """Main function for executing the loader."""
 
     # Define the path to load the data.
@@ -182,7 +152,7 @@ def ifdata_loader(loader_pipeline: IfDataPipeline) -> None:
     loader_pipeline.loader(loaded_institution, loaded_report)
 
 
-def main(pipeline: IfDataPipeline):
+def main(pipeline_manager: PipelineManager) -> None:
     """Main function to run the IF.data pipeline.
 
     This function orchestrates the execution of the various stages
@@ -190,7 +160,7 @@ def main(pipeline: IfDataPipeline):
     and loading data.
 
     Arguments:
-        pipeline (IfDataPipeline): The pipeline instance to run.
+        pipeline_manager (PipelineManager): The pipeline manager instance to run.
     """
 
     # Get the arguments.
@@ -199,35 +169,37 @@ def main(pipeline: IfDataPipeline):
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
 
     # A flag to check if any specific action was requested.
-    action_requested = any([args.scraper, args.cleaner, args.transformer, args.loader])
+    action_requested = any(
+        [args.scraper, args.cleaner, args.transformer, args.loader])
 
     # Run the scraper.
     if args.scraper:
         logger.info('Running the scraper...')
-        ifdata_scraper(pipeline)
+        pipeline_manager.run_scraper()
 
     # Run the cleaner.
     if args.cleaner:
         logger.info('Running the cleaner...')
-        ifdata_cleaner(pipeline)
+        pipeline_manager.run_cleaner()
 
     # Run the transformer.
     if args.transformer:
         logger.info('Running the transformer...')
-        ifdata_transformer(pipeline)
+        pipeline_manager.run_transformer()
 
     # Run the loader.
     if args.loader:
         logger.info('Running the loader...')
-        ifdata_loader(pipeline)
+        pipeline_manager.run_loader()
 
     # If no specific action was requested, run the default pipeline.
     if not action_requested:
-        logger.info('No specific action requested, running default pipeline (cleaner and transformer)...')
+        logger.info(
+            'No specific action requested, running default pipeline (cleaner and transformer)...')
         # Run the cleaner.
-        ifdata_cleaner(pipeline)
+        pipeline_manager.run_cleaner()
         # Run the transformer.
-        ifdata_transformer(pipeline)
+        pipeline_manager.run_transformer()
 
 
 if __name__ == '__main__':
@@ -236,10 +208,14 @@ if __name__ == '__main__':
     prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
 
     # Create the transformer controller instance.
-    transformer_controller = TransformerController(prudential_conglomerates_transformer)
+    transformer_controller = TransformerController(
+        prudential_conglomerates_transformer)
 
     # Initialize the main pipeline.
-    pipeline = IfDataPipeline(transformer_controller)
+    pipeline = Pipeline(transformer_controller)
+
+    # Create the pipeline manager instance.
+    pipeline_manager = PipelineManager(pipeline)
 
     # Run the main pipeline.
-    main(pipeline)
+    main(pipeline_manager)

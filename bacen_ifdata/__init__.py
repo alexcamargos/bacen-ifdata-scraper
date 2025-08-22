@@ -29,6 +29,6 @@ License: MIT
 """
 
 
-from bacen_ifdata.pipeline import IfDataPipeline
+from bacen_ifdata.pipeline import Pipeline
 
-__all__ = ['IfDataPipeline']
+__all__ = ['Pipeline']

@@ -45,7 +45,7 @@ from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 
 
-class IfDataPipeline:
+class Pipeline:
     """Pipeline for the Bacen IF.data AutoScraper & Data Manager.
 
     This pipeline orchestrates the scraping and cleaning processes
@@ -133,7 +133,8 @@ class IfDataPipeline:
             report (Reports): The report to be processed.
         """
 
-        main_transformer(self.transformer_controller, transformer_institution, transformer_report)
+        main_transformer(self.transformer_controller,
+                         transformer_institution, transformer_report)
 
     def loader(self,
                loaded_institution: Institutions,
