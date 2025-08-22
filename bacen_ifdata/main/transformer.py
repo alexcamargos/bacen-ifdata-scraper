@@ -34,7 +34,7 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-from bacen_ifdata.data_transformer.controller import TransformerController
+from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
@@ -64,7 +64,7 @@ def store_transformed_data(transformed_data: pd.DataFrame, output_directory: Pat
     logger.info(f'Successfully transformed: {output_directory / file_name}')
 
 
-def main(institution: Institutions, report: StrEnum) -> None:
+def main(transformer_controller: TransformerControllerInterface, institution: Institutions, report: StrEnum) -> None:
     """Main function for the transformer.
 
     This function orchestrates the transformation process for the reports
@@ -73,9 +73,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
     Arguments:
         data_frame (pd.DataFrame): The data frame containing the report data.
     """
-
-    # Create the controller instance.
-    controller = TransformerController()
 
     # Ensure that the transformed files directory exists.
     output_directory = build_directory_path(Cfg.TRANSFORMED_FILES_DIRECTORY.value,
@@ -109,6 +106,6 @@ def main(institution: Institutions, report: StrEnum) -> None:
         for file in input_data_path.glob('*.csv'):
             logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
             # Transform the CSV file.
-            transformed_data = controller.transform(file, report_schema)
+            transformed_data = transformer_controller.transform(file, report_schema)
             # Save the transformed data to the output directory.
             store_transformed_data(transformed_data, output_directory, file.name)

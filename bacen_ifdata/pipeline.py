@@ -37,15 +37,15 @@ from bacen_ifdata.main.loader import main as main_loader
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import (REPORTS,
-                                          ReportsPrudentialConglomerates)
+from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import (initialize_webdriver,
                                         validate_report_selection)
 from bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 
 
-class IfDataPipeline():
+class IfDataPipeline:
     """Pipeline for the Bacen IF.data AutoScraper & Data Manager.
 
     This pipeline orchestrates the scraping and cleaning processes
@@ -54,6 +54,9 @@ class IfDataPipeline():
     Attributes:
         session (Session): The session object for the pipeline (initialized on demand).
     """
+
+    def __init__(self, transformer_controller: TransformerControllerInterface):
+        self.transformer_controller = transformer_controller
 
     def __initialize_webdriver(self):
         """Initialize the WebDriver session."""
@@ -111,17 +114,17 @@ class IfDataPipeline():
                                 f'referring to "{data}"...')
                     main_scraper(session, data, institution, report)
 
-    def cleaner(self, process_institution: StrEnum, process_report: StrEnum) -> None:
+    def cleaner(self, process_institution: Institutions, process_report: StrEnum) -> None:
         """Main process for cleaning the data.
 
         Args:
-            process_institution (StrEnum): The institution to be processed.
+            process_institution (Institutions): The institution to be processed.
             process_report (StrEnum): The report to be processed.
         """
 
         main_cleaner(process_institution, process_report)
 
-    def transformer(self, institution: Institutions, report: StrEnum) -> None:
+    def transformer(self, transformer_institution: Institutions, transformer_report: StrEnum) -> None:
         """Main process for transforming the data.
 
         Args:
@@ -130,11 +133,11 @@ class IfDataPipeline():
             report (Reports): The report to be processed.
         """
 
-        main_transformer(institution, report)
+        main_transformer(self.transformer_controller, transformer_institution, transformer_report)
 
     def loader(self,
                loaded_institution: Institutions,
-               loaded_report: ReportsPrudentialConglomerates) -> None:
+               loaded_report: StrEnum) -> None:
         """Main process for loading the data.
 
         Args:
