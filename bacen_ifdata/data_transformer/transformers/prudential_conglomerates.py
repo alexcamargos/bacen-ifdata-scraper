@@ -32,11 +32,9 @@ from typing import List
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.transformers.interfaces.prudential_conglomerates import PrudentialConglomeratesInterface
-
 
 # pylint: disable=missing-class-docstring, missing-function-docstring
-class PrudentialConglomeratesTransformer(PrudentialConglomeratesInterface):
+class PrudentialConglomeratesTransformer:
     """Converts raw input data into well-organized, structured information
     tailored for prudential conglomerates.
     """

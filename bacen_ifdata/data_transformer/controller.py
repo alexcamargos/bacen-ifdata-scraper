@@ -29,11 +29,11 @@ License: MIT
 """
 
 from pathlib import Path
-from typing import Dict, Callable, List
+from typing import Callable, Dict, List
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
+from bacen_ifdata.data_transformer.transformers.interfaces.dataframe_transformer import DataFrameTransformerProtocol
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 
@@ -45,9 +45,9 @@ class TransformerController:
     This class is responsible for controlling the transformation of data from reports.
     """
 
-    def __init__(self):
-        # Initializing the PrudentialConglomeratesTransformer interface.
-        self.prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
+    def __init__(self, prudential_conglomerates_transformer: DataFrameTransformerProtocol):
+        # Initializing the transformer interface.
+        self.prudential_conglomerates_transformer = prudential_conglomerates_transformer
 
         # Mapping of transformation types to their corresponding methods.
         self.transformation_map: Dict[str, Callable[[pd.DataFrame, List[str]], pd.DataFrame]] = {

@@ -43,6 +43,7 @@ from bacen_ifdata.utilities.clean import (clean_download_base_directory,
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.version import __version__ as version
 from bacen_ifdata.data_transformer.controller import TransformerController
+from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 
 
 def __clean_download_directory():
@@ -231,8 +232,11 @@ def main(pipeline: IfDataPipeline):
 
 if __name__ == '__main__':
 
+    # Create the prudential conglomerates transformer instance.
+    prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
+
     # Create the transformer controller instance.
-    transformer_controller = TransformerController()
+    transformer_controller = TransformerController(prudential_conglomerates_transformer)
 
     # Initialize the main pipeline.
     pipeline = IfDataPipeline(transformer_controller)
