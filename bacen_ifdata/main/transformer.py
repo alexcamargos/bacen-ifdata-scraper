@@ -103,29 +103,15 @@ def main(transformer_controller: TransformerControllerProtocol, institution: Ins
     }
 
     # Run the transformation process.
-    if institution == Institutions.PRUDENTIAL_CONGLOMERATES:
-        # Get the schema for the report.
-        report_schema = schema_by_report.get(ReportsPrudentialConglomerates(report))
-        if report_schema is None:
-            raise ValueError(f'No schema found for report: {report.name}')
+    # Get the schema for the report.
+    report_schema = schema_by_report.get(report)
+    if report_schema is None:
+        raise ValueError(f'No schema found for report: {report.name}')
 
-        # List all CSV files in the input data directory.
-        for file in input_data_path.glob('*.csv'):
-            logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-            # Transform the CSV file.
-            transformed_data = transformer_controller.transform(file, report_schema)
-            # Save the transformed data to the output directory.
-            store_transformed_data(transformed_data, output_directory, file.name)
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES:
-        # Get the schema for the report.
-        report_schema = schema_by_report.get(ReportsFinancialConglomerates(report))
-        if report_schema is None:
-            raise ValueError(f'No schema found for report: {report.name}')
-
-        # List all CSV files in the input data directory.
-        for file in input_data_path.glob('*.csv'):
-            logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
-            # Transform the CSV file.
-            transformed_data = transformer_controller.transform(file, report_schema)
-            # Save the transformed data to the output directory.
-            store_transformed_data(transformed_data, output_directory, file.name)
+    # List all CSV files in the input data directory.
+    for file in input_data_path.glob('*.csv'):
+        logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+        # Transform the CSV file.
+        transformed_data = transformer_controller.transform(file, report_schema)
+        # Save the transformed data to the output directory.
+        store_transformed_data(transformed_data, output_directory, file.name)
