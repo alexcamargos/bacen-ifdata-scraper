@@ -42,7 +42,7 @@ from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import (initialize_webdriver,
                                         validate_report_selection)
 from bacen_ifdata.utilities.configurations import Config as Cfg
-from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
+from bacen_ifdata.data_transformer.protocol.controller import TransformerControllerProtocol
 
 
 class Pipeline:
@@ -55,7 +55,7 @@ class Pipeline:
         session (Session): The session object for the pipeline (initialized on demand).
     """
 
-    def __init__(self, transformer_controller: TransformerControllerInterface):
+    def __init__(self, transformer_controller: TransformerControllerProtocol):
         self.transformer_controller = transformer_controller
 
     def __initialize_webdriver(self):
@@ -134,7 +134,8 @@ class Pipeline:
         """
 
         main_transformer(self.transformer_controller,
-                         transformer_institution, transformer_report)
+                         transformer_institution,
+                         transformer_report)
 
     def loader(self,
                loaded_institution: Institutions,
