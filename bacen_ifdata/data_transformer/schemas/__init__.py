@@ -30,6 +30,7 @@ License: MIT
 
 from bacen_ifdata.data_transformer.schemas.financial_conglomerate.assets import FinancialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.financial_conglomerate.summary import FinancialConglomeratesSummarySchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerate.liabilities import FinancialConglomeratesLiabilitiesSchema
 
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import PrudentialConglomerateCapitalInformationSchema
@@ -63,6 +64,9 @@ FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA = FinancialConglomeratesSummarySchema()
 # Instance a schema for report assets of financial conglomerate.
 FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
 
+# Instance a schema for report liabilities of financial conglomerate.
+FINANCIAL_CONGLOMERATES_LIABILITIES_SCHEMA = FinancialConglomeratesLiabilitiesSchema()
+
 
 __all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
@@ -72,4 +76,5 @@ __all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
            # Schema for Financial Conglomerates reports.
            'FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA',
-           'FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA']
+           'FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA',
+           'FINANCIAL_CONGLOMERATES_LIABILITIES_SCHEMA']
