@@ -38,7 +38,8 @@ from bacen_ifdata.data_transformer.protocol.controller import TransformerControl
 from bacen_ifdata.data_transformer.schemas import (FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA,
                                                    FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA,
                                                    FINANCIAL_CONGLOMERATES_LIABILITIES_SCHEMA,
-                                                   FINANCIAL_CONGLOMERATES_INCOME_STATEMENT_SCHEMA)
+                                                   FINANCIAL_CONGLOMERATES_INCOME_STATEMENT_SCHEMA,
+                                                   FINANCIAL_CONGLOMERATES_CAPITAL_INFORMATION_SCHEMA)
 from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
@@ -104,6 +105,7 @@ def main(transformer_controller: TransformerControllerProtocol, institution: Ins
         ReportsFinancialConglomerates.ASSETS: FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA,
         ReportsFinancialConglomerates.LIABILITIES: FINANCIAL_CONGLOMERATES_LIABILITIES_SCHEMA,
         ReportsFinancialConglomerates.INCOME_STATEMENT: FINANCIAL_CONGLOMERATES_INCOME_STATEMENT_SCHEMA,
+        ReportsFinancialConglomerates.CAPITAL_INFORMATION: FINANCIAL_CONGLOMERATES_CAPITAL_INFORMATION_SCHEMA
     }
 
     # Run the transformation process.
