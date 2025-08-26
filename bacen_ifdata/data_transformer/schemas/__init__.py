@@ -35,6 +35,7 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities i
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import PrudentialConglomerateSegmentationSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
 from bacen_ifdata.data_transformer.schemas.financial_conglomerate.summary import FinancialConglomeratesSummarySchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerate.assets import FinancialConglomeratesAssetsSchema
 
 # Instance a schema for report summary of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
@@ -57,10 +58,15 @@ PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentation
 # Instance a schema for report summary of financial conglomerate.
 FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA = FinancialConglomeratesSummarySchema()
 
+# Instance a schema for report assets of financial conglomerate.
+FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
+
+
 __all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
            'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
-           'FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA']
+           'FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA',
+           'FINANCIAL_CONGLOMERATES_ASSETS_SCHEMA']

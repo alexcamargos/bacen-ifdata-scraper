@@ -112,7 +112,7 @@ class PipelineManager:
         """Main function for executing the transformer."""
 
         # Run the transformer.
-        self.pipeline.transformer(Institutions.FINANCIAL_CONGLOMERATES, REPORTS[Institutions.FINANCIAL_CONGLOMERATES].SUMMARY)
+        self.pipeline.transformer(Institutions.FINANCIAL_CONGLOMERATES, REPORTS[Institutions.FINANCIAL_CONGLOMERATES].ASSETS)
 
     def run_loader(self) -> None:
         """Main function for executing the loader."""
