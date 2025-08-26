@@ -34,15 +34,17 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
-from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+from bacen_ifdata.data_transformer.protocol.controller import TransformerControllerProtocol
+from bacen_ifdata.data_transformer.schemas import (FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA,
+                                                   PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
                                                    PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
+from bacen_ifdata.scraper.reports import (ReportsFinancialConglomerates,
+                                          ReportsPrudentialConglomerates)
 from bacen_ifdata.scraper.storage.processing import (build_directory_path,
                                                      ensure_directory)
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -64,7 +66,7 @@ def store_transformed_data(transformed_data: pd.DataFrame, output_directory: Pat
     logger.info(f'Successfully transformed: {output_directory / file_name}')
 
 
-def main(transformer_controller: TransformerControllerInterface, institution: Institutions, report: StrEnum) -> None:
+def main(transformer_controller: TransformerControllerProtocol, institution: Institutions, report: StrEnum) -> None:
     """Main function for the transformer.
 
     This function orchestrates the transformation process for the reports
@@ -93,12 +95,26 @@ def main(transformer_controller: TransformerControllerInterface, institution: In
         ReportsPrudentialConglomerates.INCOME_STATEMENT: PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
         ReportsPrudentialConglomerates.CAPITAL_INFORMATION: PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
         ReportsPrudentialConglomerates.SEGMENTATION: PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
+        ReportsFinancialConglomerates.SUMMARY: FINANCIAL_CONGLOMERATES_SUMMARY_SCHEMA
     }
 
     # Run the transformation process.
     if institution == Institutions.PRUDENTIAL_CONGLOMERATES:
         # Get the schema for the report.
         report_schema = schema_by_report.get(ReportsPrudentialConglomerates(report))
+        if report_schema is None:
+            raise ValueError(f'No schema found for report: {report.name}')
+
+        # List all CSV files in the input data directory.
+        for file in input_data_path.glob('*.csv'):
+            logger.info(f'Transforming {report.name} ({file.name}) from {institution.name}.')
+            # Transform the CSV file.
+            transformed_data = transformer_controller.transform(file, report_schema)
+            # Save the transformed data to the output directory.
+            store_transformed_data(transformed_data, output_directory, file.name)
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES:
+        # Get the schema for the report.
+        report_schema = schema_by_report.get(ReportsFinancialConglomerates(report))
         if report_schema is None:
             raise ValueError(f'No schema found for report: {report.name}')
 
