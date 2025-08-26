@@ -17,4 +17,21 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
-"""Bacen IF.data AutoScraper & Data Manager"""
+"""
+Bacen IF.data AutoScraper & Data Manager
+
+This script is designed to automate the download of reports from the Banco Central do Brasil's
+IF.data tool. It facilitates the integration with automated data analysis and visualization tools,
+ensuring easy and timely access to data.
+
+Author: Alexsander Lopes Camargos
+License: MIT
+"""
+
+from bacen_ifdata.data_transformer.schemas.financial_conglomerate.summary import FinancialConglomeratesSummarySchema
+
+# Instance a schema for report summary of prudential conglomerate.
+PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomeratesSummarySchema()
+
+
+__all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA']
