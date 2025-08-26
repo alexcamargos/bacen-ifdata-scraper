@@ -33,7 +33,7 @@ from typing import Callable, Dict, List
 
 import pandas as pd
 
-from bacen_ifdata.data_transformer.transformers.interfaces.dataframe_transformer import DataFrameTransformerProtocol
+from bacen_ifdata.data_transformer.transformers.protocol.dataframe_transformer import DataFrameTransformerProtocol
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
 
