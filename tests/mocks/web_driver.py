@@ -55,3 +55,11 @@ class MockWebDriver:
             raise NoSuchElementException(
                 f"Elemento com {by}='{value}' não foi encontrado")
         return element
+
+    def execute_script(self, script, element):
+        """
+        Simula a execução de um script JavaScript.
+        No caso de um script de clique, chama o método click() do elemento.
+        """
+        if 'click' in script.lower():
+            element.click()
