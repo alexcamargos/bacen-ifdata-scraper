@@ -1,29 +1,144 @@
-[tool.poetry]
+[project]
 name = "bacen-ifdata-scraper"
 version = "0.0.1"
-description = "Este sistema foi projetado para automatizar o download dos relatórios da ferramenta IF.data do Banco Central do Brasil. Criado para facilitar a integração com ferramentas automatizadas de análise e visualização de dados, garantido acesso fácil e oportuno aos dados."
-authors = ["Alexsander Lopes Camargos <alcamargos@vivaldi.net>"]
+description = "Um scraper e processador de dados automatizado para extrair, limpar e organizar relatórios financeiros do portal IF.data do Banco Central do Brasil."
+authors = [{ name = "Alexsander Lopes Camargos", email = "alcamargos@vivaldi.net" }]
 readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Office/Business :: Financial :: Banking",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing",
+    "Topic :: Utilities",
+]
+keywords = [
+    "bacen",
+    "banco-central",
+    "banco-central-brasil",
+    "ifdata",
+    "if-data",
+    "web-scraping",
+    "scraper",
+    "automation",
+    "financial-data",
+    "banking-data",
+    "financial-reports",
+    "institucoes-financeiras",
+    "financial-institutions",
+    "financial-analysis",
+    "banking-analysis",
+    "etl",
+    "open-data",
+    "public-data",
+    "data-pipeline",
+    "data-processing",
+    "data-cleaning",
+    "csv-processing",
+    "data-extraction",
+    "data-transformation",
+    "data-automation",
+    "brazil",
+    "brasil",
+    "selenium",
+    "polars",
+    "duckdb",
+]
+dependencies = [
+    "selenium>=4.16.0,<5",
+    "loguru>=0.7.2,<0.8",
+    "pandas>=2.2.2,<3",
+    "pydantic>=2.9.2,<3",
+    "duckdb>=1.1.1,<2",
+    "polars>=1.32.2,<2",
+    "pyarrow>=21.0.0,<22",
+    "python-dotenv>=1.1.1,<2",
+    "fire>=0.7.0,<0.8",
+    "pandera>=0.26.0,<0.27",
+]
+[project.urls]
+Homepage = "https://github.com/alexcamargos/bacen-ifdata-scraper"
+Repository = "https://github.com/alexcamargos/bacen-ifdata-scraper"
+Issues = "https://github.com/alexcamargos/bacen-ifdata-scraper/issues"
 
-[tool.poetry.dependencies]
-python = "^3.12"
-selenium = "^4.16.0"
-loguru = "^0.7.2"
-pandas = "^2.2.2"
-pydantic = "^2.9.2"
-duckdb = "^1.1.1"
-polars = "^1.32.2"
-pyarrow = "^21.0.0"
-python-fire = "^0.1.0"
-python-dotenv = "^1.1.1"
-fire = "^0.7.0"
-pandera = "^0.26.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
-pytest-mock = "^3.12.0"
-ipykernel = "^6.29.5"
+[dependency-groups]
+dev = [
+    "black",
+    "isort",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "ipykernel",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "."
+module-name = "bacen_ifdata"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["tests"]
+addopts = [
+    "--cov=bacen_ifdata",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--strict-markers",
+    "--verbose",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["bacen_ifdata"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/mocks/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
