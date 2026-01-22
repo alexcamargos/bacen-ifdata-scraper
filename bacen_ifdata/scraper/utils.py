@@ -28,12 +28,69 @@ License: MIT
 """
 
 from selenium import webdriver
+from selenium.common.exceptions import (ElementClickInterceptedException,
+                                        MoveTargetOutOfBoundsException,
+                                        NoSuchElementException,
+                                        TimeoutException)
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from loguru import logger
 
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.utilities.configurations import Config as Cfg
+
+
+def ensure_clickable(driver: WebDriver,
+                     wait_time: int,
+                     by_method: str | By,
+                     locator: str) -> None:
+    """
+    Waits for an element to be clickable on a web page and then clicks it.
+
+    Args:
+        driver (WebDriver): The WebDriver instance for browser interactions.
+        wait_time (int): The maximum time to wait for the element to become clickable.
+        by_method (By): The Selenium By method to locate the element.
+        locator (str): The locator string for finding the element.
+
+    Raises:
+        TimeoutException: If the element doesn't become clickable after wait_time seconds.
+        NoSuchElementException: If the element is not found on the page.
+        ElementClickInterceptedException: If the element is intercepted by another element.
+        MoveTargetOutOfBoundsException: If the element is outside the boundaries of the window.
+    """
+
+    try:
+        # Convert by_method to string if it's a By object
+        by_method_str = str(by_method) if not isinstance(by_method, str) else by_method
+        # Wait until the element is clickable.
+        element = WebDriverWait(driver, wait_time).until(
+            EC.element_to_be_clickable((by_method_str, locator))
+        )
+        # Click the element using JavaScript.
+        driver.execute_script('arguments[0].click();', element)
+
+    except TimeoutException:
+        logger.exception(f'Timeout: O elemento {
+                         locator} não se tornou clicável após {wait_time} segundos.')
+        raise
+    except NoSuchElementException:
+        logger.exception(f'Não encontrado: O elemento {
+                         locator} não foi encontrado na página.')
+        raise
+    except ElementClickInterceptedException:
+        logger.exception(f'Elemento interceptado: O elemento {
+                         locator} foi interceptado por outro elemento.')
+        raise
+    except MoveTargetOutOfBoundsException:
+        logger.exception(f'Fora dos limites: O elemento {
+                         locator} está fora dos limites da janela.')
+        raise
 
 
 def initialize_webdriver() -> WebDriver:
