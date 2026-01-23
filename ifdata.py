@@ -33,14 +33,16 @@ import argparse
 from loguru import logger
 
 from bacen_ifdata import Pipeline
+from bacen_ifdata.data_transformer.controller import TransformerController
+from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.manager import PipelineManager
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.utils import validate_report_selection
+from bacen_ifdata.utilities.clean import clean_empty_csv_files
+from bacen_ifdata.utilities.configurations import Config
 from bacen_ifdata.utilities.version import __version__ as version
-from bacen_ifdata.data_transformer.controller import TransformerController
-from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 
 
 def get_arguments() -> argparse.Namespace:
@@ -120,7 +122,7 @@ def ifdata_scraper(scraper_pipeline: Pipeline) -> None:
         # A temporary measure is to delete the empty files and rerun the
         # data scraping process, repeating this step until there are no
         # more content-less files remaining.
-        __clean_download_directory()
+        clean_empty_csv_files(Config.DOWNLOAD_DIRECTORY.value)
 
 
 def ifdata_cleaner(cleaner_pipeline: Pipeline) -> None:
