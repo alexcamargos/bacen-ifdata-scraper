@@ -55,10 +55,16 @@ class Pipeline:
         session (Session): The session object for the pipeline (initialized on demand).
     """
 
-    def __init__(self, transformer_controller: TransformerControllerInterface):
+    def __init__(self, transformer_controller: TransformerControllerInterface) -> None:
+        """Initialize the pipeline.
+
+        Args:
+            transformer_controller (TransformerControllerInterface): The transformer controller instance.
+        """
+
         self.transformer_controller = transformer_controller
 
-    def __initialize_webdriver(self):
+    def _initialize_webdriver(self):
         """Initialize the WebDriver session."""
 
         # Initialize the WebDriver session.
@@ -66,19 +72,19 @@ class Pipeline:
 
         # Initialize the session.
         # pylint: disable=attribute-defined-outside-init
-        self.__session = Session(driver, Cfg.URL.value)
+        self._session = Session(driver, Cfg.URL.value)
 
         # Open the session.
-        self.__session.open()
+        self._session.open()
 
     @property
     def session(self) -> Session:
         """Return the session object for the pipeline."""
 
-        if not hasattr(self, '_IfDataPipeline__session'):
-            self.__initialize_webdriver()
+        if not hasattr(self, '_session'):
+            self._initialize_webdriver()
 
-        return self.__session
+        return self._session
 
     def scraper(self, _data_base: str, _institution, _report) -> None:
         """Main function for scraping the data.
