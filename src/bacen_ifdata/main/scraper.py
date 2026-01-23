@@ -33,11 +33,13 @@ from time import sleep
 from loguru import logger
 
 from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.storage.processing import (build_directory_path,
-                                                     check_file_already_downloaded,
-                                                     ensure_directory,
-                                                     process_downloaded_files,
-                                                     wait_for_download_completion)
+from bacen_ifdata.scraper.storage.processing import (
+    build_directory_path,
+    check_file_already_downloaded,
+    ensure_directory,
+    process_downloaded_files,
+    wait_for_download_completion,
+)
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -58,11 +60,9 @@ def main(_session: Session, _data_base: str, _institution, _report):
     ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
     # Create the directory for the institution and report.
-    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
-                                                 _institution.name.lower())
+    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, _institution.name.lower())
     ensure_directory(institution_directory)
-    report_directory = build_directory_path(
-        institution_directory, _report.name.lower())
+    report_directory = build_directory_path(institution_directory, _report.name.lower())
     ensure_directory(report_directory)
 
     # Build the name of the file that will contain the report,
@@ -71,25 +71,25 @@ def main(_session: Session, _data_base: str, _institution, _report):
     report_file_name = f'{year}-{month}.csv'
 
     # Build the path to the report file.
-    report_file_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
-                                            _institution.name.lower(),
-                                            _report.name.lower(),
-                                            report_file_name)
+    report_file_path = build_directory_path(
+        Cfg.DOWNLOAD_DIRECTORY.value, _institution.name.lower(), _report.name.lower(), report_file_name
+    )
 
     # Check if the file was already downloaded.
     if check_file_already_downloaded(report_file_path):
-        logger.info(f'Report "{_report.name}" from "{_institution.name}"'
-                    f'referring to "{_data_base}" was already downloaded, skipping...')
+        logger.info(
+            f'Report "{_report.name}" from "{_institution.name}"'
+            f'referring to "{_data_base}" was already downloaded, skipping...'
+        )
     else:
         # Download the reports.
         _session.download_reports(_data_base, _institution, _report)
 
         # Wait for the download to finish before processing the file.
-        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY.value,
-                                        Cfg.DOWNLOAD_FILE_NAME.value):
+        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY.value, Cfg.DOWNLOAD_FILE_NAME.value):
             sleep(3)
-            process_downloaded_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
-                                                          Cfg.DOWNLOAD_FILE_NAME.value),
-                                     report_file_path)
+            process_downloaded_files(
+                build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, Cfg.DOWNLOAD_FILE_NAME.value), report_file_path
+            )
         else:
             logger.error('Download was not completed in the expected time.')
