@@ -22,8 +22,7 @@ from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities.clean import (clean_download_base_directory,
-                                          clean_empty_csv_files)
+from bacen_ifdata.utilities.clean import clean_download_base_directory, clean_empty_csv_files
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -35,7 +34,7 @@ class PipelineManager:
 
         self.pipeline = pipeline
 
-    def __clean_download_directory(self) -> None:
+    def _clean_download_directory(self) -> None:
         """Performs comprehensive cleaning operations on the download directory.
 
         This function orchestrates a two-step cleaning process:
@@ -54,13 +53,11 @@ class PipelineManager:
 
         # Clean up the empty CSV files in the download directory.
         logger.info('Cleaning up empty CSV files...')
-        clean_empty_csv_files(build_directory_path(
-            Cfg.DOWNLOAD_DIRECTORY.value))
+        clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
         # Clean up the download base directory.
         logger.info('Cleaning up the download base directory...')
-        clean_download_base_directory(
-            build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
+        clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
     def run_scraper(self) -> None:
         """Main function for executing the scraper."""
@@ -73,14 +70,13 @@ class PipelineManager:
             for institution in Institutions:
                 for report in REPORTS[institution]:
                     # Validate the report selection.
-                    cutoff_data_base = validate_report_selection(institution,
-                                                                 report,
-                                                                 data_base)
+                    cutoff_data_base = validate_report_selection(institution, report, data_base)
 
                     for data in cutoff_data_base:
                         # Download the reports.
-                        logger.info(f'Downloading report "{report.name}" from '
-                                    f'{institution.name} referring to "{data}"...')
+                        logger.info(
+                            f'Downloading report "{report.name}" from ' f'{institution.name} referring to "{data}"...'
+                        )
                         self.pipeline.scraper(data, institution, report)
         except IfDataScraperException as error:
             logger.exception(error.message)
@@ -98,7 +94,7 @@ class PipelineManager:
             # A temporary measure is to delete the empty files and rerun the
             # data scraping process, repeating this step until there are no
             # more content-less files remaining.
-            self.__clean_download_directory()
+            self._clean_download_directory()
 
     def run_cleaner(self) -> None:
         """Main function for executing the cleaner."""
@@ -113,12 +109,10 @@ class PipelineManager:
 
         # Run the transformer.
         for process_report in REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES]:
-            self.pipeline.transformer(
-                Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
+            self.pipeline.transformer(Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
 
     def run_loader(self) -> None:
         """Main function for executing the loader."""
 
         # Run the loader.
-        self.pipeline.loader(Institutions.PRUDENTIAL_CONGLOMERATES,
-                             REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES])
+        self.pipeline.loader(Institutions.PRUDENTIAL_CONGLOMERATES, REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES])
