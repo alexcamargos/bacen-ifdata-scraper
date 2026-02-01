@@ -37,6 +37,9 @@ from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.manager import PipelineManager
 from bacen_ifdata.utilities.version import __version__ as version
+from bacen_ifdata.scraper.session import Session
+from bacen_ifdata.scraper.utils import initialize_webdriver
+from bacen_ifdata.utilities.configurations import Config
 
 
 def get_arguments() -> argparse.Namespace:
@@ -78,9 +81,6 @@ def get_arguments() -> argparse.Namespace:
                         help='Load the processed reports.')
 
     return parser.parse_args()
-
-
-
 
 
 def main(pipeline_manager: PipelineManager) -> None:
@@ -134,19 +134,35 @@ def main(pipeline_manager: PipelineManager) -> None:
 
 
 if __name__ == '__main__':
+    # Initialize the session and driver, handling context management manually for now
+    driver = initialize_webdriver()
+    session = Session(driver, Config.URL.value)
+    self_cleaning_session = True
 
-    # Create the prudential conglomerates transformer instance.
-    prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
+    try:
+        # Open the session.
+        session.open()
 
-    # Create the transformer controller instance.
-    transformer_controller = TransformerController(
-        prudential_conglomerates_transformer)
+        # Create the prudential conglomerates transformer instance.
+        prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
 
-    # Initialize the main pipeline.
-    pipeline = Pipeline(transformer_controller)
+        # Create the transformer controller instance.
+        transformer_controller = TransformerController(
+            prudential_conglomerates_transformer)
 
-    # Create the pipeline manager instance.
-    pipeline_manager = PipelineManager(pipeline)
+        # Initialize the main pipeline with the session injected.
+        pipeline = Pipeline(transformer_controller, session)
 
-    # Run the main pipeline.
-    main(pipeline_manager)
+        # Create the pipeline manager instance.
+        pipeline_manager = PipelineManager(pipeline)
+
+        # Run the main pipeline.
+        main(pipeline_manager)
+    
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
+        raise e
+    finally:
+        if self_cleaning_session:
+            logger.info("Finishing session...")
+            session.cleanup()
