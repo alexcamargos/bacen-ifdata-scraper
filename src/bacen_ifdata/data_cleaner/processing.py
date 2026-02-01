@@ -72,14 +72,12 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
     """
 
     # Diretório onde os arquivos CSV baixados são armazenados.
-    input_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
-                                      institution.name.lower(),
-                                      report.name.lower())
+    input_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower(), report.name.lower())
 
     # Diretório onde os arquivos CSV normalizados serão armazenados.
-    output_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
-                                       institution.name.lower(),
-                                       report.name.lower())
+    output_path = build_directory_path(
+        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+    )
 
     # Check if the file has already been normalized.
     if check_file_already_processed(output_path, file):
@@ -88,8 +86,10 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
 
     # Normalize the file.
     try:
-        with open(f'{input_path}\\{file}', 'r', encoding='utf-8') as input_file, \
-                open(f'{output_path}\\{file}', 'w', encoding='utf-8') as output_file:
+        with (
+            open(f'{input_path}\\{file}', 'r', encoding='utf-8') as input_file,
+            open(f'{output_path}\\{file}', 'w', encoding='utf-8') as output_file,
+        ):
             data = input_file.readlines()
 
             # The developers responsible for the Bacen website deviated from
@@ -137,8 +137,7 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
             # and discarding all lines following the first one that does
             # not have the same number of columns as the header.
             mismatch_index = next(
-                (index for index, line in enumerate(data)
-                 if len(line.rstrip().split(';')) != len(header)), len(data)
+                (index for index, line in enumerate(data) if len(line.rstrip().split(';')) != len(header)), len(data)
             )
             data = data[:mismatch_index]
 

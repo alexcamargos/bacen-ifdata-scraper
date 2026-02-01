@@ -33,7 +33,7 @@ regions_states = {
     'Nordeste': ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'],
     'Sul': ['PR', 'RS', 'SC'],
     'Sudeste': ['ES', 'MG', 'RJ', 'SP'],
-    'Centro-oeste': ['DF', 'GO', 'MT', 'MS']
+    'Centro-oeste': ['DF', 'GO', 'MT', 'MS'],
 }
 # Mapeando os estados para as regiões do Brasil.
 # Formato: {estado: regiao}

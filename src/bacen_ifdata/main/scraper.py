@@ -43,47 +43,45 @@ from bacen_ifdata.scraper.storage.processing import (
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(_session: Session, _data_base: str, _institution, _report):
+def main(session: Session, report_date: str, institution, report) -> None:
     """Main function for the scraper.
 
     This function orchestrates the scraping process for the reports
     downloaded from the Banco Central do Brasil's IF.data tool.
 
     Args:
-        _session (Session): The session object for the scraper.
-        _data_base (str): The base date for the reports to be downloaded.
-        _institution (StrEnum): The institution for which the reports will be downloaded.
-        _report (StrEnum): The report that will be downloaded.
+        session (Session): The session object for the scraper.
+        report_date (str): The base date for the reports to be downloaded.
+        institution (StrEnum): The institution for which the reports will be downloaded.
+        report (StrEnum): The report that will be downloaded.
     """
 
     # Ensure that the download directory exists.
     ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
 
     # Create the directory for the institution and report.
-    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, _institution.name.lower())
+    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower())
     ensure_directory(institution_directory)
-    report_directory = build_directory_path(institution_directory, _report.name.lower())
+    report_directory = build_directory_path(institution_directory, report.name.lower())
     ensure_directory(report_directory)
 
-    # Build the name of the file that will contain the report,
-    # in the form 'year-month.csv'.
-    month, year = _data_base.split('/')
+    # Build the name of the file that will contain the report, in the form 'year-month.csv'.
+    month, year = report_date.split('/')
     report_file_name = f'{year}-{month}.csv'
 
     # Build the path to the report file.
     report_file_path = build_directory_path(
-        Cfg.DOWNLOAD_DIRECTORY.value, _institution.name.lower(), _report.name.lower(), report_file_name
+        Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower(), report.name.lower(), report_file_name
     )
 
     # Check if the file was already downloaded.
     if check_file_already_downloaded(report_file_path):
         logger.info(
-            f'Report "{_report.name}" from "{_institution.name}"'
-            f'referring to "{_data_base}" was already downloaded, skipping...'
+            f'Report "{report.name}" from "{institution.name}" referring to "{report_date}" was already downloaded, skipping...'
         )
     else:
         # Download the reports.
-        _session.download_reports(_data_base, _institution, _report)
+        session.download_reports(report_date, institution, report)
 
         # Wait for the download to finish before processing the file.
         if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY.value, Cfg.DOWNLOAD_FILE_NAME.value):

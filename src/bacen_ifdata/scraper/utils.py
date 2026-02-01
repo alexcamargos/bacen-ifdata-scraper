@@ -27,28 +27,26 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from loguru import logger
 from selenium import webdriver
-from selenium.common.exceptions import (ElementClickInterceptedException,
-                                        MoveTargetOutOfBoundsException,
-                                        NoSuchElementException,
-                                        TimeoutException)
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    MoveTargetOutOfBoundsException,
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from loguru import logger
-
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def ensure_clickable(driver: WebDriver,
-                     wait_time: int,
-                     by_method: str | By,
-                     locator: str) -> None:
+def ensure_clickable(driver: WebDriver, wait_time: int, by_method: str | By, locator: str) -> None:
     """
     Waits for an element to be clickable on a web page and then clicks it.
 
@@ -69,9 +67,7 @@ def ensure_clickable(driver: WebDriver,
         # Convert by_method to string if it's a By object
         by_method_str = str(by_method) if not isinstance(by_method, str) else by_method
         # Wait until the element is clickable.
-        element = WebDriverWait(driver, wait_time).until(
-            EC.element_to_be_clickable((by_method_str, locator))
-        )
+        element = WebDriverWait(driver, wait_time).until(EC.element_to_be_clickable((by_method_str, locator)))
         # Click the element using JavaScript.
         driver.execute_script('arguments[0].click();', element)
 
@@ -106,10 +102,8 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir",
-                           str(Cfg.DOWNLOAD_DIRECTORY.value))
-    options.set_preference(
-        "browser.helperApps.neverAsk.saveToDisk", "text/csv")
+    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY.value))
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
     # Initializes the WebDriver for Firefox.
     driver = webdriver.Firefox(options=options)
@@ -120,39 +114,49 @@ def initialize_webdriver() -> WebDriver:
 def validate_report_selection(institution: str, report: str, data_base: list) -> list:
     """Validates the report selection."""
 
-    if institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
-        report in (REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY,
-                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].ASSETS,
-                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
-                   REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT):
+    if institution == Institutions.PRUDENTIAL_CONGLOMERATES and report in (
+        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY,
+        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].ASSETS,
+        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
+        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT,
+    ):
         cutoff_date = '03/2014'
-    elif institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
-            report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+    elif (
+        institution == Institutions.PRUDENTIAL_CONGLOMERATES
+        and report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION
+    ):
         cutoff_date = '03/2015'
-    elif institution == Institutions.PRUDENTIAL_CONGLOMERATES and \
-            report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SEGMENTATION:
+    elif (
+        institution == Institutions.PRUDENTIAL_CONGLOMERATES
+        and report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SEGMENTATION
+    ):
         cutoff_date = '03/2017'
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
-            report in (REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
-                       REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER):
+    elif institution == Institutions.FINANCIAL_CONGLOMERATES and report in (
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
+        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER,
+    ):
         cutoff_date = '06/2014'
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
-            report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION:
+    elif (
+        institution == Institutions.FINANCIAL_CONGLOMERATES
+        and report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION
+    ):
         cutoff_date = '09/2014'
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES and \
-            report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION:
+    elif (
+        institution == Institutions.FINANCIAL_CONGLOMERATES
+        and report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION
+    ):
         cutoff_date_start = '12/2000'
         data_base_index_start = data_base.index(cutoff_date_start)
 
         cutoff_date_end = '12/2014'
         data_base_index_end = data_base.index(cutoff_date_end)
 
-        return data_base[data_base_index_end:data_base_index_start + 1]
+        return data_base[data_base_index_end : data_base_index_start + 1]
     elif institution == Institutions.FOREIGN_EXCHANGE:
         cutoff_date_start = '12/2014'
 
@@ -176,7 +180,7 @@ def validate_report_selection(institution: str, report: str, data_base: list) ->
 
     try:
         data_base_index = data_base.index(cutoff_date)
-        return data_base[:data_base_index + 1]
+        return data_base[: data_base_index + 1]
     except ValueError:
         # cutoff_date not in data_base, return as is
         return data_base

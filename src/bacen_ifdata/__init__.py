@@ -28,7 +28,6 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-
 from bacen_ifdata.pipeline import Pipeline
 
 __all__ = ['Pipeline']

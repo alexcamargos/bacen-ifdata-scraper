@@ -42,9 +42,9 @@ def main(institution: StrEnum, report: StrEnum) -> None:
     """Main function for the transformer."""
 
     # Build the path to the input data directory.
-    input_data_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
-                                           institution.name.lower(),
-                                           report.name.lower())
+    input_data_path = build_directory_path(
+        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+    )
     # Create the controller object.
     controller = LoaderController()
 

@@ -68,16 +68,15 @@ class ReportsFinancialConglomerates(StrEnum):
     LIABILITIES = 'Passivo'
     INCOME_STATEMENT = 'Demonstração de Resultado'
     CAPITAL_INFORMATION = 'Informações de Capital'
-    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
-        'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
+    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = 'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = (
         'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
+    )
+    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = (
         'Carteira de crédito ativa Pessoa Jurídica - por atividade econômica (CNAE)'
-    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
-        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
-    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
-        'Carteira de crédito ativa - quantidade de clientes e de operações'
+    )
+    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = 'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
+    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = 'Carteira de crédito ativa - quantidade de clientes e de operações'
     PORTFOLIO_RISK_LEVEL = 'Carteira de crédito ativa - por nível de risco da operação'
     PORTFOLIO_INDEXER = 'Carteira de crédito ativa - por indexador'
     PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
@@ -86,16 +85,15 @@ class ReportsFinancialConglomerates(StrEnum):
 class ReportsFinancialConglomeratesSCR(StrEnum):
     """Enumeration of the types of reports to download."""
 
-    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = \
-        'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = \
+    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = 'Carteira de crédito ativa Pessoa Física - modalidade e prazo de vencimento'
+    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = (
         'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo de vencimento'
-    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = \
+    )
+    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = (
         'Carteira de crédito ativa Pessoa Jurídica - por atividade econômica (CNAE)'
-    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = \
-        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
-    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = \
-        'Carteira de crédito ativa - quantidade de clientes e de operações'
+    )
+    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = 'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
+    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = 'Carteira de crédito ativa - quantidade de clientes e de operações'
     PORTFOLIO_RISK_LEVEL = 'Carteira de crédito ativa - por nível de risco da operação'
     PORTFOLIO_INDEXER = 'Carteira de Crédito Ativa - Por indexador'
     PORTFOLIO_GEOGRAPHIC_REGION = 'Carteira de crédito ativa - por região geográfica'
@@ -117,10 +115,12 @@ class ReportsForeignExchange(StrEnum):
 
 
 # Mapping of the report types to the institution types.
-REPORTS = {InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportsPrudentialConglomerates,
-           InstitutionType.FINANCIAL_CONGLOMERATES: ReportsFinancialConglomerates,
-           InstitutionType.FINANCIAL_CONGLOMERATES_SCR: ReportsFinancialConglomeratesSCR,
-           InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportsIndividualInstitutions,
-           InstitutionType.FOREIGN_EXCHANGE: ReportsForeignExchange}
+REPORTS = {
+    InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportsPrudentialConglomerates,
+    InstitutionType.FINANCIAL_CONGLOMERATES: ReportsFinancialConglomerates,
+    InstitutionType.FINANCIAL_CONGLOMERATES_SCR: ReportsFinancialConglomeratesSCR,
+    InstitutionType.INDIVIDUAL_INSTITUTIONS: ReportsIndividualInstitutions,
+    InstitutionType.FOREIGN_EXCHANGE: ReportsForeignExchange,
+}
 
 __all__ = ['REPORTS']

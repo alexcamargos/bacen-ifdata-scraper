@@ -42,8 +42,7 @@ class PrudentialConglomeratesTransformer:
     def __normalize_percentage_series(self, series: pd.Series) -> pd.Series:
         """Removes the '%' sign from a pandas Series and converts it to float."""
 
-        series_cleaned = series.str.replace('%', '', regex=False) \
-                               .str.replace(',', '.', regex=False)
+        series_cleaned = series.str.replace('%', '', regex=False).str.replace(',', '.', regex=False)
 
         return pd.to_numeric(series_cleaned, errors='coerce') / 100
 
@@ -51,8 +50,7 @@ class PrudentialConglomeratesTransformer:
         """Cleans and converts a pandas Series to a numeric type, handling errors gracefully."""
 
         # If the series contains decimal values, normalize them.
-        series_cleaned = series.str.replace('.', '', regex=False) \
-                               .str.replace(',', '.', regex=False)
+        series_cleaned = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
 
         # Convert the cleaned series to numeric, rounding and converting to Int64.
         numeric_series = pd.to_numeric(series_cleaned, errors='coerce')

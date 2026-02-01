@@ -28,8 +28,7 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from typing import Protocol
-from typing import List
+from typing import List, Protocol
 
 import pandas as pd
 

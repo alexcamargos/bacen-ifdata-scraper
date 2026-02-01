@@ -44,39 +44,50 @@ class Session:
     Attributes:
         _driver (WebDriver): The WebDriver instance for browser interactions.
         _url (str): The URL to open in the web session.
-        browser (Browser): A browser interface for web interactions.
+        _browser (Browser): A browser interface for web interactions.
         session_data (dict): Data about the session,
                              such as duration and number of reports downloaded.
         _started (float): The start time of the session.
     """
 
     def __init__(self, driver: WebDriver, url: str) -> None:
-        """Initializes a new instance of the Session class."""
+        """Initializes a new instance of the Session class.
+        
+        Args:
+            driver (WebDriver): The WebDriver instance for browser interactions.
+            url (str): The URL to open in the web session.
+        """
 
         self._driver = driver
         self._url = url
-        self.browser = Browser(self._driver)
+        self._browser = Browser(self._driver)
 
-        self.session_data = {'url': self._url,
-                             'is_headless': self._driver.capabilities['moz:headless'],
-                             'duration': 0,
-                             'reports_downloaded': 0
-                             }
+        self.session_data = {
+            'url': self._url,
+            'is_headless': self._driver.capabilities['moz:headless'],
+            'duration': 0,
+            'reports_downloaded': 0,
+        }
 
         self._started = time()
 
-    def __ensure_and_select_dropdown_option(self, element_id: str, option: str) -> None:
-        """Ensures the dropdown menu is clickable and selects the desired option."""
+    def _ensure_and_select_dropdown_option(self, element_id: str, option: str) -> None:
+        """Ensures the dropdown menu is clickable and selects the desired option.
+        
+        Args:
+            element_id (str): The ID of the dropdown menu element.
+            option (str): The option to select in the dropdown menu.
+        """
 
         # Ensuring the dropdown menu is clickable.
-        self.browser.ensure_dropdown_content(element_id, Cfg.TIMEOUT.value)
+        self._browser.ensure_dropdown_content(element_id, Cfg.TIMEOUT.value)
         # Selecting the desired option in the "ulDataBase" dropdown menu.
-        self.browser.select_dropdown_option(option, Cfg.TIMEOUT.value)
+        self._browser.select_dropdown_option(option, Cfg.TIMEOUT.value)
 
     def open(self) -> None:
         """Opens the URL in a web browser."""
 
-        self.browser.initialize(self._url)
+        self._browser.initialize(self._url)
 
     def cleanup(self) -> None:
         """Cleans up the web session and log details."""
@@ -95,34 +106,32 @@ class Session:
     def get_data_bases(self) -> list:
         """Returns a list of available data bases."""
 
-        return self.browser.get_dropdown_options('ulDataBase')
+        return self._browser.get_dropdown_options('ulDataBase')
 
-    def download_reports(self,
-                         data_base: str,
-                         institution_type: str,
-                         report_type: str) -> None:
-        """
-        Downloads reports from the IF.data tool.
+    def download_reports(self, data_base: str, institution_type: str, report_type: str) -> None:
+        """Downloads reports from the IF.data tool.
 
         IMPORTANT: The system generates reports dynamically, so we need to
         ensure the page content is loaded before proceeding.
+        
+        Args:
+            data_base (str): The base date for the reports to be downloaded.
+            institution_type (str): The institution type for the reports to be downloaded.
+            report_type (str): The report type to be downloaded.
         """
 
         # Selecting the desired option in the "ulDataBase" dropdown menu.
-        self.__ensure_and_select_dropdown_option('btnDataBase',
-                                                 data_base)
+        self._ensure_and_select_dropdown_option('btnDataBase', data_base)
 
         # Selecting the desired option in the "ulTipoInst" dropdown menu.
-        self.__ensure_and_select_dropdown_option('btnTipoInst',
-                                                 institution_type)
+        self._ensure_and_select_dropdown_option('btnTipoInst', institution_type)
 
         # Selecting the desired option in the "ulRelatorio" dropdown menu.
-        self.__ensure_and_select_dropdown_option('btnRelatorio',
-                                                 report_type)
+        self._ensure_and_select_dropdown_option('btnRelatorio', report_type)
 
         # Ensure the report content is loaded before proceeding with
         # the download of the CSV file.
-        self.browser.download_report(Cfg.TIMEOUT.value)
+        self._browser.download_report(Cfg.TIMEOUT.value)
 
         # Update the counter for downloaded reports.
         self.session_data['reports_downloaded'] += 1

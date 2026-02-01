@@ -44,9 +44,7 @@ def load_csv_data(file_path: str, options: dict) -> pd.DataFrame:
     """
 
     if not options:
-        options = {
-            'sep': ";"
-        }
+        options = {'sep': ";"}
 
     # Load the data.
     return pd.read_csv(file_path, **options)

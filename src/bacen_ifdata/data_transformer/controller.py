@@ -98,11 +98,7 @@ class TransformerController:
         """
 
         # Configurations for correctly loading the data from prudential conglomerates CSV file.
-        options = {
-            'sep': ';',
-            'names': schema.column_names,
-            'dtype': str
-        }
+        options = {'sep': ';', 'names': schema.column_names, 'dtype': str}
 
         # Load the data.
         data = self.__load_data(file_path, options)

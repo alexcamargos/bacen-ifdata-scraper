@@ -52,10 +52,7 @@ class Browser:
 
         self._driver = driver
 
-    def __ensure_clickable(self,
-                           wait_time: int,
-                           by_method: str | By,
-                           locator: str) -> None:
+    def __ensure_clickable(self, wait_time: int, by_method: str | By, locator: str) -> None:
         """
         Waits for an element to be clickable on a web page and then clicks it.
 
@@ -99,17 +96,14 @@ class Browser:
         # Need to investigate further.
         # Solution is to use WebDriverWait() directly.
         WebDriverWait(self._driver, Cfg.TIMEOUT.value).until(
-            EC.element_to_be_clickable((By.XPATH,
-                                        '//*[@id="ulDataBase"]/li[1]/a')
-                                       )
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="ulDataBase"]/li[1]/a'))
         )
 
         dropdown = self._driver.find_element(By.ID, dropdown_id)
         dropdown_items = dropdown.find_elements(By.TAG_NAME, 'li')
 
         dropdown_texts = [
-            item.find_element(By.TAG_NAME, 'a').text for item in dropdown_items
-            if item.text.strip() != ''
+            item.find_element(By.TAG_NAME, 'a').text for item in dropdown_items if item.text.strip() != ''
         ]
 
         self.select_dropdown_option(dropdown_texts[0], Cfg.TIMEOUT.value)
@@ -121,8 +115,7 @@ class Browser:
 
         # Wait for the dataTable element to be visible.
         try:
-            WebDriverWait(self._driver, wait_time).until(
-                EC.visibility_of_element_located((By.ID, 'dataTable')))
+            WebDriverWait(self._driver, wait_time).until(EC.visibility_of_element_located((By.ID, 'dataTable')))
         except TimeoutException:
             logger.exception(f'Timeout: O elemento dataTable não se tornou visível após {
                              wait_time} segundos.')

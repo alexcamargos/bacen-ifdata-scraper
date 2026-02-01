@@ -29,10 +29,18 @@ License: MIT
 """
 
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import PrudentialConglomerateCapitalInformationSchema
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statement import PrudentialConglomerateIncomeStatementSchema
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import PrudentialConglomerateLiabilitiesSchema
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import PrudentialConglomerateSegmentationSchema
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import (
+    PrudentialConglomerateCapitalInformationSchema,
+)
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statement import (
+    PrudentialConglomerateIncomeStatementSchema,
+)
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import (
+    PrudentialConglomerateLiabilitiesSchema,
+)
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import (
+    PrudentialConglomerateSegmentationSchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
 
 # Instance a schema for report summary of prudential conglomerate.
@@ -54,8 +62,10 @@ PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = PrudentialConglomerateCapit
 PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentationSchema()
 
 
-__all__ = ['PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
-           'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
-           'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
-           'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
-           'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA']
+__all__ = [
+    'PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
+]

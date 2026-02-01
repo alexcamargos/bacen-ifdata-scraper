@@ -33,8 +33,7 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_cleaner.processing import normalize_csv
-from bacen_ifdata.scraper.storage.processing import (build_directory_path,
-                                                     ensure_directory)
+from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -50,15 +49,13 @@ def main(institution: StrEnum, report: StrEnum) -> None:
     """
 
     # Ensure that the processed files directory exists.
-    output_directory = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
-                                            institution.name.lower(),
-                                            report.name.lower())
+    output_directory = build_directory_path(
+        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+    )
     ensure_directory(output_directory)
 
     # Build the path to the input data directory.
-    input_data_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value,
-                                           institution.name.lower(),
-                                           report.name.lower())
+    input_data_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower(), report.name.lower())
 
     # List all CSV files in the input data directory.
     for file in input_data_path.glob('*.csv'):

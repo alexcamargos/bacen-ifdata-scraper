@@ -54,18 +54,18 @@ from loguru import logger
 
 def __files_is_empty(file: Path) -> bool:
     """
-        Checks if the specified file is empty.
+    Checks if the specified file is empty.
 
-        Determines if a file is empty by checking its size.
-        This function can be used for any file type, not limited to CSV files,
-        despite the function name suggesting it's specific to CSV files.
+    Determines if a file is empty by checking its size.
+    This function can be used for any file type, not limited to CSV files,
+    despite the function name suggesting it's specific to CSV files.
 
-        Parameters:
-        - file (Path): The path of the file to be checked.
+    Parameters:
+    - file (Path): The path of the file to be checked.
 
-        Returns:
-        - bool: True if the file is empty (size is 0), otherwise False.
-        """
+    Returns:
+    - bool: True if the file is empty (size is 0), otherwise False.
+    """
     return file.stat().st_size == 0
 
 

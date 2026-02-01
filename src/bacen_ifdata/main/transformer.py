@@ -35,16 +35,17 @@ import pandas as pd
 from loguru import logger
 
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
-from bacen_ifdata.data_transformer.schemas import (PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
-                                                   PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA)
+from bacen_ifdata.data_transformer.schemas import (
+    PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
+    PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
+    PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
+    PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
+    PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
+    PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA,
+)
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
-from bacen_ifdata.scraper.storage.processing import (build_directory_path,
-                                                     ensure_directory)
+from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -75,15 +76,15 @@ def main(transformer_controller: TransformerControllerInterface, institution: In
     """
 
     # Ensure that the transformed files directory exists.
-    output_directory = build_directory_path(Cfg.TRANSFORMED_FILES_DIRECTORY.value,
-                                            institution.name.lower(),
-                                            report.name.lower())
+    output_directory = build_directory_path(
+        Cfg.TRANSFORMED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+    )
     ensure_directory(output_directory)
 
     # Build the path to the input data directory.
-    input_data_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY.value,
-                                           institution.name.lower(),
-                                           report.name.lower())
+    input_data_path = build_directory_path(
+        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+    )
 
     # Map report types to their schemas.
     schema_by_report = {

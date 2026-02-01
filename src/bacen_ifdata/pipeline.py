@@ -32,14 +32,13 @@ from enum import StrEnum
 
 from loguru import logger
 
+from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.loader import main as main_loader
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.session import Session
-
-from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 
 
 class Pipeline:
@@ -52,9 +51,7 @@ class Pipeline:
         session (Session): The session object for the pipeline.
     """
 
-    def __init__(self,
-                 transformer_controller: TransformerControllerInterface,
-                 session: Session = None) -> None:
+    def __init__(self, transformer_controller: TransformerControllerInterface, session: Session = None) -> None:
         """Initialize the pipeline.
 
         Args:
@@ -78,8 +75,6 @@ class Pipeline:
         session = self.session
 
         # Download the reports.
-        logger.info(f'Downloading report "{report.name}" from "{institution.name}" '
-                    f'referring to "{data_base}"...')
         main_scraper(session, data_base, institution, report)
 
     def cleaner(self, process_institution: Institutions, process_report: StrEnum) -> None:
@@ -101,12 +96,9 @@ class Pipeline:
             report (Reports): The report to be processed.
         """
 
-        main_transformer(self.transformer_controller,
-                         transformer_institution, transformer_report)
+        main_transformer(self.transformer_controller, transformer_institution, transformer_report)
 
-    def loader(self,
-               loaded_institution: Institutions,
-               loaded_report: StrEnum) -> None:
+    def loader(self, loaded_institution: Institutions, loaded_report: StrEnum) -> None:
         """Main process for loading the data.
 
         Args:

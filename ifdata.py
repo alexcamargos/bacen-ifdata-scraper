@@ -36,10 +36,10 @@ from bacen_ifdata import Pipeline
 from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.manager import PipelineManager
-from bacen_ifdata.utilities.version import __version__ as version
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import initialize_webdriver
 from bacen_ifdata.utilities.configurations import Config
+from bacen_ifdata.utilities.version import __version__ as version
 
 
 def get_arguments() -> argparse.Namespace:
@@ -50,35 +50,18 @@ def get_arguments() -> argparse.Namespace:
     """
 
     # Create the parser.
-    parser = argparse.ArgumentParser(
-        prog='ifdata',
-        description='Bacen IF.data AutoScraper & Data Manager')
+    parser = argparse.ArgumentParser(prog='ifdata', description='Bacen IF.data AutoScraper & Data Manager')
 
     # Add the arguments.
-    parser.add_argument('-s',
-                        '--scraper',
-                        action='store_true',
-                        help='Download the reports.')
+    parser.add_argument('-s', '--scraper', action='store_true', help='Download the reports.')
 
-    parser.add_argument('-c',
-                        '--cleaner',
-                        action='store_true',
-                        help='Clean the downloaded reports.')
+    parser.add_argument('-c', '--cleaner', action='store_true', help='Clean the downloaded reports.')
 
-    parser.add_argument('-v',
-                        '--version',
-                        action='version',
-                        version=f'%(prog)s {version}')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
 
-    parser.add_argument('-t',
-                        '--transformer',
-                        action='store_true',
-                        help='Transform the downloaded reports.')
+    parser.add_argument('-t', '--transformer', action='store_true', help='Transform the downloaded reports.')
 
-    parser.add_argument('-l',
-                        '--loader',
-                        action='store_true',
-                        help='Load the processed reports.')
+    parser.add_argument('-l', '--loader', action='store_true', help='Load the processed reports.')
 
     return parser.parse_args()
 
@@ -90,43 +73,41 @@ def main(pipeline_manager: PipelineManager) -> None:
     of the IfDataPipeline, including scraping, cleaning, transforming,
     and loading data.
 
-    Arguments:
+    Args:
         pipeline_manager (PipelineManager): The pipeline manager instance to run.
     """
 
     # Get the arguments.
-    args = get_arguments()
+    arguments = get_arguments()
 
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
 
     # A flag to check if any specific action was requested.
-    action_requested = any(
-        [args.scraper, args.cleaner, args.transformer, args.loader])
+    action_requested = any([arguments.scraper, arguments.cleaner, arguments.transformer, arguments.loader])
 
     # Run the scraper.
-    if args.scraper:
+    if arguments.scraper:
         logger.info('Running the scraper...')
         pipeline_manager.run_scraper()
 
     # Run the cleaner.
-    if args.cleaner:
+    if arguments.cleaner:
         logger.info('Running the cleaner...')
         pipeline_manager.run_cleaner()
 
     # Run the transformer.
-    if args.transformer:
+    if arguments.transformer:
         logger.info('Running the transformer...')
         pipeline_manager.run_transformer()
 
     # Run the loader.
-    if args.loader:
+    if arguments.loader:
         logger.info('Running the loader...')
         pipeline_manager.run_loader()
 
     # If no specific action was requested, run the default pipeline.
     if not action_requested:
-        logger.info(
-            'No specific action requested, running default pipeline (cleaner and transformer)...')
+        logger.info('No specific action requested, running default pipeline (cleaner and transformer)...')
         # Run the cleaner.
         pipeline_manager.run_cleaner()
         # Run the transformer.
@@ -135,9 +116,10 @@ def main(pipeline_manager: PipelineManager) -> None:
 
 if __name__ == '__main__':
     # Initialize the session and driver, handling context management manually for now
+    # to ensure proper cleanup in case of exceptions.
     driver = initialize_webdriver()
     session = Session(driver, Config.URL.value)
-    self_cleaning_session = True
+    enable_session_cleanup = True
 
     try:
         # Open the session.
@@ -147,8 +129,7 @@ if __name__ == '__main__':
         prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
 
         # Create the transformer controller instance.
-        transformer_controller = TransformerController(
-            prudential_conglomerates_transformer)
+        transformer_controller = TransformerController(prudential_conglomerates_transformer)
 
         # Initialize the main pipeline with the session injected.
         pipeline = Pipeline(transformer_controller, session)
@@ -158,11 +139,11 @@ if __name__ == '__main__':
 
         # Run the main pipeline.
         main(pipeline_manager)
-    
+
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         raise e
     finally:
-        if self_cleaning_session:
+        if enable_session_cleanup:
             logger.info("Finishing session...")
             session.cleanup()

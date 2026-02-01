@@ -38,30 +38,34 @@ class PrudentialConglomerateSegmentationSchema:
     SCHEMA_DEFINITION = {
         'instituicao': {
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
-            'type': 'text'
+            'type': 'text',
         },
         'codigo': {
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
-            'type': 'numeric'
+            'type': 'numeric',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
             'mapping': {
-                'b1': ('Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
-                       'ou caixas econômicas e Conglomerado composto de pelo menos uma instituição do tipo Banco '
-                       'Comercial, Banco Múltiplo com Carteira Comercial ou caixas econômicas.'),
-                'b2': ('Instituição individual do tipo Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio '
-                       'ou Banco de Investimento e Conglomerado composto de pelo menos uma instituição do tipo '
-                       'Banco Múltiplo sem Carteira Comercial ou Banco de Investimento, mas sem conter instituições '
-                       'do tipo Banco Comercial e Banco Múltiplo com Carteira Comercial.'),
+                'b1': (
+                    'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
+                    'ou caixas econômicas e Conglomerado composto de pelo menos uma instituição do tipo Banco '
+                    'Comercial, Banco Múltiplo com Carteira Comercial ou caixas econômicas.'
+                ),
+                'b2': (
+                    'Instituição individual do tipo Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio '
+                    'ou Banco de Investimento e Conglomerado composto de pelo menos uma instituição do tipo '
+                    'Banco Múltiplo sem Carteira Comercial ou Banco de Investimento, mas sem conter instituições '
+                    'do tipo Banco Comercial e Banco Múltiplo com Carteira Comercial.'
+                ),
                 'b3s': 'Cooperativa de Crédito Singular.',
                 'b3c': 'Central e Confederação de Cooperativas de Crédito.',
                 'b4': 'Banco de Desenvolvimento',
                 'n1': 'Instituição não bancária atuante no mercado de crédito.',
                 'n2': 'Instituição não bancária atuante no mercado de capitais.',
-                'n4': 'Instituições de pagamento.'
-            }
+                'n4': 'Instituições de pagamento.',
+            },
         },
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
@@ -69,102 +73,108 @@ class PrudentialConglomerateSegmentationSchema:
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
-            }
+            },
         },
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
-            'mapping': {
-                '1': 'Público',
-                '2': 'Privado Nacional',
-                '3': 'Controle Estrangeiro'
-            }
+            'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
-        'cidade': {
-            'description': 'Cidade da sede da instituição.',
-            'type': 'text'
-        },
-        'uf': {
-            'description': 'Unidade da Federação onde fica a sede da instituição.',
-            'type': 'categorical'
-        },
-        'data_base': {
-            'description': 'Data-base do relatório.',
-            'type': 'date'
-        },
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
+        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
         'instituicao_sujeita_apuracao_exposicao_total': {
-            'description': ('Para cálculo do porte da instituição é considerada a exposição total, calculada '
-                            'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
-                            'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
-                            '(art 3º, Res 4553/2017).'),
-            'type': 'text'
+            'description': (
+                'Para cálculo do porte da instituição é considerada a exposição total, calculada '
+                'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
+                'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
+                '(art 3º, Res 4553/2017).'
+            ),
+            'type': 'text',
         },
         'instituicao_sujeita_apuracao_patrimonio_referencia': {
             'description': 'Informação se a instituição é sujeita à apuração do Patrimônio de Referência (art. 2º, Res 4553/2007).',
-            'type': 'text'
+            'type': 'text',
         },
         'instituicao_utiliza_metodologia_simplificada': {
             'description': (
                 'Informação se a instituição utiliza a metodologia facultativa simplificada para apuração '
-                'dos requerimentos mínimos de Patrimônio de Referência, de Nível I e de Capital Principal (art. 2º, Res 4553/2007).'),
-            'type': 'text'
+                'dos requerimentos mínimos de Patrimônio de Referência, de Nível I e de Capital Principal (art. 2º, Res 4553/2007).'
+            ),
+            'type': 'text',
         },
         'exposicao_total_ou_ativo_total': {
-            'description': ('Para cálculo do porte da instituição é considerada a exposição total, calculada '
-                            'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
-                            'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
-                            '(art 3º, Res 4553/2017). Exposição total é definida segundo a metodologia expressa '
-                            'na Circular n° 3.748, de 27 de fevereiro de 2015'),
-            'type': 'numeric'
+            'description': (
+                'Para cálculo do porte da instituição é considerada a exposição total, calculada '
+                'conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for '
+                'sujeita a apuração da exposição total, deve substituir pelo valor do ativo total '
+                '(art 3º, Res 4553/2017). Exposição total é definida segundo a metodologia expressa '
+                'na Circular n° 3.748, de 27 de fevereiro de 2015'
+            ),
+            'type': 'numeric',
         },
         'total_ativos_consolidados_exterior': {
-            'description': ('Valor total de ativos consolidados no exterior, convertido em dólares com base na taxa '
-                            'de câmbio de venda informada pelo Banco Central do Brasil para efeito de balancete ou '
-                            'balanço patrimonial (art. 4º Res 4553/2017).'),
-            'type': 'numeric'
+            'description': (
+                'Valor total de ativos consolidados no exterior, convertido em dólares com base na taxa '
+                'de câmbio de venda informada pelo Banco Central do Brasil para efeito de balancete ou '
+                'balanço patrimonial (art. 4º Res 4553/2017).'
+            ),
+            'type': 'numeric',
         },
         'data_ultima_alteracao_segmento': {
             'description': 'Data da última alteração do segmento da instituição.',
-            'type': 'date'
+            'type': 'date',
         },
         'segmento': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {
-                's1': ('Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
-                       'econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) '
-                       'exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões).'),
-                's2': ('Composto por: (i) bancos múltiplos, bancos comerciais, bancos de investimento, '
-                       'bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior '
-                       'a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do '
-                       'Brasil de porte igual ou superior a 1% do PIB.'),
+                's1': (
+                    'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
+                    'econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) '
+                    'exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões).'
+                ),
+                's2': (
+                    'Composto por: (i) bancos múltiplos, bancos comerciais, bancos de investimento, '
+                    'bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior '
+                    'a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do '
+                    'Brasil de porte igual ou superior a 1% do PIB.'
+                ),
                 's3': 'Instituições de porte inferior a 1% e igual ou superior a 0,1%.',
                 's4': 'Instituições de porte inferior a 0,1%.',
-                's5': ('Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia '
-                       'facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio '
-                       'de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, '
-                       'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
-                       'e (ii) não sujeitas a apuração de PR.'),
-            }
+                's5': (
+                    'Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia '
+                    'facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio '
+                    'de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, '
+                    'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
+                    'e (ii) não sujeitas a apuração de PR.'
+                ),
+            },
         },
         'tcip': {
             'description': 'Classificação das instituições conforme Resolução nº 197/2022 (Tipo 1, Tipo 2, Tipo 3).',
             'type': 'categorical',
             'mapping': {
-                '1': ('Tipo 1: conglomerado prudencial cuja instituição líder seja instituição financeira ou'
-                      ' outra instituição autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei'
-                      ' nº 4.595, de 31 de dezembro de 1964.'),
-                '2': ('Tipo 2: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
-                      ' e que não seja integrado por instituição financeira ou por outra instituição'
-                      ' autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964,'
-                      ' ou sujeita à Lei nº 10.194, de 14 de fevereiro de 2001.'),
-                '3': ('Tipo 3: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
-                      ' e que seja integrado por instituição financeira ou por outra instituição autorizada'
-                      ' a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964, ou sujeita'
-                      ' à Lei nº 10.194, de 2001.'),
-                'Em branco': 'Conglomerados ou instituições que não realizem serviços de pagamento.'
-            }
-        }
+                '1': (
+                    'Tipo 1: conglomerado prudencial cuja instituição líder seja instituição financeira ou'
+                    ' outra instituição autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei'
+                    ' nº 4.595, de 31 de dezembro de 1964.'
+                ),
+                '2': (
+                    'Tipo 2: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                    ' e que não seja integrado por instituição financeira ou por outra instituição'
+                    ' autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964,'
+                    ' ou sujeita à Lei nº 10.194, de 14 de fevereiro de 2001.'
+                ),
+                '3': (
+                    'Tipo 3: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                    ' e que seja integrado por instituição financeira ou por outra instituição autorizada'
+                    ' a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964, ou sujeita'
+                    ' à Lei nº 10.194, de 2001.'
+                ),
+                'Em branco': 'Conglomerados ou instituições que não realizem serviços de pagamento.',
+            },
+        },
     }
 
     def __get_columns_by_type(self, data_type: str) -> list[str]:
