@@ -33,8 +33,24 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from typing import NamedTuple
 
-def seconds_to_human_readable(seconds: float) -> tuple[int, int, float]:
+
+class TimeComponents(NamedTuple):
+    """Named tuple to represent time components.
+
+    Attributes:
+        hours (int): The number of hours.
+        minutes (int): The number of minutes.
+        seconds (float): The number of seconds.
+    """
+
+    hours: int
+    minutes: int
+    seconds: float
+
+
+def seconds_to_human_readable(seconds: float) -> TimeComponents:
     """Converts a number of seconds to a tuple representing the time in hours, minutes, and seconds.
 
     Given a duration in seconds, this function converts it to a tuple format
@@ -43,14 +59,18 @@ def seconds_to_human_readable(seconds: float) -> tuple[int, int, float]:
     of the time duration rather than having it in a human-readable string format.
 
     Parameters:
-    - seconds (float): The time duration in seconds to be converted.
+        - seconds (float): The time duration in seconds to be converted.
 
     Returns:
-    - tuple: A tuple representation of the time duration, where the first element is hours,
-      the second is minutes, and the third is seconds.
+      - TimeComponents: A named tuple representation of the time duration,
+                        where the first element is hours, the second is minutes,
+                        and the third is seconds.
     """
 
     hours, remainder = divmod(seconds, 3600)
     minutes, elapsed_seconds = divmod(remainder, 60)
 
-    return int(hours), int(minutes), round(elapsed_seconds, 2)
+    return TimeComponents(hours=int(hours), minutes=int(minutes), seconds=elapsed_seconds)
+
+
+__all__ = ['seconds_to_human_readable']
