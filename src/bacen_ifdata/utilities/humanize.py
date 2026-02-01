@@ -70,7 +70,7 @@ def seconds_to_human_readable(seconds: float) -> TimeComponents:
     hours, remainder = divmod(seconds, 3600)
     minutes, elapsed_seconds = divmod(remainder, 60)
 
-    return TimeComponents(hours=int(hours), minutes=int(minutes), seconds=elapsed_seconds)
+    return TimeComponents(hours=int(hours), minutes=int(minutes), seconds=round(elapsed_seconds, 2))
 
 
 __all__ = ['seconds_to_human_readable']
