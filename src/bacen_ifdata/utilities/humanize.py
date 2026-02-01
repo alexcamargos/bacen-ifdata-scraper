@@ -34,9 +34,8 @@ License: MIT
 """
 
 
-def seconds_to_human_readable(seconds: float) -> tuple:
-    """
-    Converts a number of seconds to a tuple representing the time in hours, minutes, and seconds.
+def seconds_to_human_readable(seconds: float) -> tuple[int, int, float]:
+    """Converts a number of seconds to a tuple representing the time in hours, minutes, and seconds.
 
     Given a duration in seconds, this function converts it to a tuple format
     expressed in hours, minutes, and seconds for easier interpretation and further processing.
@@ -44,7 +43,7 @@ def seconds_to_human_readable(seconds: float) -> tuple:
     of the time duration rather than having it in a human-readable string format.
 
     Parameters:
-    - seconds (int): The time duration in seconds to be converted.
+    - seconds (float): The time duration in seconds to be converted.
 
     Returns:
     - tuple: A tuple representation of the time duration, where the first element is hours,
@@ -52,6 +51,6 @@ def seconds_to_human_readable(seconds: float) -> tuple:
     """
 
     hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    minutes, elapsed_seconds = divmod(remainder, 60)
 
-    return hours, minutes, seconds
+    return int(hours), int(minutes), round(elapsed_seconds, 2)
