@@ -17,10 +17,10 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
-import time
 import threading
+import time
 
-from tests.mocks.exception import ElementNotClickableException
+from .exception import ElementNotClickableException
 
 
 class MockElement:
@@ -46,9 +46,8 @@ class MockElement:
         self.is_clicked = False
 
     def click(self):
-        """
-        Simula a ação de clicar no elemento. Atualiza 'is_clicked' para True.
-        """
+        """Simula a ação de clicar no elemento. Atualiza 'is_clicked' para True."""
+
         if not self._is_displayed or not self._is_enabled:
             raise ElementNotClickableException
 
@@ -56,37 +55,43 @@ class MockElement:
 
     def is_displayed(self):
         """Retorna se o elemento está visível."""
+
         return self._is_displayed
 
     def is_enabled(self):
         """Retorna se o elemento está habilitado."""
+
         return self._is_enabled
 
     def is_selected(self):
         """Retorna se o elemento está selecionado."""
+
         return self._is_selected
 
     def make_visible(self, delay=10):
         """Tornar o elemento visível após um delay"""
+
         time.sleep(delay)
         self._is_displayed = True
 
     def get_attribute(self, attribute_name):
         """Retorna um valor de atributo simulado baseado no nome do atributo fornecido."""
-        attributes = {'class': 'some-class',
-                      'href': 'https://www3.bcb.gov.br/ifdata/',
-                      # Adicione outros atributos conforme necessário
-                      }
+
+        attributes = {
+            'class': 'some-class',
+            'href': 'https://www3.bcb.gov.br/ifdata/',
+            # Adicione outros atributos conforme necessário
+        }
         return attributes.get(attribute_name, '')
 
     def text(self):
         """Retorna o texto do elemento."""
+
         return self._text
 
 
 class DelayedVisibilityMockElement(MockElement):
-    """
-    Uma extensão de MockElement que simula um elemento da web cuja visibilidade e
+    """Uma extensão de MockElement que simula um elemento da web cuja visibilidade e
     capacidade de interação são retardadas por um período especificado. A classe
     utiliza multithreading para introduzir um atraso antes de alterar o estado
     do elemento para visível e habilitado.
@@ -102,11 +107,10 @@ class DelayedVisibilityMockElement(MockElement):
         threading.Thread(target=self.make_visible_after_delay).start()
 
     def make_visible_after_delay(self):
+        """Um método que é executado em uma thread separada para simular o atraso e
+        depois alterar os atributos de visibilidade e habilitação do elemento.
         """
-        Um método que é executado em uma thread separada para simular
-        o atraso e depois alterar os atributos de visibilidade
-        e habilitação do elemento.
-        """
+
         time.sleep(self.delay)
         self._is_displayed = True
         self._is_enabled = True

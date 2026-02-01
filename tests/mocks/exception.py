@@ -22,5 +22,7 @@ class ElementNotClickableException(Exception):
     """Exceção levantada quando um elemento não pode ser clicado."""
 
     def __init__(self, message="Element is not clickable."):
+        """Inicializa a exceção com uma mensagem personalizada."""
+
         self.message = message
         super().__init__(self.message)

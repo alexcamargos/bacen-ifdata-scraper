@@ -19,7 +19,8 @@
 
 
 from selenium.common.exceptions import NoSuchElementException
-from tests.mocks.element import MockElement, DelayedVisibilityMockElement
+
+from .element import DelayedVisibilityMockElement, MockElement
 
 
 class MockWebDriver:
@@ -42,24 +43,29 @@ class MockWebDriver:
     """
 
     def __init__(self):
-        self.elements = {'clickable': MockElement(is_displayed=True, is_enabled=True),
-                         'unclickable': MockElement(is_displayed=True, is_enabled=False),
-                         'delayed': DelayedVisibilityMockElement(is_displayed=False,
-                                                                 is_enabled=False,
-                                                                 delay=2),
-                         'nonexistent': None}
+        """Inicializa a classe MockWebDriver."""
+
+        self.elements = {
+            'clickable': MockElement(is_displayed=True, is_enabled=True),
+            'unclickable': MockElement(is_displayed=True, is_enabled=False),
+            'delayed': DelayedVisibilityMockElement(is_displayed=False, is_enabled=False, delay=2),
+            'nonexistent': None,
+        }
 
     def find_element(self, by, value):
+        """Simula a busca de um elemento no navegador."""
+
         element = self.elements.get(value)
         if element is None:
-            raise NoSuchElementException(
-                f"Elemento com {by}='{value}' não foi encontrado")
+            raise NoSuchElementException(f"Elemento com {by}='{value}' não foi encontrado")
+
         return element
 
     def execute_script(self, script, element):
-        """
-        Simula a execução de um script JavaScript.
+        """Simula a execução de um script JavaScript.]
+
         No caso de um script de clique, chama o método click() do elemento.
         """
+
         if 'click' in script.lower():
             element.click()
