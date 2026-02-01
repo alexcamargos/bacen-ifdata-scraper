@@ -59,10 +59,10 @@ def main(session: Session, report_date: str, institution: Institutions, report: 
     """
 
     # Ensure that the download directory exists.
-    ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
+    ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
 
     # Create the directory for the institution and report.
-    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower())
+    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY, institution.name.lower())
     ensure_directory(institution_directory)
     report_directory = build_directory_path(institution_directory, report.name.lower())
     ensure_directory(report_directory)
@@ -73,7 +73,7 @@ def main(session: Session, report_date: str, institution: Institutions, report: 
 
     # Build the path to the report file.
     report_file_path = build_directory_path(
-        Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower(), report.name.lower(), report_file_name
+        Cfg.DOWNLOAD_DIRECTORY, institution.name.lower(), report.name.lower(), report_file_name
     )
 
     # Check if the file was already downloaded.
@@ -86,10 +86,10 @@ def main(session: Session, report_date: str, institution: Institutions, report: 
         session.download_reports(report_date, institution, report)
 
         # Wait for the download to finish before processing the file.
-        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY.value, Cfg.DOWNLOAD_FILE_NAME.value):
+        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY, Cfg.DOWNLOAD_FILE_NAME):
             sleep(3)
             process_downloaded_files(
-                build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, Cfg.DOWNLOAD_FILE_NAME.value), report_file_path
+                build_directory_path(Cfg.DOWNLOAD_DIRECTORY, Cfg.DOWNLOAD_FILE_NAME), report_file_path
             )
         else:
             logger.error('Download was not completed in the expected time.')
