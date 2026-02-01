@@ -80,21 +80,17 @@ class PipelineManager:
                         self.pipeline.scraper(data, institution, report)
         except IfDataScraperException as error:
             logger.exception(error.message)
-        finally:
-            # Clean up the session, closing the browser and show report.
-            if self.pipeline.session:
-                self.pipeline.session.cleanup()
 
-            # BUG: The IF.data system generates CSV files for download in real-time,
-            # using the loaded data table as the foundation.
-            # Internally, it triggers the `downloadCsv` JavaScript function, which
-            # constructs a Blob object of type "text/csv" and saves this file.
-            # I have not been able to find a permanent solution to this issue.
-            #
-            # A temporary measure is to delete the empty files and rerun the
-            # data scraping process, repeating this step until there are no
-            # more content-less files remaining.
-            self._clean_download_directory()
+        # BUG: The IF.data system generates CSV files for download in real-time,
+        # using the loaded data table as the foundation.
+        # Internally, it triggers the `downloadCsv` JavaScript function, which
+        # constructs a Blob object of type "text/csv" and saves this file.
+        # I have not been able to find a permanent solution to this issue.
+        #
+        # A temporary measure is to delete the empty files and rerun the
+        # data scraping process, repeating this step until there are no
+        # more content-less files remaining.
+        self._clean_download_directory()
 
     def run_cleaner(self) -> None:
         """Main function for executing the cleaner."""
