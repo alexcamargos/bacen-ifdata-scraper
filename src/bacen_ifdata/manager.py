@@ -62,6 +62,9 @@ class PipelineManager:
     def run_scraper(self) -> None:
         """Main function for executing the scraper."""
 
+        if self.pipeline.session is None:
+            raise ValueError('Session is not initialized.')
+
         try:
             # Get the available data bases.
             data_base: list[str] = self.pipeline.session.get_data_bases()
