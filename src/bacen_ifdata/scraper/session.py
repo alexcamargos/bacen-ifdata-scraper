@@ -28,12 +28,29 @@ License: MIT
 """
 
 from time import time
+from typing import TypedDict
 
 from loguru import logger
 
 from bacen_ifdata.scraper.interfaces.interacting import Browser
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.humanize import seconds_to_human_readable
+
+
+class SessionData(TypedDict):
+    """TypedDict for session data.
+
+    Attributes:
+        url (str): The URL of the session.
+        is_headless (bool): Indicates if the browser is in headless mode.
+        duration (float): The duration of the session in seconds.
+        reports_downloaded (int): The number of reports downloaded during the session.
+    """
+
+    url: str
+    is_headless: bool
+    duration: float
+    reports_downloaded: int
 
 
 class Session:
@@ -43,7 +60,7 @@ class Session:
     Attributes:
         _url (str): The URL to open in the web session.
         _browser (Browser): A browser interface for web interactions.
-        session_data (dict): Data about the session,
+        session_data (SessionData): Data about the session,
                              such as duration and number of reports downloaded.
         _started (float): The start time of the session.
 
@@ -66,7 +83,7 @@ class Session:
         self._browser = browser
         self._url = url
 
-        self.session_data = {
+        self.session_data: SessionData = {
             'url': self._url,
             'is_headless': self._browser.is_headless,
             'duration': 0,
@@ -99,19 +116,21 @@ class Session:
         # Calculate the session duration and log details.
         session_finished = time()
         self.session_data['duration'] = session_finished - self._started
-        hours, minutes, seconds = seconds_to_human_readable(self.session_data['duration'])
+        human_readable_duration = seconds_to_human_readable(self.session_data['duration'])
 
         logger.info(f"Headless mode: {self.session_data['is_headless']}.")
-        logger.info(f"Session duration: {hours}h {minutes}m {seconds}s.")
+        logger.info(
+            f"Session duration: {human_readable_duration.hours}h {human_readable_duration.minutes}m {human_readable_duration.seconds}s."
+        )
         logger.info(f"Reports downloaded: {self.session_data['reports_downloaded']}.")
 
         self._browser.quit()
 
-    def get_data_bases(self) -> list:
+    def get_data_bases(self) -> list[str]:
         """Returns a list of available data bases.
 
         Returns:
-            list: A list of available data bases.
+            list[str]: A list of available data bases.
         """
 
         return self._browser.get_dropdown_options('ulDataBase')
