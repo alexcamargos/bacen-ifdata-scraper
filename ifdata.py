@@ -36,6 +36,7 @@ from bacen_ifdata import Pipeline
 from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.manager import PipelineManager
+from bacen_ifdata.scraper.interfaces.interacting import Browser
 from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.utils import initialize_webdriver
 from bacen_ifdata.utilities.configurations import Config
@@ -63,10 +64,16 @@ def get_arguments() -> argparse.Namespace:
 
     parser.add_argument('-l', '--loader', action='store_true', help='Load the processed reports.')
 
+    parser.add_argument(
+        '--no-cleanup',
+        action='store_true',
+        help='Keep the browser session open after execution (useful for debugging).',
+    )
+
     return parser.parse_args()
 
 
-def main(pipeline_manager: PipelineManager) -> None:
+def main(pipeline_manager: PipelineManager, enable_cleanup: bool = True) -> bool:
     """Main function to run the IF.data pipeline.
 
     This function orchestrates the execution of the various stages
@@ -75,6 +82,10 @@ def main(pipeline_manager: PipelineManager) -> None:
 
     Args:
         pipeline_manager (PipelineManager): The pipeline manager instance to run.
+        enable_cleanup (bool): Whether to enable session cleanup after execution.
+
+    Returns:
+        bool: The cleanup flag to be used by the caller.
     """
 
     # Get the arguments.
@@ -113,13 +124,19 @@ def main(pipeline_manager: PipelineManager) -> None:
         # Run the transformer.
         pipeline_manager.run_transformer()
 
+    return enable_cleanup
+
 
 if __name__ == '__main__':
     # Initialize the session and driver, handling context management manually for now
     # to ensure proper cleanup in case of exceptions.
     driver = initialize_webdriver()
-    session = Session(driver, Config.URL.value)
-    enable_session_cleanup = True
+    browser = Browser(driver)
+    session = Session(browser, Config.URL.value)
+
+    # Get command-line arguments to check cleanup flag.
+    arguments = get_arguments()
+    enable_session_cleanup = not arguments.no_cleanup
 
     try:
         # Open the session.
@@ -138,11 +155,11 @@ if __name__ == '__main__':
         pipeline_manager = PipelineManager(pipeline)
 
         # Run the main pipeline.
-        main(pipeline_manager)
+        main(pipeline_manager, enable_session_cleanup)
 
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        raise e
+    except Exception as error:
+        logger.error(f"An error occurred: {error}")
+        raise error
     finally:
         if enable_session_cleanup:
             logger.info("Finishing session...")
