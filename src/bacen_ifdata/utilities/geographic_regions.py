@@ -27,16 +27,42 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from enum import StrEnum
+from typing import Final
+
+
+class Region(StrEnum):
+    """Defines the geographic regions of Brazil.
+
+    Attributes:
+        NORTE (str): North region.
+        NORDESTE (str): Northeast region.
+        SUL (str): South region.
+        SUDESTE (str): Southeast region.
+        CENTRO_OESTE (str): Central-West region.
+    """
+
+    NORTE = 'Norte'
+    NORDESTE = 'Nordeste'
+    SUL = 'Sul'
+    SUDESTE = 'Sudeste'
+    CENTRO_OESTE = 'Centro-oeste'
+
+
 # Definindo as regiões e estados do Brasil.
-regions_states = {
-    'Norte': ['AC', 'AM', 'AP', 'PA', 'RO', 'RR', 'TO'],
-    'Nordeste': ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'],
-    'Sul': ['PR', 'RS', 'SC'],
-    'Sudeste': ['ES', 'MG', 'RJ', 'SP'],
-    'Centro-oeste': ['DF', 'GO', 'MT', 'MS'],
+REGIONS_STATES: Final[dict[Region, list[str]]] = {
+    Region.NORTE: ['AC', 'AM', 'AP', 'PA', 'RO', 'RR', 'TO'],
+    Region.NORDESTE: ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'],
+    Region.SUL: ['PR', 'RS', 'SC'],
+    Region.SUDESTE: ['ES', 'MG', 'RJ', 'SP'],
+    Region.CENTRO_OESTE: ['DF', 'GO', 'MT', 'MS'],
 }
+
 # Mapeando os estados para as regiões do Brasil.
 # Formato: {estado: regiao}
-STATE_TO_REGION = {state: region for region, states in regions_states.items() for state in states}
+STATE_TO_REGION: Final[dict[str, Region]] = {
+    state: region for region, states in REGIONS_STATES.items() for state in states
+}
 
-__ALL__ = ['STATE_TO_REGION']
+
+__all__ = ['STATE_TO_REGION']
