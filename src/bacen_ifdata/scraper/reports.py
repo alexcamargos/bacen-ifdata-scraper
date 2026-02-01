@@ -48,7 +48,6 @@ from enum import StrEnum
 from bacen_ifdata.scraper.institutions import InstitutionType
 
 
-# Type of report to download.
 class ReportsPrudentialConglomerates(StrEnum):
     """Enumeration of the types of reports to download."""
 
