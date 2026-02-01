@@ -62,13 +62,13 @@ class Pipeline:
         self.transformer_controller = transformer_controller
         self.session = session
 
-    def scraper(self, data_base: str, institution, report) -> None:
+    def scraper(self, data_base: str, institution: Institutions, report: StrEnum) -> None:
         """Main function for scraping the data.
 
         Args:
             data_base (str): The data base to be scraped.
-            institution (str): The institution to be scraped.
-            report (str): The report to be scraped.
+            institution (Institutions): The institution to be scraped.
+            report (StrEnum): The report to be scraped.
         """
 
         # Get the session.
@@ -92,8 +92,8 @@ class Pipeline:
 
         Args:
             data_frame (pd.DataFrame): The data frame containing the report data.
-            institution (InstitutionType): The institution to be processed.
-            report (Reports): The report to be processed.
+            institution (Institutions): The institution to be processed.
+            report (StrEnum): The report to be processed.
         """
 
         main_transformer(self.transformer_controller, transformer_institution, transformer_report)

@@ -41,21 +41,7 @@ from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 class Browser:
-    """A class for interacting with a web browser using Selenium WebDriver.
-
-    Attributes:
-        _driver (WebDriver): The WebDriver instance for browser interactions.
-    
-    Methods:
-        _ensure_clickable(wait_time, by_method, locator): Waits for an element to be clickable and clicks it.
-        initialize(url): Initializes the WebDriver session and opens the specified URL.
-        quit(): Quits the WebDriver session.
-        is_headless: Returns True if the browser is running in headless mode.
-        ensure_dropdown_content(dropdown_id, wait_time): Selects an option from a dropdown menu.
-        select_dropdown_option(option_text, wait_time): Selects an option from a dropdown menu.
-        get_dropdown_options(dropdown_id): Returns a list of options from a dropdown menu.
-        download_report(wait_time): Downloads a report by clicking the "Exportar CSV" button.
-    """
+    """A class for interacting with a web browser using Selenium WebDriver."""
 
     def __init__(self, driver: WebDriver) -> None:
         """Initializes a new instance of the Browser class with the given WebDriver.
@@ -66,14 +52,14 @@ class Browser:
 
         self._driver = driver
 
-    def _ensure_clickable(self, wait_time: int, by_method: str | By, locator: str) -> None:
+    def _ensure_clickable(self, wait_time: int, by_method: By, locator: str) -> None:
         """Waits for an element to be clickable on a web page and then clicks it.
 
         This is a wrapper around the ensure_clickable utility function.
 
         Args:
             wait_time (int): The maximum time to wait for the element to become clickable.
-            by_method (str | By): The Selenium By method to locate the element.
+            by_method (By): The Selenium By method to locate the element.
             locator (str): The locator string for finding the element.
 
         Raises:
@@ -105,7 +91,7 @@ class Browser:
 
         return self._driver.capabilities['moz:headless']
 
-    def ensure_dropdown_content(self, dropdown_id: str, wait_time: int):
+    def ensure_dropdown_content(self, dropdown_id: str, wait_time: int) -> None:
         """Selects an option from a dropdown menu on a web page.
 
         Args:
@@ -115,7 +101,7 @@ class Browser:
 
         self._ensure_clickable(wait_time, By.ID, dropdown_id)
 
-    def select_dropdown_option(self, option_text: str, wait_time: int):
+    def select_dropdown_option(self, option_text: str, wait_time: int) -> None:
         """Selects an option from a dropdown menu on a web page.
 
         Args:
@@ -126,22 +112,22 @@ class Browser:
         option_xpath = f"//a[normalize-space(text())='{option_text}']"
         self._ensure_clickable(wait_time, By.XPATH, option_xpath)
 
-    def get_dropdown_options(self, dropdown_id: str) -> list:
+    def get_dropdown_options(self, dropdown_id: str) -> list[str]:
         """Returns a list of options from a dropdown menu on a web page.
 
         Args:
             dropdown_id (str): The ID of the dropdown menu element.
 
         Returns:
-            list: A list of option texts from the dropdown menu.
+            list[str]: A list of option texts from the dropdown menu.
         """
 
-        self.ensure_dropdown_content('btnDataBase', Cfg.TIMEOUT.value)
+        self.ensure_dropdown_content('btnDataBase', Cfg.TIMEOUT)
 
         # NOTE: Using _ensure_clickable() not working here.
         # Need to investigate further.
         # Solution is to use WebDriverWait() directly.
-        WebDriverWait(self._driver, Cfg.TIMEOUT.value).until(
+        WebDriverWait(self._driver, Cfg.TIMEOUT).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="ulDataBase"]/li[1]/a'))
         )
 
@@ -152,7 +138,7 @@ class Browser:
             item.find_element(By.TAG_NAME, 'a').text for item in dropdown_items if item.text.strip() != ''
         ]
 
-        self.select_dropdown_option(dropdown_texts[0], Cfg.TIMEOUT.value)
+        self.select_dropdown_option(dropdown_texts[0], Cfg.TIMEOUT)
 
         return dropdown_texts
 

@@ -132,7 +132,7 @@ if __name__ == '__main__':
     # to ensure proper cleanup in case of exceptions.
     driver = initialize_webdriver()
     browser = Browser(driver)
-    session = Session(browser, Config.URL.value)
+    session = Session(browser, Config.URL)
 
     # Get command-line arguments to check cleanup flag.
     arguments = get_arguments()

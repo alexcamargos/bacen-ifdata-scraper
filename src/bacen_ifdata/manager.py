@@ -29,7 +29,7 @@ from bacen_ifdata.utilities.configurations import Config as Cfg
 class PipelineManager:
     """Manages the IF.data pipeline, including scraping, cleaning, transforming, and loading data."""
 
-    def __init__(self, pipeline: Pipeline):
+    def __init__(self, pipeline: Pipeline) -> None:
         """Initializes the PipelineManager with a pipeline instance."""
 
         self.pipeline = pipeline
@@ -64,7 +64,7 @@ class PipelineManager:
 
         try:
             # Get the available data bases.
-            data_base = self.pipeline.session.get_data_bases()
+            data_base: list[str] = self.pipeline.session.get_data_bases()
 
             # Run the scraper...
             for institution in Institutions:

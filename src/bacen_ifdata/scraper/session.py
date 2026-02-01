@@ -101,9 +101,9 @@ class Session:
         """
 
         # Ensuring the dropdown menu is clickable.
-        self._browser.ensure_dropdown_content(element_id, Cfg.TIMEOUT.value)
+        self._browser.ensure_dropdown_content(element_id, Cfg.TIMEOUT)
         # Selecting the desired option in the "ulDataBase" dropdown menu.
-        self._browser.select_dropdown_option(option, Cfg.TIMEOUT.value)
+        self._browser.select_dropdown_option(option, Cfg.TIMEOUT)
 
     def open(self) -> None:
         """Opens the URL in a web browser."""
@@ -157,7 +157,7 @@ class Session:
         self._ensure_and_select_dropdown_option('btnRelatorio', report_type)
 
         # Ensure the report content is loaded before proceeding with the download of the CSV file.
-        self._browser.download_report(Cfg.TIMEOUT.value)
+        self._browser.download_report(Cfg.TIMEOUT)
 
         # Update the counter for downloaded reports.
         self.session_data['reports_downloaded'] += 1

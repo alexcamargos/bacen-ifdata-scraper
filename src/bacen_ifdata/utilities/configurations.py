@@ -27,22 +27,23 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from enum import Enum
+from dataclasses import dataclass
 from pathlib import Path
 
 
-class Config(Enum):
+@dataclass(frozen=True)
+class Config:
     """Configuration settings for Bacen IF.data AutoScraper & Data Manager."""
 
     # URL of the page where the reports are located.
-    URL = 'https://www3.bcb.gov.br/ifdata/index2024.html'
+    URL: str = 'https://www3.bcb.gov.br/ifdata/index2024.html'
     # Maximum waiting time for elements to load.
-    TIMEOUT = 120
-    BASE_DIRECTORY = Path.cwd()
-    DOWNLOAD_DIRECTORY = BASE_DIRECTORY / 'data' / 'raw'
-    DOWNLOAD_FILE_NAME = 'dados.csv'
-    PROCESSED_FILES_DIRECTORY = BASE_DIRECTORY / 'data' / 'processed'
-    TRANSFORMED_FILES_DIRECTORY = BASE_DIRECTORY / 'data' / 'transformed'
+    TIMEOUT: int = 120
+    BASE_DIRECTORY: Path = Path.cwd()
+    DOWNLOAD_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'raw'
+    DOWNLOAD_FILE_NAME: str = 'dados.csv'
+    PROCESSED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'processed'
+    TRANSFORMED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'transformed'
 
 
 __all__ = ['Config']

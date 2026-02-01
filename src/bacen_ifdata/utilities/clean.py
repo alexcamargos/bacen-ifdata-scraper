@@ -52,38 +52,37 @@ from pathlib import Path
 from loguru import logger
 
 
-def __files_is_empty(file: Path) -> bool:
-    """
-    Checks if the specified file is empty.
+def _files_is_empty(file: Path) -> bool:
+    """Checks if the specified file is empty.
 
     Determines if a file is empty by checking its size.
     This function can be used for any file type, not limited to CSV files,
     despite the function name suggesting it's specific to CSV files.
 
-    Parameters:
-    - file (Path): The path of the file to be checked.
+    Args:
+        file (Path): The path to the file to be checked.
 
     Returns:
-    - bool: True if the file is empty (size is 0), otherwise False.
+        bool: True if the file is empty, False otherwise.
     """
+
     return file.stat().st_size == 0
 
 
 def clean_empty_csv_files(path: Path) -> None:
-    """
-    Clean up the directory by removing empty CSV files.
+    """Clean up the directory by removing empty CSV files.
 
     Iterates over all CSV files in the specified directory
     and removes each one that is empty.
 
-    Parameters:
-    - path (Path): The path of the directory to be cleaned.
+    Args:
+        path (Path): The path of the directory to be cleaned.
     """
 
     empty_files = False
 
     for file in path.rglob('*.csv'):
-        if __files_is_empty(file):
+        if _files_is_empty(file):
             logger.info(f'Removing empty file: {file.name}')
             file.unlink()
             empty_files = True
@@ -93,8 +92,7 @@ def clean_empty_csv_files(path: Path) -> None:
 
 
 def clean_download_base_directory(path: Path) -> None:
-    """
-    Clean up the download base directory by removing CSV files that were
+    """Clean up the download base directory by removing CSV files that were
     downloaded by scraping processes and have not been moved to the storage directory.
 
     This function iterates over all CSV files in the specified directory and its subdirectories.
@@ -102,8 +100,8 @@ def clean_download_base_directory(path: Path) -> None:
     This operation is intended for cleanup after files have been processed and should be used
     with caution to avoid deleting files unintentionally.
 
-    Parameters:
-    - path (Path): The path of the download base directory to be cleaned.
+    Args:
+        path (Path): The path of the download base directory to be cleaned.
     """
 
     for file in path.glob('*.csv'):

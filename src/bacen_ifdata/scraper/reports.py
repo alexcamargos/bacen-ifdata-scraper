@@ -114,7 +114,7 @@ class ReportsForeignExchange(StrEnum):
 
 
 # Mapping of the report types to the institution types.
-REPORTS = {
+REPORTS: dict[InstitutionType, type[StrEnum]] = {
     InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportsPrudentialConglomerates,
     InstitutionType.FINANCIAL_CONGLOMERATES: ReportsFinancialConglomerates,
     InstitutionType.FINANCIAL_CONGLOMERATES_SCR: ReportsFinancialConglomeratesSCR,

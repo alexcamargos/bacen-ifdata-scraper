@@ -24,5 +24,12 @@ class IfDataScraperException(Exception):
     """Base class for exceptions in this module."""
 
     def __init__(self, message: str = '') -> None:
+        """Initialize the IfDataScraperException with an optional message.
+
+        Args:
+            message (str): The error message.
+        """
+
         self.message = f'An error occurred: {message}'
+        # Call the base class constructor with the parameters it needs.
         super().__init__(self.message)

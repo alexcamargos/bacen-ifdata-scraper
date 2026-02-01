@@ -25,8 +25,17 @@ from typing import Protocol
 import pandas as pd
 
 
+# pylint: disable=too-few-public-methods
 class TransformerControllerInterface(Protocol):
     """Represents the interface for the Transformer Controller."""
 
     def transform(self, file_path: Path, schema) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+        """Transforms the data from the given file path according to the specified schema.
+
+        Args:
+            file_path (Path): The path to the file to be transformed.
+            schema: The schema to be used for transformation.
+
+        Returns:
+            pd.DataFrame: The transformed DataFrame.
+        """

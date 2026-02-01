@@ -24,23 +24,29 @@ from pathlib import Path
 
 from loguru import logger
 
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 def check_file_already_processed(output_directory: Path, file: str) -> bool:
-    """Checks if the file has already been processed."""
-
-    # Check if the file exists.
-    if (output_directory / file).exists():
-        return True
-    else:
-        return False
-
-
-def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
+    """Checks if the file has already been processed.
+    
+    Args:
+        output_directory (Path): The directory where the file is being processed.
+        file (str): The name of the file to be processed.
+    
+    Returns:
+        bool: True if the file has already been processed, False otherwise.
     """
-    Normalizes a CSV file from Bacen If.Data by correcting its header
+
+    # Check if the file exists in the output directory.
+    return (output_directory / file).exists()
+
+
+# pylint: disable=too-many-locals
+def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool:
+    """Normalizes a CSV file from Bacen If.Data by correcting its header
     structure and removing inconsistent lines at both the start and end
     of the file.
 
@@ -54,7 +60,7 @@ def normalize_csv(institution: StrEnum, report: StrEnum, file: str) -> bool:
     The function checks if the file has already been normalized before proceeding.
 
     Args:
-        institution (StrEnum): An enumerated value representing the institution.
+        institution (Institutions): An enumerated value representing the institution.
         report (StrEnum): An enumerated value representing the report type.
         file (str): The name of the file to be normalized.
 

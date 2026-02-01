@@ -38,6 +38,7 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from typing import Any, Final
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.base_schema import BaseSchema
 
 
@@ -47,7 +48,7 @@ class PrudentialConglomerateCapitalInformationSchema(BaseSchema):
     conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
     """
 
-    SCHEMA_DEFINITION = {
+    SCHEMA_DEFINITION: Final[dict[str, dict[str, Any]]] = {
         'instituicao': {
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text',

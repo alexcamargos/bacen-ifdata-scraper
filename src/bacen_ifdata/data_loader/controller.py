@@ -21,14 +21,15 @@
 """Bacen IF.data AutoScraper & Data Manager"""
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Final, Optional
 
 import pandas as pd
+from loguru import logger
 
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 
 # Nomes das colunas definidos com base na ordem do arquivo CSV e nas descrições do PDF.
-COLUMN_NAMES = [
+COLUMN_NAMES: Final[list[str]] = [
     # --- Identificação da Instituição ---
     "instituicao_financeira",  # Nome da instituição [cite: 1]
     # Código da instituição no cadastro do Banco Central [cite: 1]
@@ -67,32 +68,49 @@ COLUMN_NAMES = [
 ]
 
 
+# pylint: disable=too-few-public-methods
 class LoaderController:
     """Controller for loading data from reports.
 
     This class is responsible for controlling the loading of data from reports.
     """
 
-    def __init__(self):
-        self.__data: Optional[pd.DataFrame] = None
+    def __init__(self) -> None:
+        """Initializes a new instance of the LoaderController class."""
+
+        self._data: Optional[pd.DataFrame] = None
 
         # CSV options for loading data.
-        self.__csv_options: Dict[str, Any] = {'sep': ";", "header": None, "names": COLUMN_NAMES}
+        self._csv_options: dict[str, Any] = {'sep': ";", "header": None, "names": COLUMN_NAMES}
 
-    def __load_data(self, csv_file_path: Path):
-        """Load data from the source CSV file."""
+    def _load_data(self, csv_file_path: Path):
+        """Load data from the source CSV file.
 
-        self.__data = load_csv_data(csv_file_path.as_posix(), self.__csv_options)
+        This method is responsible for loading the data from the source CSV file.
 
-    def loader_sample_data(self, input_data: Path, sample_size: int = 5):
-        """Load a sample of the data."""
+        Args:
+            csv_file_path (Path): The path to the CSV file to be loaded.
+        """
 
         # Load the data from the input CSV file.
-        self.__load_data(input_data)
+        self._data = load_csv_data(csv_file_path.as_posix(), self._csv_options)
+
+    def loader_sample_data(self, input_data: Path, sample_size: int = 5) -> None:
+        """Load a sample of the data
+
+        This method loads a sample of the data from the input CSV file and prints it.
+
+        Args:
+            input_data (Path): The path to the CSV file to be loaded.
+            sample_size (int): The number of sample rows to be printed. Default is 5.
+        """
+
+        # Load the data from the input CSV file.
+        self._load_data(input_data)
 
         # Check if the data was loaded successfully.
-        if self.__data is None:
-            raise RuntimeError("Data loading failed: self.__data is None")
+        if self._data is None:
+            raise RuntimeError("Data loading failed: self._data is None")
 
         # Print a sample of the loaded data.
-        print(self.__data.sample(sample_size))
+        logger.info(self._data.sample(sample_size))

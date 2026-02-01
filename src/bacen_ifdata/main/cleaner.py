@@ -33,11 +33,12 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_cleaner.processing import normalize_csv
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(institution: StrEnum, report: StrEnum) -> None:
+def main(institution: Institutions, report: StrEnum) -> None:
     """Main function for the cleaner.
 
     This function orchestrates the normalization process for the reports

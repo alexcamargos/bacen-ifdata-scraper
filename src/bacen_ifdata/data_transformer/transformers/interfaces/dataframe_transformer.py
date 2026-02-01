@@ -28,7 +28,7 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from typing import List, Protocol
+from typing import Protocol
 
 import pandas as pd
 
@@ -37,19 +37,19 @@ class DataFrameTransformerProtocol(Protocol):
     """Defines a standard interface for classes that transform pandas DataFrames."""
 
     def apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+        """Applies business rules to the data frame."""
 
-    def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+    def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+        """Transforms numeric columns in the data frame."""
 
-    def transform_percentage_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+    def transform_percentage_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+        """Transforms percentage columns in the data frame."""
 
-    def transform_date_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+    def transform_date_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+        """Transforms date columns in the data frame."""
 
-    def transform_categorical_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+    def transform_categorical_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+        """Transforms categorical columns in the data frame."""
 
-    def transform_text_columns(self, data_frame: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        raise NotImplementedError("You should implement this method.")
+    def transform_text_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+        """Transforms text columns in the data frame."""

@@ -34,12 +34,21 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_loader.controller import LoaderController
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(institution: StrEnum, report: StrEnum) -> None:
-    """Main function for the transformer."""
+def main(institution: Institutions, report: StrEnum) -> None:
+    """Main function for the transformer.
+
+    This function orchestrates the loading process for the reports
+    downloaded from the Banco Central do Brasil's IF.data tool.
+
+    Args:
+        institution (StrEnum): The institution for which the reports will be loaded.
+        report (StrEnum): The report that will be loaded.
+    """
 
     # Build the path to the input data directory.
     input_data_path = build_directory_path(

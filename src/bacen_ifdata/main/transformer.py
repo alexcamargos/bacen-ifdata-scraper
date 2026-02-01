@@ -30,6 +30,7 @@ License: MIT
 
 from enum import StrEnum
 from pathlib import Path
+from typing import Final
 
 import pandas as pd
 from loguru import logger
@@ -43,6 +44,7 @@ from bacen_ifdata.data_transformer.schemas import (
     PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA,
 )
+from bacen_ifdata.data_transformer.schemas.interfaces import SchemaProtocol
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import ReportsPrudentialConglomerates
 from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
@@ -77,17 +79,17 @@ def main(transformer_controller: TransformerControllerInterface, institution: In
 
     # Ensure that the transformed files directory exists.
     output_directory = build_directory_path(
-        Cfg.TRANSFORMED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+        Cfg.TRANSFORMED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
     )
     ensure_directory(output_directory)
 
     # Build the path to the input data directory.
     input_data_path = build_directory_path(
-        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+        Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
     )
 
     # Map report types to their schemas.
-    schema_by_report = {
+    schema_by_report: Final[dict[ReportsPrudentialConglomerates, SchemaProtocol]] = {
         ReportsPrudentialConglomerates.SUMMARY: PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA,
         ReportsPrudentialConglomerates.ASSETS: PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
         ReportsPrudentialConglomerates.LIABILITIES: PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,

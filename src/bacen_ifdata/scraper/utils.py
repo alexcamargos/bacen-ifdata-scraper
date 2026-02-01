@@ -27,6 +27,8 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from enum import StrEnum
+
 from loguru import logger
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -46,7 +48,7 @@ from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def ensure_clickable(driver: WebDriver, wait_time: int, by_method: str | By, locator: str) -> None:
+def ensure_clickable(driver: WebDriver, wait_time: int, by_method: By, locator: str) -> None:
     """
     Waits for an element to be clickable on a web page and then clicks it.
 
@@ -72,20 +74,28 @@ def ensure_clickable(driver: WebDriver, wait_time: int, by_method: str | By, loc
         driver.execute_script('arguments[0].click();', element)
 
     except TimeoutException:
-        logger.exception(f'Timeout: O elemento {
-                         locator} não se tornou clicável após {wait_time} segundos.')
+        logger.exception(
+            f'Timeout: O elemento {
+                         locator} não se tornou clicável após {wait_time} segundos.'
+        )
         raise
     except NoSuchElementException:
-        logger.exception(f'Não encontrado: O elemento {
-                         locator} não foi encontrado na página.')
+        logger.exception(
+            f'Não encontrado: O elemento {
+                         locator} não foi encontrado na página.'
+        )
         raise
     except ElementClickInterceptedException:
-        logger.exception(f'Elemento interceptado: O elemento {
-                         locator} foi interceptado por outro elemento.')
+        logger.exception(
+            f'Elemento interceptado: O elemento {
+                         locator} foi interceptado por outro elemento.'
+        )
         raise
     except MoveTargetOutOfBoundsException:
-        logger.exception(f'Fora dos limites: O elemento {
-                         locator} está fora dos limites da janela.')
+        logger.exception(
+            f'Fora dos limites: O elemento {
+                         locator} está fora dos limites da janela.'
+        )
         raise
 
 
@@ -102,7 +112,7 @@ def initialize_webdriver() -> WebDriver:
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY.value))
+    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY))
     options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
     # Initializes the WebDriver for Firefox.
@@ -111,7 +121,7 @@ def initialize_webdriver() -> WebDriver:
     return driver
 
 
-def validate_report_selection(institution: str, report: str, data_base: list) -> list:
+def validate_report_selection(institution: Institutions, report: StrEnum, data_base: list[str]) -> list[str]:
     """Validates the report selection."""
 
     if institution == Institutions.PRUDENTIAL_CONGLOMERATES and report in (

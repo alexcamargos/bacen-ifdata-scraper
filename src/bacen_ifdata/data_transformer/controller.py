@@ -28,14 +28,26 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from enum import StrEnum
 from pathlib import Path
-from typing import Callable, Dict, List
+from typing import Any, Callable
 
 import pandas as pd
 
+from bacen_ifdata.data_transformer.schemas.interfaces import SchemaProtocol
 from bacen_ifdata.data_transformer.transformers.interfaces.dataframe_transformer import DataFrameTransformerProtocol
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
+
+
+class TransformationType(StrEnum):
+    """Supported data transformation types."""
+
+    NUMERIC = 'numeric'
+    PERCENTAGE = 'percentage'
+    DATE = 'date'
+    CATEGORICAL = 'categorical'
+    TEXT = 'text'
 
 
 # pylint: disable=too-few-public-methods, missing-function-docstring
@@ -45,27 +57,33 @@ class TransformerController:
     This class is responsible for controlling the transformation of data from reports.
     """
 
-    def __init__(self, data_frame_transformer: DataFrameTransformerProtocol):
+    def __init__(self, data_frame_transformer: DataFrameTransformerProtocol) -> None:
+        """Initializes a new instance of the TransformerController class.
+
+        Args:
+            data_frame_transformer (DataFrameTransformerProtocol): The data frame transformer interface.
+        """
+
         # Initializing the transformer interface.
         self.data_frame_transformer = data_frame_transformer
 
         # Mapping of transformation types to their corresponding methods.
-        self.transformation_map: Dict[str, Callable[[pd.DataFrame, List[str]], pd.DataFrame]] = {
-            'numeric': self.data_frame_transformer.transform_numeric_columns,
-            'percentage': self.data_frame_transformer.transform_percentage_columns,
-            'date': self.data_frame_transformer.transform_date_columns,
-            'categorical': self.data_frame_transformer.transform_categorical_columns,
-            'text': self.data_frame_transformer.transform_text_columns,
+        self.transformation_map: dict[TransformationType, Callable[[pd.DataFrame, list[str]], pd.DataFrame]] = {
+            TransformationType.NUMERIC: self.data_frame_transformer.transform_numeric_columns,
+            TransformationType.PERCENTAGE: self.data_frame_transformer.transform_percentage_columns,
+            TransformationType.DATE: self.data_frame_transformer.transform_date_columns,
+            TransformationType.CATEGORICAL: self.data_frame_transformer.transform_categorical_columns,
+            TransformationType.TEXT: self.data_frame_transformer.transform_text_columns,
         }
 
-    def __load_data(self, file_path: Path, options: dict) -> pd.DataFrame:
+    def __load_data(self, file_path: Path, options: dict[str, Any]) -> pd.DataFrame:
         """Loads the data for transformation.
 
         This method is responsible for loading the data that will be transformed.
 
         Args:
             file_path (Path): The path to the CSV file to be loaded.
-            options (dict): The options to be used for loading the CSV file.
+            options (dict[str, Any]): The options to be used for loading the CSV file.
         """
 
         return load_csv_data(file_path.as_posix(), options)
@@ -88,7 +106,7 @@ class TransformerController:
 
         return data
 
-    def transform(self, file_path: Path, schema) -> pd.DataFrame:
+    def transform(self, file_path: Path, schema: SchemaProtocol) -> pd.DataFrame:
         """Transforms data from prudential conglomerates reports.
 
         This method is responsible for transforming the data from prudential conglomerates reports.
@@ -107,7 +125,7 @@ class TransformerController:
         data = self.data_frame_transformer.apply_business_rules(data)
 
         # Group dataframe columns by type, consulting the schema.
-        columns_by_type: Dict[str, List[str]] = {}
+        columns_by_type: dict[TransformationType, list[str]] = {}
         for column_name in data.columns:
             column_type = schema.get_type(column_name)
 

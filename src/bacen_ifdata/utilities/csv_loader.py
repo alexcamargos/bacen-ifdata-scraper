@@ -28,23 +28,27 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from typing import Any
+
 import pandas as pd
 
 
-def load_csv_data(file_path: str, options: dict) -> pd.DataFrame:
+def load_csv_data(file_path: str, options: dict[str, Any] | None = None) -> pd.DataFrame:
     """Loads data from a CSV file.
 
     This function loads data from a CSV file and returns it as a pandas DataFrame.
 
     Arguments:
         file_path (str): The path to the CSV file.
+        options (dict[str, Any] | None): Additional options for loading the CSV file. Default is None.
 
     Returns:
         pd.DataFrame: The data loaded from the CSV file.
     """
 
+    # Set default options if not provided.
     if not options:
         options = {'sep': ";"}
 
-    # Load the data.
+    # Load the data from the CSV file.
     return pd.read_csv(file_path, **options)
