@@ -36,12 +36,6 @@ from bacen_ifdata import Pipeline
 from bacen_ifdata.data_transformer.controller import TransformerController
 from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.manager import PipelineManager
-from bacen_ifdata.scraper.exceptions import IfDataScraperException
-from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import REPORTS
-from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities.clean import clean_empty_csv_files
-from bacen_ifdata.utilities.configurations import Config
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -86,72 +80,7 @@ def get_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def ifdata_scraper(scraper_pipeline: Pipeline) -> None:
-    """Main function for executing the scraper."""
 
-    try:
-        # Get the available data bases.
-        data_base = scraper_pipeline.session.get_data_bases()
-
-        # Run the scraper...
-        for institution in Institutions:
-            for report in REPORTS[institution]:
-                # Validate the report selection.
-                cutoff_data_base = validate_report_selection(institution,
-                                                             report,
-                                                             data_base)
-
-                for data in cutoff_data_base:
-                    # Download the reports.
-                    logger.info(f'Downloading report "{report.name}" from '
-                                f'{institution.name} referring to "{data}"...')
-                    scraper_pipeline.scraper(data, institution, report)
-    except IfDataScraperException as error:
-        logger.exception(error.message)
-    finally:
-        # Clean up the session, closing the browser and show report.
-        if scraper_pipeline.session:
-            scraper_pipeline.session.cleanup()
-
-        # BUG: The IF.data system generates CSV files for download in real-time,
-        # using the loaded data table as the foundation.
-        # Internally, it triggers the `downloadCsv` JavaScript function, which
-        # constructs a Blob object of type "text/csv" and saves this file.
-        # I have not been able to find a permanent solution to this issue.
-        #
-        # A temporary measure is to delete the empty files and rerun the
-        # data scraping process, repeating this step until there are no
-        # more content-less files remaining.
-        clean_empty_csv_files(Config.DOWNLOAD_DIRECTORY.value)
-
-
-def ifdata_cleaner(cleaner_pipeline: Pipeline) -> None:
-    """Main function for executing the cleaner."""
-
-    # Run the cleaner.
-    for process_institution in Institutions:
-        for process_report in REPORTS[process_institution]:
-            cleaner_pipeline.cleaner(process_institution, process_report)
-
-
-def ifdata_transformer(transformer_pipeline: Pipeline) -> None:
-    """Main function for executing the transformer."""
-
-    # Run the transformer.
-    for process_report in REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES]:
-        transformer_pipeline.transformer(
-            Institutions.PRUDENTIAL_CONGLOMERATES, process_report)
-
-
-def ifdata_loader(loader_pipeline: Pipeline) -> None:
-    """Main function for executing the loader."""
-
-    # Define the path to load the data.
-    loaded_institution = Institutions.INDIVIDUAL_INSTITUTIONS
-    loaded_report = REPORTS[Institutions.INDIVIDUAL_INSTITUTIONS].SUMMARY
-
-    # Run the loader.
-    loader_pipeline.loader(loaded_institution, loaded_report)
 
 
 def main(pipeline_manager: PipelineManager) -> None:
