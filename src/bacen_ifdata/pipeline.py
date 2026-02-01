@@ -38,8 +38,7 @@ from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.utils import initialize_webdriver
-from bacen_ifdata.utilities.configurations import Config as Cfg
+
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 
 
@@ -50,39 +49,21 @@ class Pipeline:
     for the Bacen IF.data tool.
 
     Attributes:
-        session (Session): The session object for the pipeline (initialized on demand).
+        session (Session): The session object for the pipeline.
     """
 
-    def __init__(self, transformer_controller: TransformerControllerInterface) -> None:
+    def __init__(self,
+                 transformer_controller: TransformerControllerInterface,
+                 session: Session = None) -> None:
         """Initialize the pipeline.
 
         Args:
             transformer_controller (TransformerControllerInterface): The transformer controller instance.
+            session (Session, optional): The session object. Defaults to None.
         """
 
         self.transformer_controller = transformer_controller
-
-    def _initialize_webdriver(self):
-        """Initialize the WebDriver session."""
-
-        # Initialize the WebDriver session.
-        driver = initialize_webdriver()
-
-        # Initialize the session.
-        # pylint: disable=attribute-defined-outside-init
-        self._session = Session(driver, Cfg.URL.value)
-
-        # Open the session.
-        self._session.open()
-
-    @property
-    def session(self) -> Session:
-        """Return the session object for the pipeline."""
-
-        if not hasattr(self, '_session'):
-            self._initialize_webdriver()
-
-        return self._session
+        self.session = session
 
     def scraper(self, data_base: str, institution, report) -> None:
         """Main function for scraping the data.
@@ -91,16 +72,10 @@ class Pipeline:
             data_base (str): The data base to be scraped.
             institution (str): The institution to be scraped.
             report (str): The report to be scraped.
-
-        Raises:
-            IfDataScraperException: If an error occurs during the scraping process.
         """
 
         # Get the session.
         session = self.session
-
-        # Ensure that session is initialized.
-        session.open()
 
         # Download the reports.
         logger.info(f'Downloading report "{report.name}" from "{institution.name}" '
