@@ -46,13 +46,13 @@ def main(institution: Institutions, report: StrEnum) -> None:
     downloaded from the Banco Central do Brasil's IF.data tool.
 
     Args:
-        institution (StrEnum): The institution for which the reports will be loaded.
+        institution (Institutions): The institution for which the reports will be loaded.
         report (StrEnum): The report that will be loaded.
     """
 
     # Build the path to the input data directory.
     input_data_path = build_directory_path(
-        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
+        Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
     )
     # Create the controller object.
     controller = LoaderController()
