@@ -28,8 +28,10 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.base_schema import BaseSchema
 
-class PrudentialConglomeratesAssetsSchema:
+
+class PrudentialConglomeratesAssetsSchema(BaseSchema):
     """
     Define e categoriza os nomes das colunas para os relatórios de ATIVOS
     de conglomerados prudenciais, enriquecido com metadados do dicionário de dados.
@@ -175,53 +177,3 @@ class PrudentialConglomeratesAssetsSchema:
             'type': 'numeric',
         },
     }
-
-    def _get_columns_by_type(self, data_type: str) -> list[str]:
-        """Auxiliary function to filter columns by type."""
-
-        return [col for col, meta in self.SCHEMA_DEFINITION.items() if meta['type'] == data_type]
-
-    @property
-    def column_names(self) -> list[str]:
-        """Return all column names defined in the schema."""
-
-        return list(self.SCHEMA_DEFINITION.keys())
-
-    @property
-    def numeric_columns(self) -> list[str]:
-        """Return dynamically the numeric columns."""
-
-        return self._get_columns_by_type('numeric')
-
-    @property
-    def date_columns(self) -> list[str]:
-        """Return dynamically the date columns."""
-
-        return self._get_columns_by_type('date')
-
-    @property
-    def categorical_columns(self) -> list[str]:
-        """Return dynamically the categorical columns."""
-
-        return self._get_columns_by_type('categorical')
-
-    @property
-    def text_columns(self) -> list[str]:
-        """Return dynamically the text columns."""
-
-        return self._get_columns_by_type('text')
-
-    def get_type(self, column_name: str) -> str | None:
-        """Return the type of a specific column from the schema definition."""
-
-        return self.SCHEMA_DEFINITION.get(column_name, {}).get('type')
-
-    def get_description(self, column_name: str) -> str | None:
-        """Return the description of a specific column."""
-
-        return self.SCHEMA_DEFINITION.get(column_name, {}).get('description')
-
-    def get_mapping(self, column_name: str) -> dict | None:
-        """Return the mapping dictionary for a categorical column if it exists."""
-
-        return self.SCHEMA_DEFINITION.get(column_name, {}).get('mapping')
