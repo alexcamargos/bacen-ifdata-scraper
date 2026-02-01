@@ -41,20 +41,33 @@ from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 class Browser:
-    """A class for interacting with a web browser.
+    """A class for interacting with a web browser using Selenium WebDriver.
 
     Attributes:
         _driver (WebDriver): The WebDriver instance for browser interactions.
+    
+    Methods:
+        _ensure_clickable(wait_time, by_method, locator): Waits for an element to be clickable and clicks it.
+        initialize(url): Initializes the WebDriver session and opens the specified URL.
+        quit(): Quits the WebDriver session.
+        is_headless: Returns True if the browser is running in headless mode.
+        ensure_dropdown_content(dropdown_id, wait_time): Selects an option from a dropdown menu.
+        select_dropdown_option(option_text, wait_time): Selects an option from a dropdown menu.
+        get_dropdown_options(dropdown_id): Returns a list of options from a dropdown menu.
+        download_report(wait_time): Downloads a report by clicking the "Exportar CSV" button.
     """
 
     def __init__(self, driver: WebDriver) -> None:
-        """Initializes a new instance of the Browser class."""
+        """Initializes a new instance of the Browser class with the given WebDriver.
+        
+        Args:
+            driver (WebDriver): The WebDriver instance for browser interactions.
+        """
 
         self._driver = driver
 
-    def __ensure_clickable(self, wait_time: int, by_method: str | By, locator: str) -> None:
-        """
-        Waits for an element to be clickable on a web page and then clicks it.
+    def _ensure_clickable(self, wait_time: int, by_method: str | By, locator: str) -> None:
+        """Waits for an element to be clickable on a web page and then clicks it.
 
         This is a wrapper around the ensure_clickable utility function.
 
@@ -69,30 +82,63 @@ class Browser:
             ElementClickInterceptedException: If the element is intercepted by another element.
             MoveTargetOutOfBoundsException: If the element is outside the boundaries of the window.
         """
+
         ensure_clickable(self._driver, wait_time, by_method, locator)
 
     def initialize(self, url: str) -> None:
-        """Initializes a WebDriver session with Firefox."""
+        """Initializes a WebDriver session with Firefox and opens the specified URL.
+
+        Args:
+            url (str): The URL to open in the web browser.
+        """
 
         self._driver.get(url)
 
-    def ensure_dropdown_content(self, dropdown_id: str, wait_time: int):
-        """Selects an option from a dropdown menu on a web page."""
+    def quit(self) -> None:
+        """Quits the WebDriver session."""
 
-        self.__ensure_clickable(wait_time, By.ID, dropdown_id)
+        self._driver.quit()
+
+    @property
+    def is_headless(self) -> bool:
+        """Returns True if the browser is running in headless mode."""
+
+        return self._driver.capabilities['moz:headless']
+
+    def ensure_dropdown_content(self, dropdown_id: str, wait_time: int):
+        """Selects an option from a dropdown menu on a web page.
+
+        Args:
+            dropdown_id (str): The ID of the dropdown menu element.
+            wait_time (int): The maximum time to wait for the dropdown to become clickable.
+        """
+
+        self._ensure_clickable(wait_time, By.ID, dropdown_id)
 
     def select_dropdown_option(self, option_text: str, wait_time: int):
-        """Selects an option from a dropdown menu on a web page."""
+        """Selects an option from a dropdown menu on a web page.
+
+        Args:
+            option_text (str): The text of the option to select.
+            wait_time (int): The maximum time to wait for the option to become clickable.
+        """
 
         option_xpath = f"//a[normalize-space(text())='{option_text}']"
-        self.__ensure_clickable(wait_time, By.XPATH, option_xpath)
+        self._ensure_clickable(wait_time, By.XPATH, option_xpath)
 
     def get_dropdown_options(self, dropdown_id: str) -> list:
-        """Returns a list of options from a dropdown menu on a web page."""
+        """Returns a list of options from a dropdown menu on a web page.
+
+        Args:
+            dropdown_id (str): The ID of the dropdown menu element.
+
+        Returns:
+            list: A list of option texts from the dropdown menu.
+        """
 
         self.ensure_dropdown_content('btnDataBase', Cfg.TIMEOUT.value)
 
-        # Using __ensure_clickable() not working here.
+        # NOTE: Using _ensure_clickable() not working here.
         # Need to investigate further.
         # Solution is to use WebDriverWait() directly.
         WebDriverWait(self._driver, Cfg.TIMEOUT.value).until(
@@ -110,15 +156,18 @@ class Browser:
 
         return dropdown_texts
 
-    def download_report(self, wait_time: int):
-        """Downloads a report from a web page."""
+    def download_report(self, wait_time: int) -> None:
+        """Downloads a report from a web page by clicking the "Exportar CSV" button.
+
+        Args:
+            wait_time (int): The maximum time to wait for the button to become clickable.
+        """
 
         # Wait for the dataTable element to be visible.
         try:
             WebDriverWait(self._driver, wait_time).until(EC.visibility_of_element_located((By.ID, 'dataTable')))
         except TimeoutException:
-            logger.exception(f'Timeout: O elemento dataTable não se tornou visível após {
-                             wait_time} segundos.')
+            logger.exception(f'Timeout: O elemento dataTable não se tornou visível após {wait_time} segundos.')
             raise
 
         # BUG: This workaround ensures that the Blob object is fully initialized
@@ -127,4 +176,4 @@ class Browser:
         sleep(3)
 
         # Click the "Exportar CSV" button.
-        self.__ensure_clickable(wait_time, By.ID, 'aExportCsv')
+        self._ensure_clickable(wait_time, By.ID, 'aExportCsv')
