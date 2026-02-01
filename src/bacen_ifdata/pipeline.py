@@ -37,10 +37,8 @@ from bacen_ifdata.main.loader import main as main_loader
 from bacen_ifdata.main.scraper import main as main_scraper
 from bacen_ifdata.main.transformer import main as main_transformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import REPORTS
 from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.utils import (initialize_webdriver,
-                                        validate_report_selection)
+from bacen_ifdata.scraper.utils import initialize_webdriver
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 
@@ -86,13 +84,13 @@ class Pipeline:
 
         return self._session
 
-    def scraper(self, _data_base: str, _institution, _report) -> None:
+    def scraper(self, data_base: str, institution, report) -> None:
         """Main function for scraping the data.
 
         Args:
-            _data_base (str): The data base to be scraped.
-            _institution (str): The institution to be scraped.
-            _report (str): The report to be scraped.
+            data_base (str): The data base to be scraped.
+            institution (str): The institution to be scraped.
+            report (str): The report to be scraped.
 
         Raises:
             IfDataScraperException: If an error occurs during the scraping process.
@@ -104,21 +102,10 @@ class Pipeline:
         # Ensure that session is initialized.
         session.open()
 
-        # Get the available data bases.
-        data_base = session.get_data_bases()
-
-        for institution in Institutions:
-            for report in REPORTS[institution]:
-                # Validate the report selection.
-                cutoff_data_base = validate_report_selection(institution,
-                                                             report,
-                                                             data_base)
-
-                for data in cutoff_data_base:
-                    # Download the reports.
-                    logger.info(f'Downloading report "{report.name}" from "{institution.name}" '
-                                f'referring to "{data}"...')
-                    main_scraper(session, data, institution, report)
+        # Download the reports.
+        logger.info(f'Downloading report "{report.name}" from "{institution.name}" '
+                    f'referring to "{data_base}"...')
+        main_scraper(session, data_base, institution, report)
 
     def cleaner(self, process_institution: Institutions, process_report: StrEnum) -> None:
         """Main process for cleaning the data.
