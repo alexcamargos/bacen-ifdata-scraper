@@ -30,7 +30,6 @@ License: MIT
 from time import time
 
 from loguru import logger
-from selenium.webdriver.firefox.webdriver import WebDriver
 
 from bacen_ifdata.scraper.interfaces.interacting import Browser
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -42,29 +41,34 @@ class Session:
     Manages a web session for interacting with the IF.data tool.
 
     Attributes:
-        _driver (WebDriver): The WebDriver instance for browser interactions.
         _url (str): The URL to open in the web session.
         _browser (Browser): A browser interface for web interactions.
         session_data (dict): Data about the session,
                              such as duration and number of reports downloaded.
         _started (float): The start time of the session.
+
+    Methods:
+        _ensure_and_select_dropdown_option(element_id, option): Ensures the dropdown menu is clickable and selects the desired option.
+        open(): Opens the URL in a web browser.
+        cleanup(): Cleans up the web session and log details.
+        get_data_bases(): Returns a list of available data bases.
+        download_reports(data_base, institution_type, report_type): Downloads reports from the IF.data tool.
     """
 
-    def __init__(self, driver: WebDriver, url: str) -> None:
+    def __init__(self, browser: Browser, url: str) -> None:
         """Initializes a new instance of the Session class.
-        
+
         Args:
-            driver (WebDriver): The WebDriver instance for browser interactions.
+            browser (Browser): The browser instance for web interactions.
             url (str): The URL to open in the web session.
         """
 
-        self._driver = driver
+        self._browser = browser
         self._url = url
-        self._browser = Browser(self._driver)
 
         self.session_data = {
             'url': self._url,
-            'is_headless': self._driver.capabilities['moz:headless'],
+            'is_headless': self._browser.is_headless,
             'duration': 0,
             'reports_downloaded': 0,
         }
@@ -73,7 +77,7 @@ class Session:
 
     def _ensure_and_select_dropdown_option(self, element_id: str, option: str) -> None:
         """Ensures the dropdown menu is clickable and selects the desired option.
-        
+
         Args:
             element_id (str): The ID of the dropdown menu element.
             option (str): The option to select in the dropdown menu.
@@ -93,18 +97,22 @@ class Session:
         """Cleans up the web session and log details."""
 
         # Calculate the session duration and log details.
-        finished = time()
-        self.session_data['duration'] = finished - self._started
+        session_finished = time()
+        self.session_data['duration'] = session_finished - self._started
         hours, minutes, seconds = seconds_to_human_readable(self.session_data['duration'])
 
         logger.info(f"Headless mode: {self.session_data['is_headless']}.")
         logger.info(f"Session duration: {hours}h {minutes}m {seconds}s.")
         logger.info(f"Reports downloaded: {self.session_data['reports_downloaded']}.")
 
-        self._driver.quit()
+        self._browser.quit()
 
     def get_data_bases(self) -> list:
-        """Returns a list of available data bases."""
+        """Returns a list of available data bases.
+
+        Returns:
+            list: A list of available data bases.
+        """
 
         return self._browser.get_dropdown_options('ulDataBase')
 
@@ -113,7 +121,7 @@ class Session:
 
         IMPORTANT: The system generates reports dynamically, so we need to
         ensure the page content is loaded before proceeding.
-        
+
         Args:
             data_base (str): The base date for the reports to be downloaded.
             institution_type (str): The institution type for the reports to be downloaded.
@@ -129,8 +137,7 @@ class Session:
         # Selecting the desired option in the "ulRelatorio" dropdown menu.
         self._ensure_and_select_dropdown_option('btnRelatorio', report_type)
 
-        # Ensure the report content is loaded before proceeding with
-        # the download of the CSV file.
+        # Ensure the report content is loaded before proceeding with the download of the CSV file.
         self._browser.download_report(Cfg.TIMEOUT.value)
 
         # Update the counter for downloaded reports.
