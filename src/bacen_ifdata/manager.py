@@ -53,11 +53,11 @@ class PipelineManager:
 
         # Clean up the empty CSV files in the download directory.
         logger.info('Cleaning up empty CSV files...')
-        clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
+        clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
 
         # Clean up the download base directory.
         logger.info('Cleaning up the download base directory...')
-        clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value))
+        clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
 
     def run_scraper(self) -> None:
         """Main function for executing the scraper."""
@@ -111,4 +111,5 @@ class PipelineManager:
         """Main function for executing the loader."""
 
         # Run the loader.
-        self.pipeline.loader(Institutions.PRUDENTIAL_CONGLOMERATES, REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES])
+        for loaded_report in REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES]:
+            self.pipeline.loader(Institutions.PRUDENTIAL_CONGLOMERATES, loaded_report)
