@@ -51,7 +51,7 @@ class Pipeline:
         session (Session): The session object for the pipeline.
     """
 
-    def __init__(self, transformer_controller: TransformerControllerInterface, session: Session = None) -> None:
+    def __init__(self, transformer_controller: TransformerControllerInterface, session: Session | None = None) -> None:
         """Initialize the pipeline.
 
         Args:
@@ -71,11 +71,11 @@ class Pipeline:
             report (StrEnum): The report to be scraped.
         """
 
-        # Get the session.
-        session = self.session
+        if self.session is None:
+            raise ValueError('Session is required for scraping.')
 
         # Download the reports.
-        main_scraper(session, data_base, institution, report)
+        main_scraper(self.session, data_base, institution, report)
 
     def cleaner(self, process_institution: Institutions, process_report: StrEnum) -> None:
         """Main process for cleaning the data.
