@@ -31,11 +31,18 @@ License: MIT
 from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import (
     IndividualInstitutionSummarySchema,
 )
+from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import (
+    IndividualInstitutionAssetsSchema,
+)
 
 # Instance a schema for report summary of individual institutions.
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
 
+# Instance a schema for report assets of individual institutions.
+INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA = IndividualInstitutionAssetsSchema()
+
 
 __all__ = [
     'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
+    'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
 ]
