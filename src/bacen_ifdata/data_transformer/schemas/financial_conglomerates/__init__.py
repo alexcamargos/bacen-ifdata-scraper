@@ -31,11 +31,18 @@ License: MIT
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import (
     FinancialConglomerateSummarySchema,
 )
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import (
+    FinancialConglomeratesAssetsSchema,
+)
 
 # Instance a schema for report summary of financial conglomerates.
 FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
 
+# Instance a schema for report assets of financial conglomerates.
+FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
+
 
 __all__ = [
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
 ]
