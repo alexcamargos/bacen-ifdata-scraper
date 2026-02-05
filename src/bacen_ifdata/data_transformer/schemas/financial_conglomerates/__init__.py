@@ -34,6 +34,9 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary impor
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import (
     FinancialConglomeratesAssetsSchema,
 )
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
+    FinancialConglomerateLiabilitiesSchema,
+)
 
 # Instance a schema for report summary of financial conglomerates.
 FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
@@ -41,8 +44,12 @@ FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
 # Instance a schema for report assets of financial conglomerates.
 FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
 
+# Instance a schema for report liabilities of financial conglomerates.
+FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA = FinancialConglomerateLiabilitiesSchema()
+
 
 __all__ = [
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
 ]
