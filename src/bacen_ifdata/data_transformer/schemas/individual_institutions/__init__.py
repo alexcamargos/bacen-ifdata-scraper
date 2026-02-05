@@ -34,6 +34,9 @@ from bacen_ifdata.data_transformer.schemas.individual_institutions.summary impor
 from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import (
     IndividualInstitutionAssetsSchema,
 )
+from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
+    IndividualInstitutionLiabilitiesSchema,
+)
 
 # Instance a schema for report summary of individual institutions.
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
@@ -41,8 +44,12 @@ INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
 # Instance a schema for report assets of individual institutions.
 INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA = IndividualInstitutionAssetsSchema()
 
+# Instance a schema for report liabilities of individual institutions.
+INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA = IndividualInstitutionLiabilitiesSchema()
+
 
 __all__ = [
     'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
     'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
+    'INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA',
 ]
