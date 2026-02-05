@@ -29,7 +29,8 @@ License: MIT
 """
 
 from typing import Any, Final
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.base_schema import BaseSchema
+
+from bacen_ifdata.data_transformer.schemas.base_schema import BaseSchema
 
 
 class PrudentialConglomerateSegmentationSchema(BaseSchema):
