@@ -76,7 +76,7 @@ class TransformerController:
             TransformationType.TEXT: self.data_frame_transformer.transform_text_columns,
         }
 
-    def __load_data(self, file_path: Path, options: dict[str, Any]) -> pd.DataFrame:
+    def _load_data(self, file_path: Path, options: dict[str, Any]) -> pd.DataFrame:
         """Loads the data for transformation.
 
         This method is responsible for loading the data that will be transformed.
@@ -88,7 +88,7 @@ class TransformerController:
 
         return load_csv_data(file_path.as_posix(), options)
 
-    def __create_region_column(self, data: pd.DataFrame) -> pd.DataFrame:
+    def _create_region_column(self, data: pd.DataFrame) -> pd.DataFrame:
         """Creates the region column based on the state column.
 
         This method is responsible for creating the region column in the DataFrame.
@@ -119,7 +119,7 @@ class TransformerController:
         options = {'sep': ';', 'names': schema.column_names, 'dtype': str}
 
         # Load the data.
-        data = self.__load_data(file_path, options)
+        data = self._load_data(file_path, options)
 
         # Apply business rules, if any.
         data = self.data_frame_transformer.apply_business_rules(data)
@@ -143,6 +143,6 @@ class TransformerController:
 
         # Create the region column based on the state column and insert it after the "uf" column.
         if 'cidade' in data.columns:
-            data = self.__create_region_column(data)
+            data = self._create_region_column(data)
 
         return data
