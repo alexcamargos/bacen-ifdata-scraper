@@ -1,14 +1,40 @@
-"""Base schema for prudential conglomerate data transformation."""
+#!/usr/bin/env python
+# encoding: utf-8
+#
+#  ------------------------------------------------------------------------------
+#  Name: base_schema.py
+#  Version: 0.0.1
+#  Summary: Bacen IF.data AutoScraper & Data Manager
+#           Este sistema foi projetado para automatizar o download dos
+#           relatórios da ferramenta IF.data do Banco Central do Brasil.
+#           Criado para facilitar a integração com ferramentas automatizadas de
+#           análise e visualização de dados, garantido acesso fácil e oportuno
+#           aos dados.
+#
+#  Author: Alexsander Lopes Camargos
+#  Author-email: alcamargos@vivaldi.net
+#
+#  License: MIT
+#  ------------------------------------------------------------------------------
+
+"""
+Bacen IF.data AutoScraper & Data Manager
+
+Base schema for data transformation with column metadata and categorization.
+
+Author: Alexsander Lopes Camargos
+License: MIT
+"""
 
 from functools import cached_property
 from typing import Any
 
 
 class BaseSchema:
-    """Base schema class for prudential conglomerate data transformation.
+    """Base schema class for data transformation.
 
     This class provides a structure for defining and categorizing column names
-    for prudential conglomerate reports, enriched with metadata from the data dictionary.
+    for financial reports, enriched with metadata from the data dictionary.
 
     Attributes:
         SCHEMA_DEFINITION (dict): A dictionary defining the schema, to be overridden by subclasses.
