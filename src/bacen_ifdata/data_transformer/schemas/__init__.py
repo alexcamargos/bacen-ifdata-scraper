@@ -46,7 +46,7 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary impor
 # Instance a schema for report summary of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
 
-# Instância única para ser importada em outras partes do projeto
+# Instance a schema for report assets of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA = PrudentialConglomeratesAssetsSchema()
 
 # Instance a schema for report liabilities of prudential conglomerate.
@@ -68,4 +68,5 @@ __all__ = [
     'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA'
 ]
