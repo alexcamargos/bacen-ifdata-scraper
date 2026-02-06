@@ -34,7 +34,7 @@ from loguru import logger
 
 from bacen_ifdata import Pipeline
 from bacen_ifdata.data_transformer.controller import TransformerController
-from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
+from bacen_ifdata.data_transformer.transformer_factory import get_transformer
 from bacen_ifdata.manager import PipelineManager
 from bacen_ifdata.scraper.interfaces.interacting import Browser
 from bacen_ifdata.scraper.session import Session
@@ -142,11 +142,8 @@ if __name__ == '__main__':
         # Open the session.
         session.open()
 
-        # Create the prudential conglomerates transformer instance.
-        prudential_conglomerates_transformer = PrudentialConglomeratesTransformer()
-
-        # Create the transformer controller instance.
-        transformer_controller = TransformerController(prudential_conglomerates_transformer)
+        # Create the transformer controller instance with the transformer factory.
+        transformer_controller = TransformerController(get_transformer)
 
         # Initialize the main pipeline with the session injected.
         pipeline = Pipeline(transformer_controller, session)
