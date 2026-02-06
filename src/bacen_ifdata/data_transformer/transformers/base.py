@@ -54,8 +54,11 @@ class BaseTransformer:
             pd.Series: A pandas Series with numeric values.
         """
 
+        # Convert to string first to ensure .str accessor works
+        series_as_string = series.astype(str)
+
         # If the series contains decimal values, normalize them.
-        series_cleaned = series.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+        series_cleaned = series_as_string.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
 
         # Convert the cleaned series to numeric, rounding and converting to Int64.
         numeric_series = pd.to_numeric(series_cleaned, errors='coerce')
