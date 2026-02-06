@@ -30,8 +30,6 @@ License: MIT
 
 from enum import StrEnum
 
-from loguru import logger
-
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 from bacen_ifdata.main.cleaner import main as main_cleaner
 from bacen_ifdata.main.loader import main as main_loader
