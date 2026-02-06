@@ -53,15 +53,9 @@ class IndividualInstitutionsTransformer(BaseTransformer):
         if 'cidade' in data_frame.columns:
             data_frame['cidade'] = data_frame['cidade'].str.title()
 
-        # Fills null values in conglomerate-related columns
+        # Fills null values in conglomerate-related columns.
         # These fields are empty when the institution does not belong to any conglomerate.
         if 'conglomerado' in data_frame.columns:
             data_frame['conglomerado'] = data_frame['conglomerado'].fillna('Não informado')
-
-        if 'conglomerado_financeiro' in data_frame.columns:
-            data_frame['conglomerado_financeiro'] = data_frame['conglomerado_financeiro'].fillna(0)
-
-        if 'conglomerado_prudencial' in data_frame.columns:
-            data_frame['conglomerado_prudencial'] = data_frame['conglomerado_prudencial'].fillna(0)
 
         return data_frame
