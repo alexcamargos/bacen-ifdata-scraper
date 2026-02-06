@@ -24,17 +24,20 @@ from typing import Protocol
 
 import pandas as pd
 
+from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
+
 
 # pylint: disable=too-few-public-methods
 class TransformerControllerInterface(Protocol):
     """Represents the interface for the Transformer Controller."""
 
-    def transform(self, file_path: Path, schema) -> pd.DataFrame:
+    def transform(self, file_path: Path, schema, institution: Institutions) -> pd.DataFrame:
         """Transforms the data from the given file path according to the specified schema.
 
         Args:
             file_path (Path): The path to the file to be transformed.
             schema: The schema to be used for transformation.
+            institution (Institutions): The institution type.
 
         Returns:
             pd.DataFrame: The transformed DataFrame.
