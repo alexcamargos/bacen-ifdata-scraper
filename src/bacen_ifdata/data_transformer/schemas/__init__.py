@@ -42,38 +42,62 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation 
     PrudentialConglomerateSegmentationSchema,
 )
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import (
-    FinancialConglomerateSummarySchema,
+
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
+    FinancialConglomerateLiabilitiesSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
+    FinancialConglomerateIncomeStatementSchema,
 )
 
-# Instance a schema for report summary of prudential conglomerate.
+from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import IndividualInstitutionSummarySchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
+    IndividualInstitutionLiabilitiesSchema,
+)
+from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
+    IndividualInstitutionIncomeStatementSchema,
+)
+
+# Prudential Conglomerate schemas
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
-
-# Instance a schema for report summary of financial conglomerates.
-FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
-
-# Instance a schema for report assets of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA = PrudentialConglomeratesAssetsSchema()
-
-# Instance a schema for report liabilities of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA = PrudentialConglomerateLiabilitiesSchema()
-
-# Instance a schema for report income statement of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = PrudentialConglomerateIncomeStatementSchema()
-
-# Instance a schema for report capital information of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = PrudentialConglomerateCapitalInformationSchema()
-
-# Instance a schema for report segmentation of prudential conglomerate.
 PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentationSchema()
+
+# Financial Conglomerates schemas
+FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
+FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
+FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA = FinancialConglomerateLiabilitiesSchema()
+FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = FinancialConglomerateIncomeStatementSchema()
+
+# Individual Institutions schemas
+INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
+INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA = IndividualInstitutionAssetsSchema()
+INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA = IndividualInstitutionLiabilitiesSchema()
+INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA = IndividualInstitutionIncomeStatementSchema()
 
 
 __all__ = [
+    # Prudential Conglomerate
     'PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
+    # Financial Conglomerates
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
+    # Individual Institutions
+    'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
+    'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
+    'INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA',
+    'INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA',
 ]
