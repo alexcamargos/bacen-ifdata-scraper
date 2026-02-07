@@ -33,8 +33,8 @@ from time import sleep
 
 from loguru import logger
 
+from bacen_ifdata.interfaces import SessionProtocol
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.session import Session
 from bacen_ifdata.scraper.storage.processing import (
     build_directory_path,
     check_file_already_downloaded,
@@ -45,14 +45,14 @@ from bacen_ifdata.scraper.storage.processing import (
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(session: Session, report_date: str, institution: Institutions, report: StrEnum) -> None:
+def main(session: SessionProtocol, report_date: str, institution: Institutions, report: StrEnum) -> None:
     """Main function for the scraper.
 
     This function orchestrates the scraping process for the reports
     downloaded from the Banco Central do Brasil's IF.data tool.
 
     Args:
-        session (Session): The session object for the scraper.
+        session (SessionProtocol): The session object for the scraper.
         report_date (str): The base date for the reports to be downloaded.
         institution (Institutions): The institution for which the reports will be downloaded.
         report (Reports): The report that will be downloaded.
