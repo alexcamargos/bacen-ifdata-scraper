@@ -35,6 +35,12 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statem
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
     FinancialConglomerateLiabilitiesSchema,
 )
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_geographic_region import (
+    FinancialConglomeratePortfolioGeographicRegionSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_indexer import (
+    FinancialConglomeratePortfolioIndexerSchema,
+)
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_individuals_type_maturity import (
     FinancialConglomeratePortfolioIndividualsTypeMaturitySchema,
 )
@@ -46,6 +52,12 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_leg
 )
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_legal_person_type_maturity import (
     FinancialConglomeratePortfolioLegalPersonTypeMaturitySchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_number_clients_operations import (
+    FinancialConglomeratePortfolioNumberClientsOperationsSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_risk_level import (
+    FinancialConglomeratePortfolioRiskLevelSchema,
 )
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
 from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
@@ -138,6 +150,12 @@ FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA = (
 FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA = (
     FinancialConglomeratePortfolioLegalPersonBusinessSizeSchema()
 )
+FINANCIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA = (
+    FinancialConglomeratePortfolioNumberClientsOperationsSchema()
+)
+FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA = FinancialConglomeratePortfolioRiskLevelSchema()
+FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA = FinancialConglomeratePortfolioIndexerSchema()
+FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA = FinancialConglomeratePortfolioGeographicRegionSchema()
 
 # Individual Institutions schemas
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
@@ -171,6 +189,10 @@ __all__ = [
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA',
     # Individual Institutions
     'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
     'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
