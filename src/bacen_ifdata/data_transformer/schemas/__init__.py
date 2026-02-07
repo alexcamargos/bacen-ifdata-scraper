@@ -63,6 +63,9 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_leg
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_economic_activity import (
     PrudentialConglomeratePortfolioLegalPersonEconomicActivitySchema,
 )
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_number_clients_operations import (
+    PrudentialConglomeratePortfolioNumberClientsOperationsSchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_type_maturity import (
     PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema,
 )
@@ -90,6 +93,9 @@ PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA = (
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA = (
     PrudentialConglomeratePortfolioLegalPersonEconomicActivitySchema()
 )
+PRUDENTIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA = (
+    PrudentialConglomeratePortfolioNumberClientsOperationsSchema()
+)
 
 # Financial Conglomerates schemas
 FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
@@ -116,6 +122,7 @@ __all__ = [
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA',
     # Financial Conglomerates
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
