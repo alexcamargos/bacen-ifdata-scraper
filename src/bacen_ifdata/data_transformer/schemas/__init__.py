@@ -35,6 +35,9 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statem
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
     FinancialConglomerateLiabilitiesSchema,
 )
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_individuals_type_maturity import (
+    FinancialConglomeratePortfolioIndividualsTypeMaturitySchema,
+)
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
 from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
 from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
@@ -114,6 +117,9 @@ FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
 FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
 FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA = FinancialConglomerateLiabilitiesSchema()
 FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = FinancialConglomerateIncomeStatementSchema()
+FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
+    FinancialConglomeratePortfolioIndividualsTypeMaturitySchema()
+)
 
 # Individual Institutions schemas
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
@@ -143,6 +149,7 @@ __all__ = [
     'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
     'FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
     'FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
     # Individual Institutions
     'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
     'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
