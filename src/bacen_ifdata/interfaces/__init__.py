@@ -17,9 +17,9 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
-"""Scraper interfaces module for Bacen IF.data."""
+"""Interfaces module for Bacen IF.data."""
 
-from bacen_ifdata.scraper.interfaces.browser import BrowserProtocol
-from bacen_ifdata.scraper.interfaces.interacting import Browser
+from bacen_ifdata.interfaces.pipeline_manager import PipelineManagerProtocol
+from bacen_ifdata.interfaces.session import SessionProtocol
 
-__all__ = ['Browser', 'BrowserProtocol']
+__all__ = ['PipelineManagerProtocol', 'SessionProtocol']
