@@ -148,6 +148,7 @@ class PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
         'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        # TOTAL DA CARTEIRA
         'total_carteira_pessoa_fisica': {
             'description': (
                 'Volume de crédito disponibilizado a pessoas físicas por instituições financeiras, '
@@ -156,38 +157,238 @@ class PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
             ),
             'type': 'numeric',
         },
-        'vencido_a_partir_15_dias': {
-            'description': 'Operações vencidas há, no mínimo, 15 dias.',
+        # 1. EMPRÉSTIMO COM CONSIGNAÇÃO EM FOLHA
+        'consignacao_vencido_a_partir_15_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
         },
-        'a_vencer_ate_90_dias': {
-            'description': 'Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
+        'consignacao_a_vencer_ate_90_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer em até 90 dias.',
             'type': 'numeric',
         },
-        'a_vencer_91_a_360_dias': {
-            'description': 'Operações a vencer entre 91 a 360 dias.',
+        'consignacao_a_vencer_91_a_360_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
         },
-        'a_vencer_361_a_1080_dias': {
-            'description': 'Operações a vencer entre 361 a 1080 dias.',
+        'consignacao_a_vencer_361_a_1080_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
         },
-        'a_vencer_1081_a_1800_dias': {
-            'description': 'Operações a vencer entre 1081 a 1800 dias.',
+        'consignacao_a_vencer_1081_a_1800_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
         },
-        'a_vencer_1801_a_5400_dias': {
-            'description': 'Operações a vencer entre 1801 a 5400 dias.',
+        'consignacao_a_vencer_1801_a_5400_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
         },
-        'a_vencer_acima_5400_dias': {
-            'description': 'Operações a vencer acima de 5400 dias.',
+        'consignacao_a_vencer_acima_5400_dias': {
+            'description': 'Empréstimo com Consignação em Folha - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
         },
-        'total': {
-            'description': 'Total do grupo.',
+        'consignacao_total': {
+            'description': 'Empréstimo com Consignação em Folha - Total do grupo.',
             'type': 'numeric',
         },
+        # 2. EMPRÉSTIMO SEM CONSIGNAÇÃO EM FOLHA
+        'sem_consignacao_vencido_a_partir_15_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_ate_90_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_91_a_360_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_361_a_1080_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_1081_a_1800_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_1801_a_5400_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_a_vencer_acima_5400_dias': {
+            'description': 'Empréstimo sem Consignação em Folha - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'sem_consignacao_total': {
+            'description': 'Empréstimo sem Consignação em Folha - Total do grupo.',
+            'type': 'numeric',
+        },
+        # 3. VEÍCULOS
+        'veiculos_vencido_a_partir_15_dias': {
+            'description': 'Veículos - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_ate_90_dias': {
+            'description': 'Veículos - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_91_a_360_dias': {
+            'description': 'Veículos - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_361_a_1080_dias': {
+            'description': 'Veículos - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_1081_a_1800_dias': {
+            'description': 'Veículos - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_1801_a_5400_dias': {
+            'description': 'Veículos - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_a_vencer_acima_5400_dias': {
+            'description': 'Veículos - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'veiculos_total': {
+            'description': 'Veículos - Total do grupo.',
+            'type': 'numeric',
+        },
+        # 4. HABITAÇÃO
+        'habitacao_vencido_a_partir_15_dias': {
+            'description': 'Habitação - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_ate_90_dias': {
+            'description': 'Habitação - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_91_a_360_dias': {
+            'description': 'Habitação - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_361_a_1080_dias': {
+            'description': 'Habitação - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_1081_a_1800_dias': {
+            'description': 'Habitação - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_1801_a_5400_dias': {
+            'description': 'Habitação - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_a_vencer_acima_5400_dias': {
+            'description': 'Habitação - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'habitacao_total': {
+            'description': 'Habitação - Total do grupo.',
+            'type': 'numeric',
+        },
+        # 5. CARTÃO DE CRÉDITO
+        'cartao_credito_vencido_a_partir_15_dias': {
+            'description': 'Cartão de Crédito - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_ate_90_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_91_a_360_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_361_a_1080_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_1081_a_1800_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_1801_a_5400_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_a_vencer_acima_5400_dias': {
+            'description': 'Cartão de Crédito - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'cartao_credito_total': {
+            'description': 'Cartão de Crédito - Total do grupo.',
+            'type': 'numeric',
+        },
+        # 6. RURAL E AGROINDUSTRIAL
+        'rural_agroindustrial_vencido_a_partir_15_dias': {
+            'description': 'Rural e Agroindustrial - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_ate_90_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_91_a_360_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_361_a_1080_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_1081_a_1800_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_1801_a_5400_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_a_vencer_acima_5400_dias': {
+            'description': 'Rural e Agroindustrial - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'rural_agroindustrial_total': {
+            'description': 'Rural e Agroindustrial - Total do grupo.',
+            'type': 'numeric',
+        },
+        # 7. OUTROS CRÉDITOS
+        'outros_creditos_vencido_a_partir_15_dias': {
+            'description': 'Outros Créditos - Operações vencidas há, no mínimo, 15 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_ate_90_dias': {
+            'description': 'Outros Créditos - Operações a vencer em até 90 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_91_a_360_dias': {
+            'description': 'Outros Créditos - Operações a vencer entre 91 a 360 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_361_a_1080_dias': {
+            'description': 'Outros Créditos - Operações a vencer entre 361 a 1080 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_1081_a_1800_dias': {
+            'description': 'Outros Créditos - Operações a vencer entre 1081 a 1800 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_1801_a_5400_dias': {
+            'description': 'Outros Créditos - Operações a vencer entre 1801 a 5400 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_a_vencer_acima_5400_dias': {
+            'description': 'Outros Créditos - Operações a vencer acima de 5400 dias.',
+            'type': 'numeric',
+        },
+        'outros_creditos_total': {
+            'description': 'Outros Créditos - Total do grupo.',
+            'type': 'numeric',
+        },
+        # TOTAL EXTERIOR
         'total_exterior_pessoa_fisica': {
             'description': (
                 'Volume das operações de crédito realizadas por IFs brasileiras no exterior para pessoas físicas.'
