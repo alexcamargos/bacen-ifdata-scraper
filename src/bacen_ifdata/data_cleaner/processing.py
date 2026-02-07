@@ -31,11 +31,11 @@ from bacen_ifdata.utilities.configurations import Config as Cfg
 
 def check_file_already_processed(output_directory: Path, file: str) -> bool:
     """Checks if the file has already been processed.
-    
+
     Args:
         output_directory (Path): The directory where the file is being processed.
         file (str): The name of the file to be processed.
-    
+
     Returns:
         bool: True if the file has already been processed, False otherwise.
     """
@@ -78,12 +78,10 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
     """
 
     # Diretório onde os arquivos CSV baixados são armazenados.
-    input_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY.value, institution.name.lower(), report.name.lower())
+    input_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY, institution.name.lower(), report.name.lower())
 
     # Diretório onde os arquivos CSV normalizados serão armazenados.
-    output_path = build_directory_path(
-        Cfg.PROCESSED_FILES_DIRECTORY.value, institution.name.lower(), report.name.lower()
-    )
+    output_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower())
 
     # Check if the file has already been normalized.
     if check_file_already_processed(output_path, file):
