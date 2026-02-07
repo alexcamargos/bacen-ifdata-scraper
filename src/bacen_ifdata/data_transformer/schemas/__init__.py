@@ -28,6 +28,22 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
+    FinancialConglomerateIncomeStatementSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
+    FinancialConglomerateLiabilitiesSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
+    IndividualInstitutionIncomeStatementSchema,
+)
+from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
+    IndividualInstitutionLiabilitiesSchema,
+)
+from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import IndividualInstitutionSummarySchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import (
     PrudentialConglomerateCapitalInformationSchema,
@@ -38,32 +54,16 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statem
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import (
     PrudentialConglomerateLiabilitiesSchema,
 )
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_individuals_type_maturity import (
+    PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema,
+)
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_type_maturity import (
+    PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import (
     PrudentialConglomerateSegmentationSchema,
 )
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
-
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_individuals_type_maturity import (
-    PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema,
-)
-
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
-    FinancialConglomerateLiabilitiesSchema,
-)
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
-    FinancialConglomerateIncomeStatementSchema,
-)
-
-from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import IndividualInstitutionSummarySchema
-from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
-from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
-    IndividualInstitutionLiabilitiesSchema,
-)
-from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
-    IndividualInstitutionIncomeStatementSchema,
-)
 
 # Prudential Conglomerate schemas
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
@@ -74,6 +74,9 @@ PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = PrudentialConglomerateCapit
 PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentationSchema()
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
     PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema()
+)
+PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA = (
+    PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema()
 )
 
 # Financial Conglomerates schemas
@@ -98,6 +101,7 @@ __all__ = [
     'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
     # Financial Conglomerates
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
