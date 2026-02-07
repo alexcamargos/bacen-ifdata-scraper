@@ -1,4 +1,47 @@
 {
+    // Python Analysis (Pylance)
     "python.analysis.typeCheckingMode": "basic",
-    "python.linting.pylintArgs": ["--max-line-length=119"]
+    "python.analysis.autoImportCompletions": true,
+    // Testing (pytest)
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    // Formatting (Black)
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    // Black Formatter
+    "black-formatter.args": [
+        "--line-length",
+        "120"
+    ],
+    // isort (import sorting)
+    "isort.args": [
+        "--profile",
+        "black",
+        "--line-length",
+        "120"
+    ],
+    // Pylint
+    "pylint.args": [
+        "--max-line-length=120"
+    ],
+    // Editor settings for Python
+    "editor.rulers": [
+        120
+    ],
+    // Files
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        ".pytest_cache": true,
+        "htmlcov": true,
+        "*.egg-info": true
+    }
 }

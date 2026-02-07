@@ -5,29 +5,73 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run the scraper.",
+            "name": "Run Default Pipeline (Cleaner + Transformer)",
             "type": "debugpy",
             "request": "launch",
-            "program": "./ifdata.py",
-            "args": ["-s"],
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [],
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": true
         },
         {
-            "name": "Run the transformer.",
+            "name": "Run Scraper",
             "type": "debugpy",
             "request": "launch",
-            "program": "./ifdata.py",
-            "args": ["-t"],
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [
+                "-s"
+            ],
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": true
         },
         {
-            "name": "Run the cleaner.",
+            "name": "Run Scraper (Debug - Keep Browser Open)",
             "type": "debugpy",
             "request": "launch",
-            "program": "./ifdata.py",
-            "args": ["-c"],
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [
+                "-s",
+                "--no-cleanup"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run Cleaner",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [
+                "-c"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run Transformer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [
+                "-t"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run Loader",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ifdata.py",
+            "args": [
+                "-l"
+            ],
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": true
         }
