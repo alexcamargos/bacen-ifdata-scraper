@@ -54,6 +54,9 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statem
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import (
     PrudentialConglomerateLiabilitiesSchema,
 )
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_geographic_region import (
+    PrudentialConglomeratePortfolioGeographicRegionSchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_indexer import (
     PrudentialConglomeratePortfolioIndexerSchema,
 )
@@ -66,14 +69,14 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_leg
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_economic_activity import (
     PrudentialConglomeratePortfolioLegalPersonEconomicActivitySchema,
 )
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_type_maturity import (
+    PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_number_clients_operations import (
     PrudentialConglomeratePortfolioNumberClientsOperationsSchema,
 )
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_risk_level import (
     PrudentialConglomeratePortfolioRiskLevelSchema,
-)
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_legal_person_type_maturity import (
-    PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema,
 )
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import (
     PrudentialConglomerateSegmentationSchema,
@@ -90,9 +93,8 @@ PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentation
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
     PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema()
 )
-PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA = (
-    PrudentialConglomeratePortfolioIndexerSchema()
-)
+PRUDENTIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA = PrudentialConglomeratePortfolioGeographicRegionSchema()
+PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA = PrudentialConglomeratePortfolioIndexerSchema()
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA = (
     PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema()
 )
@@ -129,6 +131,7 @@ __all__ = [
     'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA',
