@@ -54,6 +54,9 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.income_statem
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.liabilities import (
     PrudentialConglomerateLiabilitiesSchema,
 )
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_indexer import (
+    PrudentialConglomeratePortfolioIndexerSchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_individuals_type_maturity import (
     PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema,
 )
@@ -86,6 +89,9 @@ PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = PrudentialConglomerateCapit
 PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA = PrudentialConglomerateSegmentationSchema()
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
     PrudentialConglomeratePortfolioIndividualsTypeMaturitySchema()
+)
+PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA = (
+    PrudentialConglomeratePortfolioIndexerSchema()
 )
 PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA = (
     PrudentialConglomeratePortfolioLegalPersonTypeMaturitySchema()
@@ -123,6 +129,7 @@ __all__ = [
     'PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
+    'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA',
     'PRUDENTIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA',
