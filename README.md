@@ -17,6 +17,7 @@ Este projeto automatiza a coleta, o processamento e a carga dos relatórios fina
 O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjunto de dados limpo, organizado e pronto para análise, eliminando a necessidade de trabalho manual e garantindo a precisão das informações através de um pipeline ETL (Extract, Transform, Load) completo.
 
 **Sumário**
+
 - [Bacen IF.data AutoScraper \& Data Manager](#bacen-ifdata-autoscraper--data-manager)
   - [Tecnologias Utilizadas](#tecnologias-utilizadas)
   - [Funcionalidades Principais](#funcionalidades-principais)
@@ -32,20 +33,21 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
     - [Transformação (Transforming)](#transformação-transforming)
     - [Carga (Loading)](#carga-loading)
     - [Execução Padrão](#execução-padrão)
+  - [Arquitetura do Sistema](#arquitetura-do-sistema)
   - [Desafios e Aprendizados](#desafios-e-aprendizados)
   - [Autor](#autor)
   - [Licença](#licença)
 
 ## Tecnologias Utilizadas
 
-* **Linguagem Principal:** Python
-* **Gerenciador de Dependências e Build:** uv
-* **Automação Web (Scraping):** Selenium
-* **Manipulação de Dados:** Polars
-* **Banco de Dados Analítico:** DuckDB
-* **Validação de Dados:** Pydantic, Pandera
-* **CLI:** Fire
-* **Web Driver:** GeckoDriver (para Firefox)
+- **Linguagem Principal:** Python
+- **Gerenciador de Dependências e Build:** uv
+- **Automação Web (Scraping):** Selenium
+- **Manipulação de Dados:** Polars
+- **Banco de Dados Analítico:** DuckDB
+- **Validação de Dados:** Pydantic, Pandera
+- **CLI:** Fire
+- **Web Driver:** GeckoDriver (para Firefox)
 
 ## Funcionalidades Principais
 
@@ -69,21 +71,21 @@ Veja o pipeline de automação em ação.
 
   <summary>Clique para saber mais sobre o contexto do projeto</summary>
 
-  ## Motivação
+## Motivação
 
   Embora o Bacen disponibilize dados para o público em geral, com o objetivo de atender ao disposto na Lei 12.527 de 2011 (popularmente conhecida como Lei de Acesso à Informação), a forma como esses dados são apresentados exige a aplicação de métodos especializados para sua interpretação. É necessário empregar uma série de procedimentos e técnicas para extrair informações mais sofisticadas desses dados. A utilização de algoritmos e técnicas de tratamento e mineração de dados é fundamental nesse contexto. Essas abordagens permitem a extração de insights mais complexos dos dados fornecidos pelo Bacen, facilitando análises mais profundas e detalhadas sobre o sistema financeiro brasileiro.
 
-  ## O Portal IF.Data
+## O Portal IF.Data
 
   O Portal IF.Data, criado pelo Banco Central do Brasil (Bacen), atende às exigências da Lei de Acesso à Informação ([Lei 12.527 de 2011](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12527.htm)). Essa legislação obriga o poder público a publicar informações na internet de maneira acessível e em formatos compatíveis com processamento automatizado. O portal se caracteriza por ser interativo, armazenando e disponibilizando uma série de relatórios sobre instituições financeiras. Estes relatórios, que são atualizados trimestralmente, incluem dados abertos e podem ser visualizados online ou baixados em formato .csv.
 
   No Portal IF.Data, é possível encontrar dados relacionados a contabilidade e capital, crédito, câmbio e segmentação das instituições financeiras. O portal abrange dados desde o ano 2000, e também oferece acesso a informações anteriores, de 1994 a 2000, embora em formatos diferentes. Para acessar os dados, o usuário pode selecionar no portal o trimestre de interesse, o tipo de instituição financeira e o relatório desejado.
 
-  ## O Banco Central do Brasil
+## O Banco Central do Brasil
 
   O Banco Central do Brasil, frequentemente referido como Bacen, é a autoridade monetária principal do Brasil e desempenha um papel crucial na economia do país. Sua principal função é garantir a estabilidade do poder de compra da moeda nacional, o Real, e manter um sistema financeiro sólido e eficiente. Para isso, o Bacen regula a quantidade de dinheiro em circulação, administra as reservas internacionais do país, e atua como um regulador e supervisor do sistema financeiro, controlando e fiscalizando as instituições financeiras. Além disso, é responsável pela formulação e execução da política monetária, buscando controlar a inflação e influenciar as atividades econômicas. Como parte de suas funções, o Bacen também coleta e divulga dados econômicos e financeiros importantes, como os disponibilizados no Portal IF.Data, para garantir transparência e acesso à informação para o público em geral e para instituições financeiras.
 
-  ## Objetivo Geral
+## Objetivo Geral
 
   Este projeto visa aprimorar a coleta e o processamento de dados através da automação de atividades em navegadores web, utilizando a biblioteca [Selenium](https://www.selenium.dev). Selenium é uma ferramenta poderosa para a automação de browsers, permitindo a extração eficiente de dados de diversas fontes online. Após a coleta, o projeto focará no agrupamento e tratamento desses dados, organizando-os de maneira sistemática e coerente.
 
@@ -95,6 +97,7 @@ Veja o pipeline de automação em ação.
 ## Instalação
 
 Primeiro, clone o repositório:
+
 ```bash
 git clone https://github.com/alexcamargos/bacen-ifdata-scraper.git
 
@@ -102,6 +105,7 @@ cd bacen-ifdata-scraper
 ```
 
 Para criar um ambiente virtual e instalar as dependências com `uv`:
+
 ```bash
 # Crie o ambiente virtual
 uv venv
@@ -129,6 +133,7 @@ Para baixar os relatórios do portal IF.data, use a flag `-s` ou `--scraper`. O 
 ```bash
 uv run ifdata.py -s
 ```
+
 O script exibirá em tempo real quais arquivos estão sendo baixados. Ao final, um relatório detalhará o número total de arquivos baixados e o tempo de execução.
 
 ### Limpeza (Cleaning)
@@ -163,21 +168,25 @@ Se nenhum argumento for fornecido, o pipeline executará as etapas de limpeza e 
 uv run ifdata.py
 ```
 
+## Arquitetura do Sistema
+
+Para informações detalhadas sobre a arquitetura do projeto, padrões de design utilizados, estrutura de diretórios e guia de contribuição, consulte a [documentação de arquitetura](docs/ARCHITECTURE.md).
+
 ## Desafios e Aprendizados
 
-* **Desafio: Construção de um Pipeline de Dados de Ponta a Ponta**
-    * **Problema:** As informações financeiras do Bacen, apesar de públicas, não são disponibilizadas através de uma API. Elas estão "presas" em um portal web que exige navegação manual e os arquivos para download estão em um formato inconsistente e "sujo". Para realizar qualquer análise séria e replicável, era necessário um sistema que superasse essas barreiras.
-    * **Solução:** Projetei e implementei um pipeline de dados em quatro etapas (ETL):
-        1.  **Extração (Extract):** Um scraper automatizado com Selenium que simula a interação humana com o portal IF.data, navegando pelos menus e realizando o download sistemático de todos os relatórios necessários.
-        2.  **Limpeza (Clean):** Um módulo de pré-processamento que recebe os arquivos brutos e corrige a formatação não-padrão.
-        3.  **Transformação (Transform):** Um módulo que estrutura os dados limpos usando **Polars**, aplicando schemas de dados com **Pydantic** para garantir a consistência e o formato correto para análise.
-        4.  **Carga (Load):** Um módulo que carrega os dados transformados em um banco de dados **DuckDB**, criando tabelas otimizadas para consultas analíticas rápidas.
-    * **Aprendizado:** Este projeto foi um exercício prático completo de **Engenharia de Dados (ETL - Extract, Transform, Load)**. Aprendi a decompor um problema complexo em etapas lógicas, selecionar as ferramentas adequadas para cada fase (Selenium, Polars, DuckDB) e a construir um fluxo de trabalho automatizado e confiável. O resultado final não é apenas um conjunto de dados, mas um **sistema replicável que transforma uma fonte de dados manual e não confiável em um ativo de informação pronto para análise**.
+- **Desafio: Construção de um Pipeline de Dados de Ponta a Ponta**
+  - **Problema:** As informações financeiras do Bacen, apesar de públicas, não são disponibilizadas através de uma API. Elas estão "presas" em um portal web que exige navegação manual e os arquivos para download estão em um formato inconsistente e "sujo". Para realizar qualquer análise séria e replicável, era necessário um sistema que superasse essas barreiras.
+  - **Solução:** Projetei e implementei um pipeline de dados em quatro etapas (ETL):
+        1. **Extração (Extract):** Um scraper automatizado com Selenium que simula a interação humana com o portal IF.data, navegando pelos menus e realizando o download sistemático de todos os relatórios necessários.
+        2. **Limpeza (Clean):** Um módulo de pré-processamento que recebe os arquivos brutos e corrige a formatação não-padrão.
+        3. **Transformação (Transform):** Um módulo que estrutura os dados limpos usando **Polars**, aplicando schemas de dados com **Pydantic** para garantir a consistência e o formato correto para análise.
+        4. **Carga (Load):** Um módulo que carrega os dados transformados em um banco de dados **DuckDB**, criando tabelas otimizadas para consultas analíticas rápidas.
+  - **Aprendizado:** Este projeto foi um exercício prático completo de **Engenharia de Dados (ETL - Extract, Transform, Load)**. Aprendi a decompor um problema complexo em etapas lógicas, selecionar as ferramentas adequadas para cada fase (Selenium, Polars, DuckDB) e a construir um fluxo de trabalho automatizado e confiável. O resultado final não é apenas um conjunto de dados, mas um **sistema replicável que transforma uma fonte de dados manual e não confiável em um ativo de informação pronto para análise**.
 
-* **Desafio: Parsing de CSVs Não-Padronizados**
-    * **Problema:** Os arquivos CSV disponibilizados pelo Bacen não seguem o padrão convencional. Eles incluem múltiplos cabeçalhos, linhas de resumo e agrupamentos de dados dentro do mesmo arquivo, tornando a importação direta com bibliotecas padrão inviável.
-    * **Solução:** Desenvolvi um script de processamento em Python que lê cada arquivo linha por linha. Utilizando lógica condicional, o script identifica e ignora os cabeçalhos secundários e as linhas de resumo. Ele localiza o cabeçalho principal correto e extrai apenas as linhas de dados pertencentes às instituições financeiras, reescrevendo um novo arquivo CSV limpo e bem formatado.
-    * **Aprendizado:** Este desafio aprofundou minhas habilidades em manipulação de arquivos e parsing de texto em baixo nível. Aprendi a importância de não confiar cegamente em formatos de arquivo e a desenvolver soluções robustas para lidar com dados sujos e inconsistentes, uma habilidade fundamental em qualquer projeto de engenharia ou ciência de dados.
+- **Desafio: Parsing de CSVs Não-Padronizados**
+  - **Problema:** Os arquivos CSV disponibilizados pelo Bacen não seguem o padrão convencional. Eles incluem múltiplos cabeçalhos, linhas de resumo e agrupamentos de dados dentro do mesmo arquivo, tornando a importação direta com bibliotecas padrão inviável.
+  - **Solução:** Desenvolvi um script de processamento em Python que lê cada arquivo linha por linha. Utilizando lógica condicional, o script identifica e ignora os cabeçalhos secundários e as linhas de resumo. Ele localiza o cabeçalho principal correto e extrai apenas as linhas de dados pertencentes às instituições financeiras, reescrevendo um novo arquivo CSV limpo e bem formatado.
+  - **Aprendizado:** Este desafio aprofundou minhas habilidades em manipulação de arquivos e parsing de texto em baixo nível. Aprendi a importância de não confiar cegamente em formatos de arquivo e a desenvolver soluções robustas para lidar com dados sujos e inconsistentes, uma habilidade fundamental em qualquer projeto de engenharia ou ciência de dados.
 
 ## Autor
 
@@ -186,12 +195,10 @@ uv run ifdata.py
 Engenheiro de dados e inteligência artificial focado em soluções de alta performance para o mercado financeiro.
 Este projeto reflete meu interesse em automação de processos, engenharia de dados e análise financeira.
 
-
 Fique à vontade para entrar em contato para discussões técnicas, sugestões ou oportunidades:
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alexcamargos/)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:alcamargos@vivaldi.net)
-
 
 ## Licença
 
