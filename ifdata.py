@@ -3,7 +3,7 @@
 #
 #  ------------------------------------------------------------------------------
 #  Name: ifdata.py
-#  Version: 0.0.2
+#  Version: 0.0.3
 #  Summary: Bacen IF.data AutoScraper & Data Manager
 #           Este sistema foi projetado para automatizar o download dos
 #           relatórios da ferramenta IF.data do Banco Central do Brasil.
@@ -29,17 +29,12 @@ License: MIT
 """
 
 import argparse
+from collections.abc import Callable
 
 from loguru import logger
 
-from bacen_ifdata import Pipeline
-from bacen_ifdata.data_transformer.controller import TransformerController
-from bacen_ifdata.data_transformer.transformer_factory import get_transformer
-from bacen_ifdata.manager import PipelineManager
-from bacen_ifdata.scraper.interfaces.interacting import Browser
-from bacen_ifdata.scraper.session import Session
-from bacen_ifdata.scraper.utils import initialize_webdriver
-from bacen_ifdata.utilities.configurations import Config
+from bacen_ifdata.application import Application
+from bacen_ifdata.interfaces import PipelineManagerProtocol
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -50,20 +45,13 @@ def get_arguments() -> argparse.Namespace:
         argparse.Namespace: The command-line arguments parser.
     """
 
-    # Create the parser.
     parser = argparse.ArgumentParser(prog='ifdata', description='Bacen IF.data AutoScraper & Data Manager')
 
-    # Add the arguments.
     parser.add_argument('-s', '--scraper', action='store_true', help='Download the reports.')
-
     parser.add_argument('-c', '--cleaner', action='store_true', help='Clean the downloaded reports.')
-
-    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
-
     parser.add_argument('-t', '--transformer', action='store_true', help='Transform the downloaded reports.')
-
     parser.add_argument('-l', '--loader', action='store_true', help='Load the processed reports.')
-
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument(
         '--no-cleanup',
         action='store_true',
@@ -73,91 +61,41 @@ def get_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main(pipeline_manager: PipelineManager, enable_cleanup: bool = True) -> bool:
-    """Main function to run the IF.data pipeline.
-
-    This function orchestrates the execution of the various stages
-    of the IfDataPipeline, including scraping, cleaning, transforming,
-    and loading data.
+def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Namespace) -> None:
+    """Execute the requested pipeline stages.
 
     Args:
-        pipeline_manager (PipelineManager): The pipeline manager instance to run.
-        enable_cleanup (bool): Whether to enable session cleanup after execution.
-
-    Returns:
-        bool: The cleanup flag to be used by the caller.
+        pipeline_manager: The pipeline manager instance.
+        args: Parsed command-line arguments.
     """
-
-    # Get the arguments.
-    arguments = get_arguments()
 
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
 
-    # A flag to check if any specific action was requested.
-    action_requested = any([arguments.scraper, arguments.cleaner, arguments.transformer, arguments.loader])
+    # Mapping of arg names to their log message and runner method.
+    actions: dict[str, tuple[str, Callable[[], None]]] = {
+        'scraper': ('Running the scraper...', pipeline_manager.run_scraper),
+        'cleaner': ('Running the cleaner...', pipeline_manager.run_cleaner),
+        'transformer': ('Running the transformer...', pipeline_manager.run_transformer),
+        'loader': ('Running the loader...', pipeline_manager.run_loader),
+    }
 
-    # Run the scraper.
-    if arguments.scraper:
-        logger.info('Running the scraper...')
-        pipeline_manager.run_scraper()
-
-    # Run the cleaner.
-    if arguments.cleaner:
-        logger.info('Running the cleaner...')
-        pipeline_manager.run_cleaner()
-
-    # Run the transformer.
-    if arguments.transformer:
-        logger.info('Running the transformer...')
-        pipeline_manager.run_transformer()
-
-    # Run the loader.
-    if arguments.loader:
-        logger.info('Running the loader...')
-        pipeline_manager.run_loader()
+    # Execute requested actions.
+    action_executed = False
+    for argument_name, (message, runner) in actions.items():
+        if getattr(args, argument_name):
+            logger.info(message)
+            runner()  # pylint: disable=not-callable
+            action_executed = True
 
     # If no specific action was requested, run the default pipeline.
-    if not action_requested:
+    if not action_executed:
         logger.info('No specific action requested, running default pipeline (cleaner and transformer)...')
-        # Run the cleaner.
         pipeline_manager.run_cleaner()
-        # Run the transformer.
         pipeline_manager.run_transformer()
-
-    return enable_cleanup
 
 
 if __name__ == '__main__':
-    # Initialize the session and driver, handling context management manually for now
-    # to ensure proper cleanup in case of exceptions.
-    driver = initialize_webdriver()
-    browser = Browser(driver)
-    session = Session(browser, Config.URL)
+    args = get_arguments()
 
-    # Get command-line arguments to check cleanup flag.
-    arguments = get_arguments()
-    enable_session_cleanup = not arguments.no_cleanup
-
-    try:
-        # Open the session.
-        session.open()
-
-        # Create the transformer controller instance with the transformer factory.
-        transformer_controller = TransformerController(get_transformer)
-
-        # Initialize the main pipeline with the session injected.
-        pipeline = Pipeline(transformer_controller, session)
-
-        # Create the pipeline manager instance.
-        pipeline_manager = PipelineManager(pipeline)
-
-        # Run the main pipeline.
-        main(pipeline_manager, enable_session_cleanup)
-
-    except Exception as error:
-        logger.error(f"An error occurred: {error}")
-        raise error
-    finally:
-        if enable_session_cleanup:
-            logger.info("Finishing session...")
-            session.cleanup()
+    with Application(enable_cleanup=not args.no_cleanup) as app:
+        run_pipeline(app.pipeline_manager, args)
