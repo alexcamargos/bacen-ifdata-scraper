@@ -32,7 +32,7 @@ from typing import TypedDict
 
 from loguru import logger
 
-from bacen_ifdata.scraper.interfaces.interacting import Browser
+from bacen_ifdata.scraper.interfaces import BrowserProtocol
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.humanize import seconds_to_human_readable
 
@@ -65,18 +65,19 @@ class Session:
         _started (float): The start time of the session.
 
     Methods:
-        _ensure_and_select_dropdown_option(element_id, option): Ensures the dropdown menu is clickable and selects the desired option.
+        _ensure_and_select_dropdown_option(element_id, option): Ensures the dropdown menu is clickable
+                                                                and selects the desired option.
         open(): Opens the URL in a web browser.
         cleanup(): Cleans up the web session and log details.
         get_data_bases(): Returns a list of available data bases.
         download_reports(data_base, institution_type, report_type): Downloads reports from the IF.data tool.
     """
 
-    def __init__(self, browser: Browser, url: str) -> None:
+    def __init__(self, browser: BrowserProtocol, url: str) -> None:
         """Initializes a new instance of the Session class.
 
         Args:
-            browser (Browser): The browser instance for web interactions.
+            browser (BrowserProtocol): The browser instance for web interactions.
             url (str): The URL to open in the web session.
         """
 
