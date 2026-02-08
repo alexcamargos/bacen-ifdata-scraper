@@ -24,6 +24,7 @@ MANIFEST
 htmlcov/
 .coverage
 .coverage.*
+coverage.xml
 .cache
 *.cover
 *.py,cover
