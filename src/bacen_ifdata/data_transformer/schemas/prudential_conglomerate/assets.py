@@ -71,7 +71,7 @@ class PrudentialConglomeratesAssetsSchema(BaseSchema):
                 'n4': 'Instituições de pagamento.',
             },
         },
-        'segmento': {
+        'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {
@@ -115,7 +115,7 @@ class PrudentialConglomeratesAssetsSchema(BaseSchema):
         },
         'cidade': {'description': 'Cidade onde fica localizada a sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
-        'data': {'description': 'Data-base do Relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do Relatório.', 'type': 'date'},
         'disponibilidades': {'description': 'Disponibilidades.', 'type': 'numeric'},
         'aplicacoes_interfinanceiras_liquidez': {
             'description': 'Aplicações Interfinanceiras de Liquidez.',

@@ -62,7 +62,7 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
                 'n4': 'Instituições de Pagamento.',
             },
         },
-        'segmento': {
+        'segmento_resolucao': {
             'description': 'Segmento conforme Resolução nº 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {
@@ -116,7 +116,7 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
         },
-        'data': {
+        'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
         },

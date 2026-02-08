@@ -48,27 +48,30 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
         },
-        'tcb': {
+        'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
             'mapping': {
                 'b1': (
-                    'Banco Comercial, Banco Múltiplo com Carteira Comercial '
-                    'ou Caixas Econômicas.'
+                    'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
+                    'ou caixas econômicas e Conglomerado composto de pelo menos uma instituição do tipo Banco '
+                    'Comercial, Banco Múltiplo com Carteira Comercial ou caixas econômicas.'
                 ),
                 'b2': (
-                    'Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio '
-                    'ou Banco de Investimento.'
+                    'Instituição individual do tipo Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio '
+                    'ou Banco de Investimento e Conglomerado composto de pelo menos uma instituição do tipo '
+                    'Banco Múltiplo sem Carteira Comercial ou Banco de Investimento, mas sem conter instituições '
+                    'do tipo Banco Comercial e Banco Múltiplo com Carteira Comercial.'
                 ),
                 'b3s': 'Cooperativa de Crédito Singular.',
                 'b3c': 'Central e Confederação de Cooperativas de Crédito.',
-                'b4': 'Banco de Desenvolvimento.',
-                'n1': 'Não bancário de Crédito.',
-                'n2': 'Não bancário do Mercado de Capitais.',
-                'n4': 'Instituições de Pagamento.',
+                'b4': 'Banco de Desenvolvimento',
+                'n1': 'Instituição não bancária atuante no mercado de crédito.',
+                'n2': 'Instituição não bancária atuante no mercado de capitais.',
+                'n4': 'Instituições de pagamento.',
             },
         },
-        'td': {
+        'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
             'mapping': {
@@ -76,16 +79,12 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
                 'c': 'Conglomerado',
             },
         },
-        'tc': {
+        'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
-            'mapping': {
-                '1': 'Público',
-                '2': 'Privado Nacional',
-                '3': 'Privado com Controle Estrangeiro',
-            },
+            'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
-        'sr': {
+        'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {

@@ -71,7 +71,7 @@ class PrudentialConglomerateIncomeStatementSchema(BaseSchema):
                 'n4': 'Instituições de pagamento.',
             },
         },
-        'segmento': {
+        'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {

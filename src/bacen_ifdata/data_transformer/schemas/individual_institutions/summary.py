@@ -51,21 +51,21 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'conglomerado': {
             'description': (
                 'Nome do conglomerado a que pertence a instituição individual.'
-                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.',
+                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'text',
         },
         'conglomerado_financeiro': {
             'description': (
                 'Código do conglomerado financeiro a que pertence a instituição individual.'
-                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.',
+                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'numeric',
         },
         'conglomerado_prudencial': {
             'description': (
                 'Código do conglomerado prudencial a que pertence a instituição individual.'
-                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.',
+                ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'numeric',
         },
@@ -132,7 +132,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
         },
-        'data': {
+        'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
         },
