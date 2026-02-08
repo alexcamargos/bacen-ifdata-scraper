@@ -37,58 +37,47 @@ from loguru import logger
 
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 from bacen_ifdata.data_transformer.schemas import (
-    # Prudential Conglomerate schemas
+    FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA,
+    FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
+    FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA,
+    FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDEXER_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_RISK_LEVEL_SCHEMA,
+    FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA,
+    INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA,
+    INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA,
+    INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA,
+    INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_ASSETS_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_SEGMENTATION_SCHEMA,
     PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA,
-    # Financial Conglomerates schemas
-    FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA,
-    FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA,
-    FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA,
-    FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA,
-    FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA,
-    # Individual Institutions schemas
-    INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA,
-    INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA,
-    INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA,
-    INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA,
 )
 from bacen_ifdata.data_transformer.schemas.interfaces import SchemaProtocol
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import (
     ReportsFinancialConglomerates,
+    ReportsFinancialConglomeratesSCR,
     ReportsIndividualInstitutions,
     ReportsPrudentialConglomerates,
 )
 from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
 from bacen_ifdata.utilities.configurations import Config as Cfg
-
-
-def store_transformed_data(transformed_data: pd.DataFrame, output_directory: Path, file_name: str) -> None:
-    """Save the transformed data to the output directory.
-
-    This function saves the transformed data to a CSV file in the specified
-    output directory.
-
-    Arguments:
-        transformed_data (pd.DataFrame): The transformed data to be saved.
-        output_directory (Path): The directory where the data should be saved.
-        file_name (str): The name of the file to save the data as.
-    """
-
-    transformed_data.to_csv(output_directory / file_name, index=False)
-    logger.info(f'Successfully transformed: {output_directory / file_name}')
-
 
 # Schema mapping by institution and report type.
 SCHEMA_BY_INSTITUTION_AND_REPORT: Final[dict[Institutions, dict[StrEnum, SchemaProtocol]]] = {
@@ -114,6 +103,16 @@ SCHEMA_BY_INSTITUTION_AND_REPORT: Final[dict[Institutions, dict[StrEnum, SchemaP
         ReportsFinancialConglomerates.PORTFOLIO_INDEXER: FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA,
         ReportsFinancialConglomerates.PORTFOLIO_GEOGRAPHIC_REGION: FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA,
     },
+    Institutions.FINANCIAL_CONGLOMERATES_SCR: {
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_INDIVIDUALS_TYPE_MATURITY: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_NUMBER_CLIENTS_OPERATIONS: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_RISK_LEVEL: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_RISK_LEVEL_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_INDEXER: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDEXER_SCHEMA,
+        ReportsFinancialConglomeratesSCR.PORTFOLIO_GEOGRAPHIC_REGION: FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA,
+    },
     Institutions.INDIVIDUAL_INSTITUTIONS: {
         ReportsIndividualInstitutions.SUMMARY: INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA,
         ReportsIndividualInstitutions.ASSETS: INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA,
@@ -121,6 +120,22 @@ SCHEMA_BY_INSTITUTION_AND_REPORT: Final[dict[Institutions, dict[StrEnum, SchemaP
         ReportsIndividualInstitutions.INCOME_STATEMENT: INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA,
     },
 }
+
+
+def _store_transformed_data(transformed_data: pd.DataFrame, output_directory: Path, file_name: str) -> None:
+    """Save the transformed data to the output directory.
+
+    This function saves the transformed data to a CSV file in the specified
+    output directory.
+
+    Arguments:
+        transformed_data (pd.DataFrame): The transformed data to be saved.
+        output_directory (Path): The directory where the data should be saved.
+        file_name (str): The name of the file to save the data as.
+    """
+
+    transformed_data.to_csv(output_directory / file_name, index=False)
+    logger.info(f'Successfully transformed: {output_directory / file_name}')
 
 
 def main(transformer_controller: TransformerControllerInterface, institution: Institutions, report: StrEnum) -> None:
@@ -164,4 +179,4 @@ def main(transformer_controller: TransformerControllerInterface, institution: In
         # Transform the CSV file.
         transformed_data = transformer_controller.transform(file, report_schema, institution)
         # Save the transformed data to the output directory.
-        store_transformed_data(transformed_data, output_directory, file.name)
+        _store_transformed_data(transformed_data, output_directory, file.name)
