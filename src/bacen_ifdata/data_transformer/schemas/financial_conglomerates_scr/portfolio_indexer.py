@@ -49,7 +49,7 @@ class FinancialConglomerateSCRPortfolioIndexerSchema(BaseSchema):
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
         },
-        'tcb': {
+        'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
             'mapping': {
@@ -72,7 +72,7 @@ class FinancialConglomerateSCRPortfolioIndexerSchema(BaseSchema):
                 'n4': 'Instituições de pagamento.',
             },
         },
-        'td': {
+        'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
             'mapping': {
@@ -80,12 +80,12 @@ class FinancialConglomerateSCRPortfolioIndexerSchema(BaseSchema):
                 'c': 'Conglomerado',
             },
         },
-        'tc': {
+        'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
-        'sr': {
+        'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
             'mapping': {
@@ -153,7 +153,7 @@ class FinancialConglomerateSCRPortfolioIndexerSchema(BaseSchema):
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
         },
-        'data': {
+        'data_base': {
             'description': 'Data-base do relatório.',
             'type': 'date',
         },
