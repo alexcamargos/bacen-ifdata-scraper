@@ -60,6 +60,33 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_ris
     FinancialConglomeratePortfolioRiskLevelSchema,
 )
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_geographic_region import (
+    FinancialConglomerateSCRPortfolioGeographicRegionSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_indexer import (
+    FinancialConglomerateSCRPortfolioIndexerSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_individuals_type_maturity import (
+    FinancialConglomerateSCRPortfolioIndividualsTypeMaturitySchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_legal_person_business_size import (
+    FinancialConglomerateSCRPortfolioLegalPersonBusinessSizeSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_legal_person_economic_activity import (
+    FinancialConglomerateSCRPortfolioLegalPersonEconomicActivitySchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_legal_person_type_maturity import (
+    FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_number_clients_operations import (
+    FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_risk_level import (
+    FinancialConglomerateSCRPortfolioRiskLevelSchema,
+)
+from bacen_ifdata.data_transformer.schemas.foreign_exchange.quarterly_foreign_currency_flow import (
+    ForeignExchangeQuarterlyForeignCurrencyFlowSchema,
+)
 from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
 from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
     IndividualInstitutionIncomeStatementSchema,
@@ -157,11 +184,35 @@ FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA = FinancialConglomeratePortfo
 FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA = FinancialConglomeratePortfolioIndexerSchema()
 FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA = FinancialConglomeratePortfolioGeographicRegionSchema()
 
+# Financial Conglomerates SCR schemas
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
+    FinancialConglomerateSCRPortfolioIndividualsTypeMaturitySchema()
+)
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA = (
+    FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema()
+)
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA = (
+    FinancialConglomerateSCRPortfolioLegalPersonEconomicActivitySchema()
+)
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA = (
+    FinancialConglomerateSCRPortfolioLegalPersonBusinessSizeSchema()
+)
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA = (
+    FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema()
+)
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_RISK_LEVEL_SCHEMA = FinancialConglomerateSCRPortfolioRiskLevelSchema()
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDEXER_SCHEMA = FinancialConglomerateSCRPortfolioIndexerSchema()
+FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA = (
+    FinancialConglomerateSCRPortfolioGeographicRegionSchema()
+)
+
 # Individual Institutions schemas
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()
 INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA = IndividualInstitutionAssetsSchema()
 INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA = IndividualInstitutionLiabilitiesSchema()
 INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA = IndividualInstitutionIncomeStatementSchema()
+
+FOREIGN_EXCHANGE_QUARTERLY_FOREIGN_CURRENCY_FLOW_SCHEMA = ForeignExchangeQuarterlyForeignCurrencyFlowSchema()
 
 
 __all__ = [
@@ -193,9 +244,20 @@ __all__ = [
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA',
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_INDEXER_SCHEMA',
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA',
+    # Financial Conglomerates SCR schemas
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_NUMBER_CLIENTS_OPERATIONS_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_RISK_LEVEL_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_INDEXER_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_SCR_PORTFOLIO_GEOGRAPHIC_REGION_SCHEMA',
     # Individual Institutions
     'INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA',
     'INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA',
     'INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA',
     'INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA',
+    # Foreign Exchange
+    'FOREIGN_EXCHANGE_QUARTERLY_FOREIGN_CURRENCY_FLOW_SCHEMA',
 ]
