@@ -1,0 +1,7 @@
+"""Mock data for other tests."""
+
+MOCK_TRANSFORMER_INPUT_CSV = """
+Instituição;Código;TCB;SR;TD;TC;Cidade;UF;Data;Ativo Total;Carteira de Crédito Classificada
+BANCO EXEMPLO;12345678;b1;S1;C;1;SAO PAULO;SP;09/2024;1.000.000,00;500.000,00
+BANCO TESTE;87654321;b2;S2;D;2;RIO DE JANEIRO;RJ;09/2024;2.000.000,00;1.000.000,00
+"""
