@@ -17,8 +17,7 @@
 #  License: MIT
 #  ------------------------------------------------------------------------------
 
-import threading
-import time
+from typing import Optional
 
 from .exception import ElementNotClickableException
 
@@ -37,11 +36,19 @@ class MockElement:
 
     """
 
-    def __init__(self, is_displayed=True, is_enabled=True, is_selected=False, text='lore ipsum'):
+    def __init__(
+        self,
+        is_displayed: bool = True,
+        is_enabled: bool = True,
+        is_selected: bool = False,
+        text: str = 'lore ipsum',
+        attributes: Optional[dict[str, str]] = None,
+    ):
         self._is_displayed = is_displayed
         self._is_enabled = is_enabled
         self._is_selected = is_selected
         self._text = text
+        self._attributes = attributes or {}
 
         self.is_clicked = False
 
@@ -68,21 +75,19 @@ class MockElement:
 
         return self._is_selected
 
-    def make_visible(self, delay=10):
-        """Tornar o elemento visível após um delay"""
+    def make_visible(self):
+        """Tornar o elemento visível imediatamente."""
 
-        time.sleep(delay)
         self._is_displayed = True
 
-    def get_attribute(self, attribute_name):
+    def get_attribute(self, attribute_name: str):
         """Retorna um valor de atributo simulado baseado no nome do atributo fornecido."""
 
-        attributes = {
+        default_attributes = {
             'class': 'some-class',
             'href': 'https://www3.bcb.gov.br/ifdata/',
-            # Adicione outros atributos conforme necessário
         }
-        return attributes.get(attribute_name, '')
+        return self._attributes.get(attribute_name, default_attributes.get(attribute_name, ''))
 
     def text(self):
         """Retorna o texto do elemento."""
@@ -92,25 +97,27 @@ class MockElement:
 
 class DelayedVisibilityMockElement(MockElement):
     """Uma extensão de MockElement que simula um elemento da web cuja visibilidade e
-    capacidade de interação são retardadas por um período especificado. A classe
-    utiliza multithreading para introduzir um atraso antes de alterar o estado
-    do elemento para visível e habilitado.
+    capacidade de interação são retardadas não por tempo, mas por tentativas de acesso.
+    Isso permite testar mecanismos de espera (wait) de forma determinística e rápida.
 
     Atributos:
-        delay (int ou float): O tempo, em segundos, que o elemento levará
-                              para se tornar visível e habilitado.
+        required_attempts (int): O número de verificações necessárias antes
+                                 que o elemento se torne visível.
     """
 
-    def __init__(self, is_displayed, is_enabled, delay=2):
-        super().__init__(is_displayed=is_displayed, is_enabled=is_enabled)
-        self.delay = delay
-        threading.Thread(target=self.make_visible_after_delay).start()
+    def __init__(self, delay: int = 2, **kwargs):
+        # Nota: 'delay' aqui é reinterpretado como número de chamadas (polls)
+        # para manter compatibilidade com a assinatura existente, mas sem usar time.sleep.
+        super().__init__(**kwargs)
+        self._attempts = 0
+        self._required_attempts = delay
 
-    def make_visible_after_delay(self):
-        """Um método que é executado em uma thread separada para simular o atraso e
-        depois alterar os atributos de visibilidade e habilitação do elemento.
-        """
+    def is_displayed(self):
+        """Simula a visibilidade atrasada baseada no número de chamadas."""
+        if self._attempts < self._required_attempts:
+            self._attempts += 1
+            return False
 
-        time.sleep(self.delay)
-        self._is_displayed = True
         self._is_enabled = True
+        self._is_displayed = True
+        return True
