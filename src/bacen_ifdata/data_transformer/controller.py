@@ -161,7 +161,7 @@ class TransformerController:
         transformation_map = self._build_transformation_map(transformer)
 
         # Configurations for correctly loading the data from CSV file.
-        options = {'sep': ';', 'names': schema.column_names, 'dtype': str}
+        options = {'sep': ';', 'names': schema.input_column_names, 'dtype': str}
 
         # Load the data.
         data = self._load_data(file_path, options)
