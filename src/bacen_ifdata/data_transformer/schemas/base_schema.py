@@ -43,6 +43,9 @@ class BaseSchema:
     # Schema definition dictionary to be overridden by subclasses.
     SCHEMA_DEFINITION: dict[str, dict[str, Any]] = {}
 
+    # Columns that are calculated during transformation and thus not present in the input CSV.
+    CALCULATED_COLUMNS: list[str] = ['regiao']
+
     def _get_columns_by_type(self, column_type: str) -> list[str]:
         """Helper method to get columns by their type.
 
@@ -64,6 +67,12 @@ class BaseSchema:
         """Return all column names defined in the schema."""
 
         return list(self.SCHEMA_DEFINITION.keys())
+
+    @cached_property
+    def input_column_names(self) -> list[str]:
+        """Return column names expected in the input CSV (excluding calculated columns)."""
+
+        return [column for column in self.column_names if column not in self.CALCULATED_COLUMNS]
 
     @cached_property
     def numeric_columns(self) -> list[str]:
