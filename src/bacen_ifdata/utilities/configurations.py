@@ -31,6 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass(frozen=True)
 class Config:
     """Configuration settings for Bacen IF.data AutoScraper & Data Manager."""
@@ -44,6 +45,7 @@ class Config:
     DOWNLOAD_FILE_NAME: str = 'dados.csv'
     PROCESSED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'processed'
     TRANSFORMED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'transformed'
+    DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'warehouse.duckdb'
 
 
 __all__ = ['Config']
