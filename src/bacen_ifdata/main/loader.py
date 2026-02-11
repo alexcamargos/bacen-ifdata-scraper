@@ -34,6 +34,9 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_loader.controller import LoaderController
+from bacen_ifdata.data_transformer.schemas.mapper import (
+    SCHEMA_BY_INSTITUTION_AND_REPORT,
+)
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -50,9 +53,21 @@ def main(institution: Institutions, report: StrEnum) -> None:
         report (StrEnum): The report that will be loaded.
     """
 
+    # Check if we have schemas for this institution.
+    if institution not in SCHEMA_BY_INSTITUTION_AND_REPORT:
+        logger.warning(f'No schema mapping found for institution: {institution.name}. Skipping loading.')
+        return
+
+    # Get the schema for the report.
+    schema_by_report = SCHEMA_BY_INSTITUTION_AND_REPORT[institution]
+    report_schema = schema_by_report.get(report)
+    if report_schema is None:
+        logger.warning(f'No schema found for report: {report.name} in {institution.name}. Skipping.')
+        return
+
     # Build the path to the input data directory.
     input_data_path = build_directory_path(
-        Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
+        Cfg.TRANSFORMED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
     )
     # Create the controller object.
     controller = LoaderController()
@@ -61,4 +76,4 @@ def main(institution: Institutions, report: StrEnum) -> None:
     for file in input_data_path.glob('*.csv'):
         logger.info(f'Loading {report.name} ({file.name}) from {institution.name}.')
         # Load and print the sample data.
-        controller.loader_sample_data(file, 3)
+        controller.loader_sample_data(input_data=file, schema=report_schema, sample_size=3)

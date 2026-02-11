@@ -21,51 +21,13 @@
 """Bacen IF.data AutoScraper & Data Manager"""
 
 from pathlib import Path
-from typing import Any, Final, Optional
+from typing import Any, Optional
 
 import pandas as pd
 from loguru import logger
 
+from bacen_ifdata.data_transformer.schemas.interfaces import SchemaProtocol
 from bacen_ifdata.utilities.csv_loader import load_csv_data
-
-# Nomes das colunas definidos com base na ordem do arquivo CSV e nas descrições do PDF.
-COLUMN_NAMES: Final[list[str]] = [
-    # --- Identificação da Instituição ---
-    "instituicao_financeira",  # Nome da instituição [cite: 1]
-    # Código da instituição no cadastro do Banco Central [cite: 1]
-    "codigo_instituicao",
-    # Nome do conglomerado prudencial [cite: 1]
-    "nome_conglomerado_prudencial",
-    # Código do conglomerado financeiro [cite: 1]
-    "codigo_conglomerado_financeiro",
-    # Código do conglomerado prudencial [cite: 1]
-    "codigo_conglomerado_prudencial",
-    # --- Classificação ---
-    "tcb",  # Tipo de Consolidado Bancário [cite: 1]
-    # Tipo de Controle (Público, Privado Nacional, etc.) [cite: 1]
-    "tc",
-    # Tipo de Instituição (Banco Múltiplo, Comercial, etc.) [cite: 1]
-    "ti",
-    # --- Localização e Data ---
-    "cidade",  # Cidade sede da instituição [cite: 2]
-    "uf",  # Unidade da Federação da sede [cite: 2]
-    # Data-base do Relatório (MM/YYYY) [cite: 2]
-    "data_base",
-    # --- Dados Financeiros e Operacionais ---
-    "ativo_total",  # Valor do Ativo Total [cite: 2]
-    # Valor da Carteira de Crédito Classificada [cite: 2]
-    "carteira_de_credito_classificada",
-    # Passivo Circulante e Exigível a Longo Prazo [cite: 2]
-    "passivo_circulante_e_exigivel_lp",
-    # Principal componente de Captações (Depósitos) [cite: 2]
-    "captacoes_depositos",
-    "patrimonio_liquido",  # Valor do Patrimônio Líquido [cite: 2]
-    "lucro_liquido",  # Valor do Lucro Líquido [cite: 2]
-    # Quantidade de agências da instituição [cite: 2]
-    "numero_de_agencias",
-    # Quantidade de postos de atendimento [cite: 2]
-    "numero_de_postos_atendimento",
-]
 
 
 # pylint: disable=too-few-public-methods
@@ -80,33 +42,54 @@ class LoaderController:
 
         self._data: Optional[pd.DataFrame] = None
 
-        # CSV options for loading data.
-        self._csv_options: dict[str, Any] = {'sep': ";", "header": None, "names": COLUMN_NAMES}
-
-    def _load_data(self, csv_file_path: Path):
+    def _load_data(self, csv_file_path: Path, schema: SchemaProtocol) -> None:
         """Load data from the source CSV file.
 
         This method is responsible for loading the data from the source CSV file.
 
         Args:
             csv_file_path (Path): The path to the CSV file to be loaded.
+            schema (SchemaProtocol): The schema to be used for loading the data.
         """
 
-        # Load the data from the input CSV file.
-        self._data = load_csv_data(csv_file_path.as_posix(), self._csv_options)
+        # Map schema types to pandas dtypes.
+        dtype_map: dict[str, str] = {}
+        parse_dates: list[str] = []
 
-    def loader_sample_data(self, input_data: Path, sample_size: int = 5) -> None:
+        for column_name, definition in schema.SCHEMA_DEFINITION.items():
+            data_type = definition.get('type')
+            if data_type in ('numeric', 'percentage'):
+                dtype_map[column_name] = 'float64'
+            elif data_type == 'categorical':
+                dtype_map[column_name] = 'category'
+            elif data_type == 'date':
+                parse_dates.append(column_name)
+            else:
+                dtype_map[column_name] = 'object'
+
+        csv_options: dict[str, Any] = {
+            'sep': ',',
+            'header': 0,
+            'dtype': dtype_map,
+            'parse_dates': parse_dates,
+        }
+
+        # Load the data from the input CSV file.
+        self._data = load_csv_data(csv_file_path.as_posix(), csv_options)
+
+    def loader_sample_data(self, input_data: Path, schema: SchemaProtocol, sample_size: int = 5) -> None:
         """Load a sample of the data
 
         This method loads a sample of the data from the input CSV file and prints it.
 
         Args:
             input_data (Path): The path to the CSV file to be loaded.
+            schema (SchemaProtocol): The schema to be used for loading the data.
             sample_size (int): The number of sample rows to be printed. Default is 5.
         """
 
         # Load the data from the input CSV file.
-        self._load_data(input_data)
+        self._load_data(input_data, schema)
 
         # Check if the data was loaded successfully.
         if self._data is None:
@@ -114,3 +97,6 @@ class LoaderController:
 
         # Print a sample of the loaded data.
         logger.info(self._data.sample(sample_size))
+        logger.info(f'Total rows loaded: {len(self._data)}')
+        logger.info(f'Total columns loaded: {len(self._data.columns)}')
+
