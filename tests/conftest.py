@@ -16,6 +16,7 @@ from .fixtures.mock_data import (
     MOCK_COMPLEX_CSV_CONTENT_PROCESSED,
     MOCK_COMPLEX_RAW_CSV_CONTENT,
     MOCK_FINANCIAL_CONGLOMERATES_ASSETS_CSV,
+    MOCK_FINANCIAL_CONGLOMERATES_CAPITAL_INFORMATION_CSV,
     MOCK_FINANCIAL_CONGLOMERATES_CSV,
     MOCK_FINANCIAL_CONGLOMERATES_INCOME_STATEMENT_CSV,
     MOCK_FINANCIAL_CONGLOMERATES_LIABILITIES_CSV,
@@ -167,6 +168,13 @@ def mock_financial_conglomerates_assets_csv_data():
     """Mock CSV data for Financial Conglomerates Assets."""
 
     return MOCK_FINANCIAL_CONGLOMERATES_ASSETS_CSV
+
+
+@pytest.fixture
+def mock_financial_conglomerates_capital_information_csv_data():
+    """Mock CSV data for Financial Conglomerates Capital Information."""
+
+    return MOCK_FINANCIAL_CONGLOMERATES_CAPITAL_INFORMATION_CSV
 
 
 @pytest.fixture

@@ -12,6 +12,12 @@ BANCO GENERICO 1;11111;b1;S1;C;1;SAO PAULO;SP;09/2024;500.000,00;1.000.000,00;2.
 BANCO GENERICO 2;22222;b2;S2;C;2;RIO DE JANEIRO;RJ;09/2024;300.000,00;800.000,00;1.500.000,00;8.000.000,00;-150.000,00;7.850.000,00;80.000,00;40.000,00;8.000,00;-4.000,00;124.000,00;400.000,00;150.000,00;800.000,00;12.000.000,00;0,00;12.000.000,00
 """
 
+MOCK_FINANCIAL_CONGLOMERATES_CAPITAL_INFORMATION_CSV = """
+Instituição;Código;TCB;SR;TD;TC;Cidade;UF;Data;Capital Principal para Comparação com o RWA;Capital Complementar;Patrimônio de Referência Nível I para Comparação com o RWA;Capital Nível II;Patrimônio de Referência para Comparação com o RWA;RWA Risco de Crédito;RWACAM;RWACOM;RWAJUR;RWAACS;RWA Risco de Mercado;RWA Risco Operacional;Ativos Ponderados pelo Risco (RWA);Exposição Total;Índice de Capital Principal;Índice de Capital Nível I;Índice de Basileia;Razão de Alavancagem;Índice de Imobilização
+Banco A;123;B1;S1;C;1;São Paulo;SP;06/2023;1000,00;200,00;1200,00;300,00;1500,00;5000,00;100,00;50,00;50,00;50,00;250,00;500,00;5750,00;10000,00;0,17;0,21;0,26;0,12;0,10
+Banco B;456;B2;S2;I;2;Rio de Janeiro;RJ;06/2023;2000,00;400,00;2400,00;600,00;3000,00;10000,00;200,00;100,00;100,00;100,00;500,00;1000,00;11500,00;20000,00;0,17;0,21;0,26;0,12;0,10
+"""
+
 MOCK_FINANCIAL_CONGLOMERATES_LIABILITIES_CSV = """
 Instituição;Código;Consolidado Bancário;Segmento;Tipo de Consolidação;Tipo de Controle;Cidade;UF;Data;Depósitos à Vista;Depósitos de Poupança;Depósitos Interfinanceiros;Depósitos a Prazo;Conta de Pagamento Pré-Paga;Outros Depósitos;Depósito Total;Obrigações por Operações Compromissadas;LCI;LCA;LF;Obrigações TVM Exterior;Outros Recursos Aceites;Recursos de Aceites e Emissão de Títulos;Obrigações por Empréstimos e Repasses;Captações;Instrumentos Derivativos;Outras Obrigações;Passivo Circulante e Exigível a Longo Prazo;Patrimônio Líquido;Passivo Total
 BANCO GENERICO 1;00000;b1;S1;C;1;BRASILIA;DF;09/2024;100.000,00;200.000,00;50.000,00;5.000.000,00;10.000,00;50.000,00;5.410.000,00;2.500.000,00;100.000,00;100.000,00;200.000,00;50.000,00;150.000,00;1.000.000,00;1.500.000,00;10.410.000,00;50.000,00;100.000,00;10.560.000,00;2.000.000,00;12.560.000,00
