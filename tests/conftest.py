@@ -148,7 +148,8 @@ def mock_dataframe_from_csv():
             pd.DataFrame: A DataFrame with schema-compliant column names
         """
 
-        return pd.read_csv(StringIO(csv_string), sep=';', names=schema.column_names, dtype=str, skiprows=1, header=0)
+        names = [col for col in schema.column_names if col != 'regiao']
+        return pd.read_csv(StringIO(csv_string), sep=';', names=names, dtype=str, skiprows=1, header=0)
 
     return create_mock_df
 
