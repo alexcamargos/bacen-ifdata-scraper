@@ -28,18 +28,14 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import (
-    FinancialConglomerateSummarySchema,
-)
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import (
-    FinancialConglomeratesAssetsSchema,
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
+    FinancialConglomerateIncomeStatementSchema,
 )
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.liabilities import (
     FinancialConglomerateLiabilitiesSchema,
 )
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
-    FinancialConglomerateIncomeStatementSchema,
-)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
 
 # Instance a schema for report summary of financial conglomerates.
 FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()

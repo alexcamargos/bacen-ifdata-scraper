@@ -112,6 +112,7 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
         },
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
         'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
         'depositos_vista': {'description': 'Depósitos à vista.', 'type': 'numeric'},
         'depositos_poupanca': {'description': 'Depósitos Poupança.', 'type': 'numeric'},

@@ -71,6 +71,30 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
                 'n4': 'Instituições de pagamento.',
             },
         },
+        'tipo_de_classificacao_conglomerado': {
+            'description': 'Classificação das instituições conforme Resolução nº 197/2022 (Tipo 1, Tipo 2, Tipo 3).',
+            'type': 'categorical',
+            'mapping': {
+                '1': (
+                    'Tipo 1: conglomerado prudencial cuja instituição líder seja instituição financeira ou'
+                    ' outra instituição autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei'
+                    ' nº 4.595, de 31 de dezembro de 1964.'
+                ),
+                '2': (
+                    'Tipo 2: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                    ' e que não seja integrado por instituição financeira ou por outra instituição'
+                    ' autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964,'
+                    ' ou sujeita à Lei nº 10.194, de 14 de fevereiro de 2001.'
+                ),
+                '3': (
+                    'Tipo 3: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
+                    ' e que seja integrado por instituição financeira ou por outra instituição autorizada'
+                    ' a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964, ou sujeita'
+                    ' à Lei nº 10.194, de 2001.'
+                ),
+                'Em branco': 'Conglomerados ou instituições que não realizem serviços de pagamento.',
+            },
+        },
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
@@ -86,6 +110,7 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
         },
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
         'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
         'instituicao_sujeita_apuracao_exposicao_total': {
             'description': (
@@ -153,30 +178,6 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
                     'bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; '
                     'e (ii) não sujeitas a apuração de PR.'
                 ),
-            },
-        },
-        'tcip': {
-            'description': 'Classificação das instituições conforme Resolução nº 197/2022 (Tipo 1, Tipo 2, Tipo 3).',
-            'type': 'categorical',
-            'mapping': {
-                '1': (
-                    'Tipo 1: conglomerado prudencial cuja instituição líder seja instituição financeira ou'
-                    ' outra instituição autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei'
-                    ' nº 4.595, de 31 de dezembro de 1964.'
-                ),
-                '2': (
-                    'Tipo 2: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
-                    ' e que não seja integrado por instituição financeira ou por outra instituição'
-                    ' autorizada a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964,'
-                    ' ou sujeita à Lei nº 10.194, de 14 de fevereiro de 2001.'
-                ),
-                '3': (
-                    'Tipo 3: conglomerado prudencial cuja instituição líder seja instituição de pagamento'
-                    ' e que seja integrado por instituição financeira ou por outra instituição autorizada'
-                    ' a funcionar pelo Banco Central do Brasil sujeita à Lei nº 4.595, de 1964, ou sujeita'
-                    ' à Lei nº 10.194, de 2001.'
-                ),
-                'Em branco': 'Conglomerados ou instituições que não realizem serviços de pagamento.',
             },
         },
     }

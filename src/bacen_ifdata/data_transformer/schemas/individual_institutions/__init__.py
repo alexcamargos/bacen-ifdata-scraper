@@ -28,18 +28,14 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import (
-    IndividualInstitutionSummarySchema,
-)
-from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import (
-    IndividualInstitutionAssetsSchema,
+from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
+    IndividualInstitutionIncomeStatementSchema,
 )
 from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
     IndividualInstitutionLiabilitiesSchema,
 )
-from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
-    IndividualInstitutionIncomeStatementSchema,
-)
+from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import IndividualInstitutionSummarySchema
 
 # Instance a schema for report summary of individual institutions.
 INDIVIDUAL_INSTITUTION_SUMMARY_SCHEMA = IndividualInstitutionSummarySchema()

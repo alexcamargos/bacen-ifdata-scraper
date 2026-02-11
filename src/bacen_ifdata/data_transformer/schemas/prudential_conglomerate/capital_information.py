@@ -146,6 +146,7 @@ class PrudentialConglomerateCapitalInformationSchema(BaseSchema):
         },
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
         'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
         'capital_principal_para_comparacao_com_rwa': {
             'description': 'Parcela do capital de melhor qualidade e imediatamente disponível para absorver perdas.',

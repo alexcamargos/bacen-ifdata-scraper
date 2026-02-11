@@ -112,6 +112,7 @@ class PrudentialConglomerateIncomeStatementSchema(BaseSchema):
         },
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
         'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
         'rendas_operacoes_de_credito': {'description': 'Rendas de Operações de Crédito.', 'type': 'numeric'},
         'rendas_operacoes_de_arrendamento_mercantil': {

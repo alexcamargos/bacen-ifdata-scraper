@@ -132,6 +132,10 @@ class IndividualInstitutionAssetsSchema(BaseSchema):
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
         },
+        'regiao': {
+            'description': 'Região geográfica onde fica a sede da instituição.',
+            'type': 'categorical',
+        },
         'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
