@@ -25,17 +25,10 @@ based on the institution type.
 """
 
 from bacen_ifdata.data_transformer.transformers.base import BaseTransformer
-from bacen_ifdata.data_transformer.transformers.financial_conglomerates import (
-    FinancialConglomeratesTransformer,
-)
-from bacen_ifdata.data_transformer.transformers.individual_institutions import (
-    IndividualInstitutionsTransformer,
-)
-from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import (
-    PrudentialConglomeratesTransformer,
-)
+from bacen_ifdata.data_transformer.transformers.financial_conglomerates import FinancialConglomeratesTransformer
+from bacen_ifdata.data_transformer.transformers.individual_institutions import IndividualInstitutionsTransformer
+from bacen_ifdata.data_transformer.transformers.prudential_conglomerates import PrudentialConglomeratesTransformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-
 
 # Mapping of institution types to their corresponding transformer classes.
 TRANSFORMER_MAP: dict[Institutions, type[BaseTransformer]] = {
