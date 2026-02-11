@@ -40,6 +40,12 @@ class MockSchema:
 
         return TransformationType.TEXT
 
+    @property
+    def input_column_names(self) -> list[str]:
+        """Retorna os nomes das colunas de entrada (neste mock, igual a column_names)."""
+
+        return self.column_names
+
 
 @pytest.fixture
 def transformer_controller():
