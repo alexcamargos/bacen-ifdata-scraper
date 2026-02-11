@@ -28,6 +28,7 @@ def test_financial_conglomerates_scr_portfolio_individuals_type_maturity_schema_
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_da_carteira_de_pessoa_fisica': TransformationType.NUMERIC,
         'emprestimo_com_consignacao_em_folha': TransformationType.NUMERIC,

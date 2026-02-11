@@ -26,6 +26,7 @@ def test_individual_institutions_liabilities_schema_structure():
         'tipo_de_instituicao': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'depositos_vista': TransformationType.NUMERIC,
         'depositos_poupanca': TransformationType.NUMERIC,

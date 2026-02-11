@@ -24,6 +24,7 @@ def test_financial_conglomerates_liabilities_schema_structure():
         'tipo_de_controle': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'depositos_vista': TransformationType.NUMERIC,
         'depositos_poupanca': TransformationType.NUMERIC,

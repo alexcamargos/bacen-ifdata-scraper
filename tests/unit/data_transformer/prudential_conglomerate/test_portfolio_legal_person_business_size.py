@@ -28,6 +28,7 @@ def test_prudential_conglomerates_portfolio_legal_person_business_size_schema_st
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_carteira_pessoa_juridica': TransformationType.NUMERIC,
         'micro': TransformationType.NUMERIC,

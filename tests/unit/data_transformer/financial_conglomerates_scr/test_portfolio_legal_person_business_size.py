@@ -28,6 +28,7 @@ def test_financial_conglomerates_scr_portfolio_legal_person_business_size_schema
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_da_carteira_de_pessoa_juridica': TransformationType.NUMERIC,
         'micro': TransformationType.NUMERIC,
@@ -46,7 +47,7 @@ def test_financial_conglomerates_scr_portfolio_legal_person_business_size_schema
 
 def test_financial_conglomerates_scr_portfolio_legal_person_business_size_transform_integration(
     mocker,
-    mock_financial_conglomerates_portfolio_legal_person_business_size_csv_data,
+    mock_financial_conglomerates_scr_portfolio_legal_person_business_size_csv_data,
     transformer_factory,
     mock_dataframe_from_csv,
 ):
@@ -55,7 +56,7 @@ def test_financial_conglomerates_scr_portfolio_legal_person_business_size_transf
     # Create mock DataFrame using the shared helper
     schema = FinancialConglomerateSCRPortfolioLegalPersonBusinessSizeSchema()
     mock_df = mock_dataframe_from_csv(
-        mock_financial_conglomerates_portfolio_legal_person_business_size_csv_data, schema
+        mock_financial_conglomerates_scr_portfolio_legal_person_business_size_csv_data, schema
     )
     mocker.patch('bacen_ifdata.data_transformer.controller.load_csv_data', return_value=mock_df)
 

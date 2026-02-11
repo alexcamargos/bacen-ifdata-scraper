@@ -26,6 +26,7 @@ def test_prudential_conglomerate_capital_information_schema_structure():
         'tipo_de_controle': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'capital_principal_para_comparacao_com_rwa': TransformationType.NUMERIC,
         'capital_complementar': TransformationType.NUMERIC,

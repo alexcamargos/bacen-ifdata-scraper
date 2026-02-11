@@ -28,6 +28,7 @@ def test_prudential_conglomerates_portfolio_number_clients_operations_schema_str
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'quantidade_de_clientes_com_operacoes_ativas': TransformationType.NUMERIC,
         'quantidade_de_operacoes_ativas': TransformationType.NUMERIC,

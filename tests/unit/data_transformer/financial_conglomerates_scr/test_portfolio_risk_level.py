@@ -28,6 +28,7 @@ def test_financial_conglomerates_scr_portfolio_risk_level_schema_structure():
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_geral': TransformationType.NUMERIC,
         'aa': TransformationType.NUMERIC,
@@ -49,13 +50,13 @@ def test_financial_conglomerates_scr_portfolio_risk_level_schema_structure():
 
 
 def test_financial_conglomerates_scr_portfolio_risk_level_transform_integration(
-    mocker, mock_financial_conglomerates_portfolio_risk_level_csv_data, transformer_factory, mock_dataframe_from_csv
+    mocker, mock_financial_conglomerates_scr_portfolio_risk_level_csv_data, transformer_factory, mock_dataframe_from_csv
 ):
     """Should transform Financial Conglomerates SCR Portfolio Risk Level data correctly."""
 
     # Create mock DataFrame using the shared helper
     schema = FinancialConglomerateSCRPortfolioRiskLevelSchema()
-    mock_df = mock_dataframe_from_csv(mock_financial_conglomerates_portfolio_risk_level_csv_data, schema)
+    mock_df = mock_dataframe_from_csv(mock_financial_conglomerates_scr_portfolio_risk_level_csv_data, schema)
     mocker.patch('bacen_ifdata.data_transformer.controller.load_csv_data', return_value=mock_df)
 
     controller = TransformerController(transformer_factory)

@@ -25,6 +25,7 @@ def test_individual_institutions_summary_schema_structure():
         'tipo_de_instituicao': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'ativo_total': TransformationType.NUMERIC,
         'carteira_de_credito_classificada': TransformationType.NUMERIC,

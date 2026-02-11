@@ -24,6 +24,7 @@ def test_foreign_exchange_quarterly_foreign_currency_flow_schema_structure():
         'segmento_resolucao': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'operacoes_comerciais_compra_numero_operacoes': TransformationType.NUMERIC,
         'operacoes_comerciais_compra_valor': TransformationType.NUMERIC,

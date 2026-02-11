@@ -25,6 +25,7 @@ def test_financial_conglomerates_portfolio_risk_level_schema_structure():
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_geral': TransformationType.NUMERIC,
         'aa': TransformationType.NUMERIC,

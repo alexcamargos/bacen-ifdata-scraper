@@ -20,10 +20,12 @@ def test_prudential_conglomerate_segmentation_schema_structure():
         'instituicao': TransformationType.TEXT,
         'codigo': TransformationType.NUMERIC,
         'consolidado_bancario': TransformationType.CATEGORICAL,
+        'tipo_de_classificacao_conglomerado': TransformationType.CATEGORICAL,
         'tipo_de_consolidacao': TransformationType.CATEGORICAL,
         'tipo_de_controle': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'instituicao_sujeita_apuracao_exposicao_total': TransformationType.TEXT,
         'instituicao_sujeita_apuracao_patrimonio_referencia': TransformationType.TEXT,
@@ -32,7 +34,6 @@ def test_prudential_conglomerate_segmentation_schema_structure():
         'total_ativos_consolidados_exterior': TransformationType.NUMERIC,
         'data_ultima_alteracao_segmento': TransformationType.DATE,
         'segmento_resolucao': TransformationType.CATEGORICAL,
-        'tcip': TransformationType.CATEGORICAL,
     }
 
     assert set(schema.column_names) == set(expected_structure.keys())

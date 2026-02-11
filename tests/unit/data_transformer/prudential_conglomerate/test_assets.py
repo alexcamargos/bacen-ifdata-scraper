@@ -23,6 +23,7 @@ def test_prudential_conglomerate_assets_schema_structure():
         'tipo_de_controle': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'disponibilidades': TransformationType.NUMERIC,
         'aplicacoes_interfinanceiras_liquidez': TransformationType.NUMERIC,

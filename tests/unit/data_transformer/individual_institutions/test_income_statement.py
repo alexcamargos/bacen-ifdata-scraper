@@ -27,6 +27,7 @@ def test_individual_institutions_income_statement_schema_structure():
         'tipo_de_instituicao': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'rendas_operacoes_de_credito': TransformationType.NUMERIC,
         'rendas_operacoes_de_arrendamento_mercantil': TransformationType.NUMERIC,

@@ -28,6 +28,7 @@ def test_prudential_conglomerates_portfolio_legal_person_type_maturity_schema_st
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_carteira_pessoa_juridica': TransformationType.NUMERIC,
         'capital_giro_vencido_a_partir_15_dias': TransformationType.NUMERIC,

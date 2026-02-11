@@ -28,6 +28,7 @@ def test_prudential_conglomerates_portfolio_legal_person_economic_activity_schem
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_carteira_pessoa_juridica': TransformationType.NUMERIC,
         # Agricultura

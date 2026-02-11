@@ -41,6 +41,7 @@ def test_financial_conglomerates_scr_portfolio_legal_person_economic_activity_sc
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'total_da_carteira_de_pessoa_juridica': TransformationType.NUMERIC,
     }

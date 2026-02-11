@@ -28,6 +28,7 @@ def test_financial_conglomerates_scr_portfolio_number_clients_operations_schema_
         'segmento': TransformationType.CATEGORICAL,
         'cidade': TransformationType.TEXT,
         'uf': TransformationType.CATEGORICAL,
+        'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
         'quantidade_de_clientes_com_operacoes_ativas': TransformationType.NUMERIC,
         'quantidade_de_operacoes_ativas': TransformationType.NUMERIC,
@@ -41,7 +42,7 @@ def test_financial_conglomerates_scr_portfolio_number_clients_operations_schema_
 
 def test_financial_conglomerates_scr_portfolio_number_clients_operations_transform_integration(
     mocker,
-    mock_financial_conglomerates_portfolio_number_clients_operations_csv_data,
+    mock_financial_conglomerates_scr_portfolio_number_clients_operations_csv_data,
     transformer_factory,
     mock_dataframe_from_csv,
 ):
@@ -49,7 +50,9 @@ def test_financial_conglomerates_scr_portfolio_number_clients_operations_transfo
 
     # Create mock DataFrame using the shared helper
     schema = FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema()
-    mock_df = mock_dataframe_from_csv(mock_financial_conglomerates_portfolio_number_clients_operations_csv_data, schema)
+    mock_df = mock_dataframe_from_csv(
+        mock_financial_conglomerates_scr_portfolio_number_clients_operations_csv_data, schema
+    )
     mocker.patch('bacen_ifdata.data_transformer.controller.load_csv_data', return_value=mock_df)
 
     controller = TransformerController(transformer_factory)
