@@ -73,29 +73,18 @@ def ensure_clickable(driver: WebDriver, wait_time: int, by_method: By, locator: 
         # Click the element using JavaScript.
         driver.execute_script('arguments[0].click();', element)
 
+    # Handle exceptions and log them appropriately.
     except TimeoutException:
-        logger.exception(
-            f'Timeout: O elemento {
-                         locator} não se tornou clicável após {wait_time} segundos.'
-        )
+        logger.exception(f'Timeout: O elemento {locator} não se tornou clicável após {wait_time} segundos.')
         raise
     except NoSuchElementException:
-        logger.exception(
-            f'Não encontrado: O elemento {
-                         locator} não foi encontrado na página.'
-        )
+        logger.exception(f'Não encontrado: O elemento {locator} não foi encontrado na página.')
         raise
     except ElementClickInterceptedException:
-        logger.exception(
-            f'Elemento interceptado: O elemento {
-                         locator} foi interceptado por outro elemento.'
-        )
+        logger.exception(f'Elemento interceptado: O elemento {locator} foi interceptado por outro elemento.')
         raise
     except MoveTargetOutOfBoundsException:
-        logger.exception(
-            f'Fora dos limites: O elemento {
-                         locator} está fora dos limites da janela.'
-        )
+        logger.exception(f'Fora dos limites: O elemento {locator} está fora dos limites da janela.')
         raise
 
 
