@@ -45,7 +45,7 @@ class Browser:
 
     def __init__(self, driver: WebDriver) -> None:
         """Initializes a new instance of the Browser class with the given WebDriver.
-        
+
         Args:
             driver (WebDriver): The WebDriver instance for browser interactions.
         """
