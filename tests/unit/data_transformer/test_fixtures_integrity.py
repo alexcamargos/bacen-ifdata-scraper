@@ -5,9 +5,7 @@ from io import StringIO
 import pandas as pd
 import pytest
 
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import (
-    FinancialConglomeratesAssetsSchema,
-)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
     FinancialConglomerateIncomeStatementSchema,
 )
@@ -27,10 +25,10 @@ def test_financial_conglomerates_assets_mock_integrity(
     csv_columns = [col.strip() for col in df.columns]
 
     # Verify column count matches (System relies on positional mapping)
-    assert len(csv_columns) == len(schema.column_names), (
+    assert len(csv_columns) == len(schema.input_column_names), (
         f"Column count mismatch!\n"
         f"CSV has {len(csv_columns)} columns: {csv_columns}\n"
-        f"Schema expects {len(schema.column_names)}: {schema.column_names}"
+        f"Schema expects {len(schema.input_column_names)}: {schema.input_column_names}"
     )
 
 
@@ -43,8 +41,10 @@ def test_financial_conglomerates_liabilities_mock_integrity(
     df = pd.read_csv(StringIO(mock_financial_conglomerates_liabilities_csv_data), sep=';')
     csv_columns = [col.strip() for col in df.columns]
 
-    assert len(csv_columns) == len(schema.column_names), (
-        f"Column count mismatch!\n" f"CSV has {len(csv_columns)} columns\n" f"Schema expects {len(schema.column_names)}"
+    assert len(csv_columns) == len(schema.input_column_names), (
+        f"Column count mismatch!\n"
+        f"CSV has {len(csv_columns)} columns\n"
+        f"Schema expects {len(schema.input_column_names)}"
     )
 
 
@@ -57,6 +57,8 @@ def test_financial_conglomerates_income_statement_mock_integrity(
     df = pd.read_csv(StringIO(mock_financial_conglomerates_income_statement_csv_data), sep=';')
     csv_columns = [col.strip() for col in df.columns]
 
-    assert len(csv_columns) == len(schema.column_names), (
-        f"Column count mismatch!\n" f"CSV has {len(csv_columns)} columns\n" f"Schema expects {len(schema.column_names)}"
+    assert len(csv_columns) == len(schema.input_column_names), (
+        f"Column count mismatch!\n"
+        f"CSV has {len(csv_columns)} columns\n"
+        f"Schema expects {len(schema.input_column_names)}"
     )
