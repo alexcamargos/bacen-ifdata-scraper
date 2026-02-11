@@ -8,7 +8,7 @@ from pytest_mock import MockerFixture
 
 from bacen_ifdata.data_cleaner.processing import check_file_already_processed, normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from tests.fixtures.mock_data import MOCK_RAW_CSV_CONTENT
+from tests.fixtures.mock_data import MOCK_SIMPLE_RAW_CSV_CONTENT
 
 
 class MockReport(StrEnum):
@@ -38,7 +38,7 @@ def test_normalize_csv_success(mocker: MockerFixture):
     """Deve normalizar com sucesso um arquivo CSV bruto."""
 
     # Mocks
-    mock_input_open = mocker.mock_open(read_data=MOCK_RAW_CSV_CONTENT)
+    mock_input_open = mocker.mock_open(read_data=MOCK_SIMPLE_RAW_CSV_CONTENT)
     mock_output_open = mocker.mock_open()
 
     # Precisamos lidar com múltiplas chamadas de open: uma para leitura (input), outra para escrita (output).
