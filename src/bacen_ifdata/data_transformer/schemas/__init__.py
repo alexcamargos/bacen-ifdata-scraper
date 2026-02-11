@@ -28,7 +28,12 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import (
+    FinancialConglomeratesAssetsSchema,
+)
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.capital_information import (
+    FinancialConglomerateCapitalInformationSchema,
+)
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
     FinancialConglomerateIncomeStatementSchema,
 )
@@ -59,7 +64,9 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_num
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.portfolio_risk_level import (
     FinancialConglomeratePortfolioRiskLevelSchema,
 )
-from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import FinancialConglomerateSummarySchema
+from bacen_ifdata.data_transformer.schemas.financial_conglomerates.summary import (
+    FinancialConglomerateSummarySchema,
+)
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio_geographic_region import (
     FinancialConglomerateSCRPortfolioGeographicRegionSchema,
 )
@@ -87,15 +94,21 @@ from bacen_ifdata.data_transformer.schemas.financial_conglomerates_scr.portfolio
 from bacen_ifdata.data_transformer.schemas.foreign_exchange.quarterly_foreign_currency_flow import (
     ForeignExchangeQuarterlyForeignCurrencyFlowSchema,
 )
-from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import IndividualInstitutionAssetsSchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.assets import (
+    IndividualInstitutionAssetsSchema,
+)
 from bacen_ifdata.data_transformer.schemas.individual_institutions.income_statement import (
     IndividualInstitutionIncomeStatementSchema,
 )
 from bacen_ifdata.data_transformer.schemas.individual_institutions.liabilities import (
     IndividualInstitutionLiabilitiesSchema,
 )
-from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import IndividualInstitutionSummarySchema
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import PrudentialConglomeratesAssetsSchema
+from bacen_ifdata.data_transformer.schemas.individual_institutions.summary import (
+    IndividualInstitutionSummarySchema,
+)
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.assets import (
+    PrudentialConglomeratesAssetsSchema,
+)
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.capital_information import (
     PrudentialConglomerateCapitalInformationSchema,
 )
@@ -132,7 +145,9 @@ from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.portfolio_ris
 from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.segmentation import (
     PrudentialConglomerateSegmentationSchema,
 )
-from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import PrudentialConglomerateSummarySchema
+from bacen_ifdata.data_transformer.schemas.prudential_conglomerate.summary import (
+    PrudentialConglomerateSummarySchema,
+)
 
 # Prudential Conglomerate schemas
 PRUDENTIAL_CONGLOMERATE_SUMMARY_SCHEMA = PrudentialConglomerateSummarySchema()
@@ -163,6 +178,7 @@ PRUDENTIAL_CONGLOMERATE_PORTFOLIO_RISK_LEVEL_SCHEMA = PrudentialConglomeratePort
 # Financial Conglomerates schemas
 FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA = FinancialConglomerateSummarySchema()
 FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA = FinancialConglomeratesAssetsSchema()
+FINANCIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA = FinancialConglomerateCapitalInformationSchema()
 FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA = FinancialConglomerateLiabilitiesSchema()
 FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA = FinancialConglomerateIncomeStatementSchema()
 FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA = (
@@ -212,6 +228,7 @@ INDIVIDUAL_INSTITUTION_ASSETS_SCHEMA = IndividualInstitutionAssetsSchema()
 INDIVIDUAL_INSTITUTION_LIABILITIES_SCHEMA = IndividualInstitutionLiabilitiesSchema()
 INDIVIDUAL_INSTITUTION_INCOME_STATEMENT_SCHEMA = IndividualInstitutionIncomeStatementSchema()
 
+# Foreign Exchange schemas
 FOREIGN_EXCHANGE_QUARTERLY_FOREIGN_CURRENCY_FLOW_SCHEMA = ForeignExchangeQuarterlyForeignCurrencyFlowSchema()
 
 
@@ -234,6 +251,7 @@ __all__ = [
     # Financial Conglomerates
     'FINANCIAL_CONGLOMERATE_SUMMARY_SCHEMA',
     'FINANCIAL_CONGLOMERATE_ASSETS_SCHEMA',
+    'FINANCIAL_CONGLOMERATE_CAPITAL_INFORMATION_SCHEMA',
     'FINANCIAL_CONGLOMERATE_LIABILITIES_SCHEMA',
     'FINANCIAL_CONGLOMERATE_INCOME_STATEMENT_SCHEMA',
     'FINANCIAL_CONGLOMERATE_PORTFOLIO_INDIVIDUALS_TYPE_MATURITY_SCHEMA',
