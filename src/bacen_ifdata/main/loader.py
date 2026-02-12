@@ -34,9 +34,7 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_loader.controller import LoaderController
-from bacen_ifdata.data_transformer.schemas.mapper import (
-    SCHEMA_BY_INSTITUTION_AND_REPORT,
-)
+from bacen_ifdata.data_transformer.schemas.mapper import SCHEMA_BY_INSTITUTION_AND_REPORT
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -75,5 +73,5 @@ def main(institution: Institutions, report: StrEnum) -> None:
     # List all CSV files in the input data directory.
     for file in input_data_path.glob('*.csv'):
         logger.info(f'Loading {report.name} ({file.name}) from {institution.name}.')
-        # Load and print the sample data.
-        controller.loader_sample_data(input_data=file, schema=report_schema, sample_size=3)
+        # Load the data into the database.
+        controller.load_report(institution, report, file, report_schema)
