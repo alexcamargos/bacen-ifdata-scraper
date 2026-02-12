@@ -3,7 +3,6 @@
 from io import StringIO
 
 import pandas as pd
-import pytest
 
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.assets import FinancialConglomeratesAssetsSchema
 from bacen_ifdata.data_transformer.schemas.financial_conglomerates.income_statement import (
