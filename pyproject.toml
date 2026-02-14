@@ -21,7 +21,7 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Internet :: WWW/HTTP :: Browsers",
     "Topic :: Office/Business :: Financial",
-    "Topic :: Office/Business :: Financial :: Banking",
+    "Topic :: Office/Business :: Financial :: Investment",
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing",
