@@ -71,6 +71,7 @@ dependencies = [
     "fire>=0.7.0,<0.8",
     "pandera>=0.26.0,<0.27",
     "matplotlib>=3.10.8",
+    "dbt-duckdb>=1.10.0",
 ]
 [project.urls]
 Homepage = "https://github.com/alexcamargos/bacen-ifdata-scraper"
