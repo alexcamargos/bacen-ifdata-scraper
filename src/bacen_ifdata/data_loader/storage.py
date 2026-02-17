@@ -57,6 +57,63 @@ class DatabaseService:
         # Default to VARCHAR for text, categorical, and unknown types
         return 'VARCHAR'
 
+    def _get_raw_csv_header(self, csv_path: Path) -> list[str]:
+        """Reads the CSV header to identify present columns.
+
+        Args:
+            csv_path (Path): The path to the CSV file.
+
+        Returns:
+            list[str]: A list of column names found in the CSV header.
+        """
+
+        with open(csv_path, 'r', encoding='utf-8') as file:
+            header_line = file.readline().strip()
+            # Handle potential BOM
+            if header_line.startswith('\ufeff'):
+                header_line = header_line[1:]
+
+            # Simple CSV split assuming standard comma delimiter and quotes
+            return [column.strip().strip('"') for column in header_line.split(',')]
+
+    def _build_insert_query(self, table_name: str, csv_path: Path, columns: list[str], schema: BaseSchema) -> str:
+        """Builds the DuckDB INSERT query with explicit column types.
+
+        Args:
+            table_name (str): The name of the target table.
+            csv_path (Path): The path to the CSV file.
+            columns (list[str]): The list of columns to import.
+            schema (BaseSchema): The schema defining column types.
+
+        Returns:
+            str: The SQL query string.
+        """
+
+        columns_struct = []
+        for column_name in columns:
+            column_type = schema.get_type(column_name)
+            duckdb_type = self._map_type_to_duckdb(column_type)
+            columns_struct.append(f"'{column_name}': '{duckdb_type}'")
+
+        columns_str = ", ".join(columns_struct)
+        column_names_str = ", ".join([f'"{col}"' for col in columns])
+
+        return (
+            f"INSERT INTO {table_name} ({column_names_str}) SELECT * FROM read_csv("
+            f"'{csv_path.as_posix()}', "
+            f"header=True, "
+            f"delim=',', "
+            f"quote='\"', "
+            f"escape='\"', "
+            f"columns={{{columns_str}}}, "
+            f"dateformat='%Y-%m-%d', "
+            f"null_padding=True, "
+            f"nullstr=['', 'NULL', 'NA', 'N/A', '-'], "
+            f"ignore_errors=False, "
+            f"auto_detect=False"
+            f");"
+        )
+
     @property
     def connection(self) -> db.DuckDBPyConnection:
         """Get the active database connection.
@@ -76,6 +133,29 @@ class DatabaseService:
         if self._connection:
             self._connection.close()
             self._connection = None
+
+    def reset_database(self) -> None:
+        """Drop all existing tables to prepare for a full data reload.
+
+        This must be called once before the loading loop begins, since the
+        pipeline performs a full reload on each execution. Individual
+        ``create_table`` calls must NOT drop tables because each report
+        type appends multiple CSV files to the same table.
+        """
+
+        try:
+            tables = self.connection.execute(
+                "SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'"
+            ).fetchall()
+
+            for (table_name,) in tables:
+                self.connection.execute(f'DROP TABLE IF EXISTS "{table_name}";')
+
+            logger.info(f"Database reset: {len(tables)} table(s) dropped.")
+
+        except db.Error as error:
+            logger.error(f"Error resetting database: {error}")
+            raise
 
     def create_table(self, table_name: str, schema: BaseSchema) -> None:
         """Create a table in the database if it does not exist.
@@ -129,38 +209,21 @@ class DatabaseService:
         """
 
         try:
-            # Build the columns dictionary string for read_csv
-            # Format: {'col1': 'TYPE', 'col2': 'TYPE', ...}
-            columns_struct = []
-            for column_name in schema.column_names:
-                column_type = schema.get_type(column_name)
-                duckdb_type = self._map_type_to_duckdb(column_type)
-                columns_struct.append(f"'{column_name}': '{duckdb_type}'")
+            # Read CSV header to identify present columns
+            raw_columns = self._get_raw_csv_header(csv_path)
 
-            columns_str = ", ".join(columns_struct)
+            # Intersect schema columns with CSV columns to maintain order and validity
+            common_columns = [column for column in schema.column_names if column in raw_columns]
 
-            # Use INSERT INTO ... SELECT ... FROM read_csv(...)
-            # valid_types='ALL' might be needed if date parsing is strict, but let's try standard first.
-            # dateformat='%Y-%m-%d' matches standard ISO.
-            query = (
-                f"INSERT INTO {table_name} SELECT * FROM read_csv("
-                f"'{csv_path.as_posix()}', "
-                f"header=True, "
-                f"delim=',', "
-                f"quote='\"', "
-                f"escape='\"', "
-                f"columns={{{columns_str}}}, "
-                f"dateformat='%Y-%m-%d', "
-                f"null_padding=True, "
-                f"nullstr=['', 'NULL', 'NA', 'N/A', '-'], "
-                f"ignore_errors=False, "
-                f"auto_detect=False"
-                f");"
-            )
+            if not common_columns:
+                logger.warning(f"No matching columns found between schema and '{csv_path.name}'. Skipping.")
+                return
 
+            # Build and execute the query
+            query = self._build_insert_query(table_name, csv_path, common_columns, schema)
             self.connection.execute(query)
-            logger.info(f"Data from '{csv_path.name}' loaded into '{table_name}'.")
+            logger.info(f"Data from '{csv_path.name}' loaded into '{table_name}' ({len(common_columns)} columns).")
 
-        except db.Error as error:
+        except (OSError, db.Error) as error:
             logger.error(f"Error loading data from '{csv_path}' into '{table_name}': {error}")
             raise
