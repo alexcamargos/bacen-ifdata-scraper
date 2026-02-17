@@ -44,14 +44,17 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (TCB).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': 'Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas',
                 'b2': 'Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio ou Banco de Investimento',
@@ -66,6 +69,7 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'segmento_resolucao': {
             'description': 'Segmento Resolução nº 4.553/2017 (SR).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -92,6 +96,7 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (TD).',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -100,27 +105,31 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle (TC).',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {
                 '1': 'Público',
                 '2': 'Privado Nacional',
                 '3': 'Privado com Controle Estrangeiro',
             },
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Estado (Unidade da Federação).', 'type': 'categorical'},
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
+        'uf': {'description': 'Estado (Unidade da Federação).', 'type': 'categorical', 'raw_csv_header': 'UF'},
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
         'capital_principal_para_comparacao_com_rwa': {
             'description': 'Parcela do capital de melhor qualidade e imediatamente disponível para absorver perdas.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio de Referência para Comparação com o RWA',
         },
         'capital_complementar': {
             'description': 'Instrumentos de capital e dívida perpétuos, elegíveis como patrimônio regulatório.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio de Referência para Comparação com o RWA - Capital Complementar (b)',
         },
         'patrimonio_referencia_nivel_i_para_comparacao_com_rwa': {
             'description': 'Parcela do capital formada pela soma das parcelas do Capital Principal e Capital Complementar.',
             'type': 'numeric',
+            'raw_csv_header': 'MISSING_IN_CSV',
         },
         'capital_nivel_ii': {
             'description': (
@@ -128,65 +137,81 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
                 'regulatório, aptos a absorver perdas durante o funcionamento da instituição.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio de Referência para Comparação com o RWA - Capital Nível II (d)',
         },
         'patrimonio_referencia_para_comparacao_com_rwa': {
             'description': 'Montante de capital regulatório formado pela soma das parcelas de Capital Nível I e Capital Nível II.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio de Referência para Comparação com o RWA - Patrimônio de Referência para Comparação com o RWA (e) = (a) + (d)',
         },
         'rwa_risco_credito': {
             'description': 'Parcela dos ativos ponderados pelo risco (RWA) referente à exposição ao risco de crédito.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWA para Risco de Crédito (f)',
         },
         'rwacam': {
             'description': 'Parcela do RWA referente às exposições em ouro, em moeda estrangeira e em ativos sujeitos à variação cambial.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWAcam (g1)',
         },
         'rwacom': {
             'description': 'Parcela do RWA referente ao risco das operações sujeitas à variação do preço de mercadorias (commodities).',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWAcom (g2)',
         },
         'rwajur': {
             'description': 'Parcela do RWA referente às exposições sujeitas à variação de taxas de juros e cupons.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWAjur (g3)',
         },
         'rwaacs': {
             'description': 'Parcela do RWA referente ao risco das operações sujeitas à variação do preço de ações.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWAacs (g4)',
         },
         'rwa_risco_mercado': {
             'description': 'Parcela do RWA referente à exposição ao risco de mercado.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWA para Risco de Mercado (g) = (g1) + (g2) + (g3) + (g4)',
         },
         'rwa_risco_operacional': {
             'description': 'Parcela do RWA referente à exposição ao risco operacional.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWA para Risco Operacional (h)',
         },
         'ativos_ponderados_pelo_risco_rwa': {
             'description': 'Corresponde à soma das parcelas referentes à exposição aos riscos de Crédito, de Mercado e Operacional.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - Ativos Ponderados pelo Risco (RWA) (i) = (f) + (g) + (h)',
         },
         'exposicao_total': {
             'description': 'Exposição Total, sem ponderação de risco, conforme definido na Circular n° 3.748 de 27 de fevereiro de 2015.',
             'type': 'numeric',
+            'raw_csv_header': 'Exposição Total (j)',
         },
         'indice_capital_principal': {
             'description': 'Relação entre Capital Principal e Ativos ponderados pelo risco.',
             'type': 'percentage',
+            'raw_csv_header': 'Índice de Capital Principal (k) = (a) / (i)',
         },
         'indice_capital_nivel_i': {
             'description': 'Relação entre o Patrimônio de Referência Nível I e os Ativos ponderados pelo risco.',
             'type': 'percentage',
+            'raw_csv_header': 'Índice de Capital Nível I (l) = (c) / (i)',
         },
         'indice_basileia': {
             'description': 'Relação entre o Patrimônio de Referência e os Ativos ponderados pelo risco.',
             'type': 'percentage',
+            'raw_csv_header': 'Índice de Basileia (m) = (e) / (i)',
         },
         'razao_alavancagem': {
             'description': 'Relação entre o Patrimônio de Referência de Nível I e a Exposição Total.',
             'type': 'percentage',
+            'raw_csv_header': 'Razão de Alavancagem (n) = (c) / (j)',
         },
         'indice_imobilizacao': {
             'description': 'Relação entre Ativo Permanente e Patrimônio de Referência.',
             'type': 'percentage',
+            'raw_csv_header': 'Índice de Imobilização (o)',
         },
     }

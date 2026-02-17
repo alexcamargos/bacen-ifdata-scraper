@@ -44,14 +44,17 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -145,10 +152,14 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
                 '199': 'Conglomerado - Bancário I',
             },
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da instituição.',
+            'type': 'categorical',
+            'raw_csv_header': 'UF',
+        },
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
         'total_geral': {
             'description': (
                 'Volume de crédito disponibilizado por instituições financeiras, '
@@ -156,78 +167,97 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
                 'por outra instituição financeira.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total Geral',
         },
         'prefixado': {
             'description': 'Volume das operações de crédito com indexador prefixado.',
             'type': 'numeric',
+            'raw_csv_header': 'Prefixado',
         },
         'tr_tbf': {
             'description': 'Volume das operações de crédito com indexador TR / TBF.',
             'type': 'numeric',
+            'raw_csv_header': 'TR / TBF',
         },
         'tjlp': {
             'description': 'Volume das operações de crédito com indexador TJLP.',
             'type': 'numeric',
+            'raw_csv_header': 'TJLP',
         },
         'tlp': {
             'description': 'Taxa de Longo Prazo - TLP.',
             'type': 'numeric',
+            'raw_csv_header': 'TLP',
         },
         'libor': {
             'description': 'Volume das operações de crédito com indexador Libor.',
             'type': 'numeric',
+            'raw_csv_header': 'Libor',
         },
         'outras_taxas_pos_fixadas': {
             'description': 'Volume das operações de crédito com outras taxas pós-fixadas.',
             'type': 'numeric',
+            'raw_csv_header': 'Outras Taxas Pós-Fixadas',
         },
         'carteira_ativa_com_indexador_cdi': {
             'description': 'Volume das operações de crédito com indexador CDI.',
             'type': 'numeric',
+            'raw_csv_header': 'Carteira ativa com indexador CDI',
         },
         'selic': {
             'description': 'Volume das operações de crédito com indexador SELIC.',
             'type': 'numeric',
+            'raw_csv_header': 'SELIC',
         },
         'outras_taxas_flutuantes': {
             'description': 'Volume das operações de crédito com outras taxas flutuantes.',
             'type': 'numeric',
+            'raw_csv_header': 'Outras Taxas Flutuantes',
         },
         'igpm': {
             'description': 'Volume das operações de crédito com indexador IGPM.',
             'type': 'numeric',
+            'raw_csv_header': 'IGPM',
         },
         'ipca': {
             'description': 'Volume das operações de crédito com indexador IPCA.',
             'type': 'numeric',
+            'raw_csv_header': 'IPCA',
         },
         'ipcc': {
             'description': 'Volume das operações de crédito com indexador IPCC.',
             'type': 'numeric',
+            'raw_csv_header': 'IPCC',
         },
         'outros_indices_de_preco': {
             'description': 'Volume das operações de crédito com outros índices de preço.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Índices de Preço',
         },
         'outros_indexadores': {
             'description': 'Volume das operações de crédito com outros indexadores.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Indexadores',
         },
         'tcr_pre': {
             'description': 'Volume das operações de crédito com indexador TCR pré.',
             'type': 'numeric',
+            'raw_csv_header': 'TCR pré',
         },
         'tcr_pos': {
             'description': 'Volume das operações de crédito com indexador TCR pós.',
             'type': 'numeric',
+            'raw_csv_header': 'TCR pós',
         },
         'trfc_pre': {
             'description': 'Volume das operações de crédito com indexador TRFC pré.',
             'type': 'numeric',
+            'raw_csv_header': 'TRFC pré',
         },
         'trfc_pos': {
             'description': 'Volume das operações de crédito com indexador TRFC pós.',
             'type': 'numeric',
+            'raw_csv_header': 'TRFC pós',
         },
         'total_nao_individualizado': {
             'description': (
@@ -235,9 +265,11 @@ class FinancialConglomeratePortfolioIndexerSchema(BaseSchema):
                 'para as quais não há informação de indexadores.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total não Individualizado',
         },
         'total_exterior': {
             'description': 'Volume das operações de crédito realizadas por IFs brasileiras no exterior.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Exterior',
         },
     }

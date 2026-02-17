@@ -44,14 +44,17 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -148,10 +155,12 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'cidade': {
             'description': 'Cidade da sede da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -160,6 +169,7 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'total_geral': {
             'description': (
@@ -168,26 +178,32 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
                 'por outra instituição financeira.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total Geral',
         },
         'sudeste': {
             'description': 'Volume das operações de crédito realizadas na região Sudeste.',
             'type': 'numeric',
+            'raw_csv_header': 'Sudeste',
         },
         'centro_oeste': {
             'description': 'Volume das operações de crédito realizadas na região Centro-oeste.',
             'type': 'numeric',
+            'raw_csv_header': 'Centro-oeste',
         },
         'nordeste': {
             'description': 'Volume das operações de crédito realizadas na região Nordeste.',
             'type': 'numeric',
+            'raw_csv_header': 'Nordeste',
         },
         'norte': {
             'description': 'Volume das operações de crédito realizadas na região Norte.',
             'type': 'numeric',
+            'raw_csv_header': 'Norte',
         },
         'sul': {
             'description': 'Volume das operações de crédito realizadas na região Sul.',
             'type': 'numeric',
+            'raw_csv_header': 'Sul',
         },
         'regiao_nao_informada': {
             'description': (
@@ -195,9 +211,11 @@ class FinancialConglomerateSCRPortfolioGeographicRegionSchema(BaseSchema):
                 'endereço inválido e empréstimos não individualizados.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Região não Informada',
         },
         'total_exterior': {
             'description': 'Volume das operações de crédito realizadas por IFs brasileiras no exterior.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Exterior',
         },
     }

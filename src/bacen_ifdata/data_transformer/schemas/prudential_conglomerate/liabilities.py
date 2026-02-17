@@ -43,14 +43,17 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -74,6 +77,7 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -100,6 +104,7 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -108,17 +113,52 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
-        'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
-        'depositos_vista': {'description': 'Depósitos à vista.', 'type': 'numeric'},
-        'depositos_poupanca': {'description': 'Depósitos Poupança.', 'type': 'numeric'},
-        'depositos_interfinanceiros': {'description': 'Depósitos interfinanceiros.', 'type': 'numeric'},
-        'depositos_a_prazo': {'description': 'Depósitos a prazo.', 'type': 'numeric'},
-        'conta_de_pagamento_pre_paga': {'description': 'Conta de pagamento pré-paga.', 'type': 'numeric'},
+        'cidade': {
+            'description': 'Cidade da sede da instituição.',
+            'type': 'text',
+            'raw_csv_header': 'Cidade',
+        },
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da institution.',
+            'type': 'categorical',
+            'raw_csv_header': 'UF',
+        },
+        'regiao': {
+            'description': 'Região geográfica onde fica a sede da instituição.',
+            'type': 'categorical',
+        },
+        'data_base': {
+            'description': 'Data-Base do relatório.',
+            'type': 'date',
+            'raw_csv_header': 'Data',
+        },
+        'depositos_vista': {
+            'description': 'Depósitos à vista.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos à Vista (a1)',
+        },
+        'depositos_poupanca': {
+            'description': 'Depósitos Poupança.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos de Poupança (a2)',
+        },
+        'depositos_interfinanceiros': {
+            'description': 'Depósitos interfinanceiros.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos Interfinanceiros (a3)',
+        },
+        'depositos_a_prazo': {
+            'description': 'Depósitos a prazo.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos a Prazo (a4)',
+        },
+        'conta_de_pagamento_pre_paga': {
+            'description': 'Conta de pagamento pré-paga.',
+            'type': 'numeric',
+        },
         'depositos_outros': {
             'description': (
                 '(+) Depósitos sob aviso (+) Obrigações por depósitos especiais e de fundos e '
@@ -126,24 +166,37 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
                 '(+) Outros depósitos (-) Conta de pagamento pré-paga.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Outros Depósitos (a5)',
         },
-        'deposito_total': {'description': 'Depósito Totais.', 'type': 'numeric'},
+        'deposito_total': {
+            'description': 'Depósito Totais.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósito Total (a)',
+        },
         'obrigações_operações_compromissadas': {
             'description': 'Obrigações por Operações Compromissadas.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Operações Compromissadas (b)',
         },
         'letras_de_credito_imobiliario': {
             'description': 'LCI - Obrigações por Emissão de Letras de Crédito Imobiliário.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras de Crédito Imobiliário (c1)',
         },
         'letras_de_credito_agronegocio': {
             'description': 'LCA - Obrigações por Emissão de Letras de Crédito do Agronegócio.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras de Crédito do Agronegócio (c2)',
         },
-        'letras_financeiras': {'description': 'LF - Obrigações por Emissão de Letras Financeiras.', 'type': 'numeric'},
+        'letras_financeiras': {
+            'description': 'LF - Obrigações por Emissão de Letras Financeiras.',
+            'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras Financeiras (c3)',
+        },
         'obrigacoes_titulos_e_valores_mobiliarios_exterior': {
             'description': 'Obrigações por Títulos e Valores Mobiliários no Exterior.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Títulos e Valores Mobiliários no Exterior (c4)',
         },
         'outros_recursos_de_aceites_e_emissao_de_titulos': {
             'description': (
@@ -153,14 +206,17 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
                 'Emissão de Letras Financeiras (-) Obrigações por Títulos e Valores Mobiliários no Exterior.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Outros Recursos de Aceites e Emissão de Títulos (c5)',
         },
         'recursos_de_aceites_e_emissao_de_titulos': {
             'description': 'Recursos de aceites cambiais, letras imobiliárias e hipotecárias, debêntures, e similares.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Recursos de Aceites e Emissão de Títulos (c)',
         },
         'obrigacoes_emprestimos_e_repasses': {
             'description': 'Obrigações por empréstimos e repasses.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Empréstimos e Repasses (d)',
         },
         'captacoes': {
             'description': (
@@ -169,19 +225,32 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
                 'por empréstimos e repasses.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Captações (e) = (a) + (b) + (c) + (d)',
         },
-        'instrumentos_derivativos': {'description': 'Instrumentos financeiros derivativos.', 'type': 'numeric'},
+        'instrumentos_derivativos': {
+            'description': 'Instrumentos financeiros derivativos.',
+            'type': 'numeric',
+            'raw_csv_header': 'Instrumentos Derivativos (f)',
+        },
         'outras_obrigações': {
             'description': '(+) Relações Interfinanceiras (+) Relações interdependências (+) Outras obrigações.',
             'type': 'numeric',
+            'raw_csv_header': 'Outras Obrigações (g)',
         },
         'passivo_circulante_exigível_a_longo_prazo': {
             'description': 'Passivo circulante e exigível a longo prazo.',
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Circulante e Exigível a Longo Prazo (h) = (e) + (f) + (g)',
+        },
+        'resultados_exercicios_futuros': {
+            'description': 'Resultados de Exercícios Futuros.',
+            'type': 'numeric',
+            'raw_csv_header': 'Resultados de Exercícios Futuros (i)',
         },
         'patrimonio_liquido': {
             'description': '(+) Patrimônio Líquido (+) Contas de resultado credoras (+) Contas de resultado devedoras',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio Líquido (j)',
         },
         'passivo_total': {
             'description': (
@@ -189,5 +258,6 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
                 'Contas de resultado credoras (+) Contas de resultado devedoras.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Total (k) = (h) + (i) + (j)',
         },
     }

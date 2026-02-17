@@ -44,14 +44,17 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -145,10 +152,14 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
                 '199': 'Conglomerado - Bancário I',
             },
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da instituição.',
+            'type': 'categorical',
+            'raw_csv_header': 'UF',
+        },
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
         'quantidade_de_clientes_com_operacoes_ativas': {
             'description': (
                 'O total de clientes é calculado para os clientes, que possuam carteira ativa, identificados, '
@@ -156,6 +167,7 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
                 'A porção agregada das informações constantes do documento 3040 não está refletida nesse número.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Quantidade de clientes com operações ativas',
         },
         'quantidade_de_operacoes_ativas': {
             'description': (
@@ -164,5 +176,6 @@ class FinancialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
                 'por exemplo, cartão de crédito à vista, cartão de crédito parcelado e cartão de crédito rotativo.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Quantidade de operações ativas',
         },
     }

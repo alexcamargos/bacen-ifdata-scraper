@@ -43,10 +43,12 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição no cadastro do Banco Central.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Código do conglomerado ou CNPJ no cadastro do Banco Central.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'conglomerado': {
             'description': (
@@ -54,6 +56,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
                 ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'text',
+            'raw_csv_header': 'Conglomerado Financeiro.1',
         },
         'conglomerado_financeiro': {
             'description': (
@@ -61,6 +64,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
                 ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Conglomerado Financeiro',
         },
         'conglomerado_prudencial': {
             'description': (
@@ -68,10 +72,12 @@ class IndividualInstitutionSummarySchema(BaseSchema):
                 ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Conglomerado Prudencial',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': 'Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas.',
                 'b2': 'Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio ou Banco de Investimento.',
@@ -86,6 +92,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'tipo_de_controle': {
             'description': ('Tipo de Controle: Identifica a origem do controle de capital das instituições.'),
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {
                 '1': 'Público',
                 '2': 'Privado Nacional',
@@ -95,6 +102,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'tipo_de_instituicao': {
             'description': 'Tipo de Instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'TI',
             'mapping': {
                 '1': 'Banco do Brasil - Banco Múltiplo',
                 '2': 'Banco Comercial',
@@ -127,10 +135,12 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'cidade': {
             'description': 'Cidade onde fica localizada a sede da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -139,37 +149,46 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'ativo_total': {
             'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativo Total',
         },
         'carteira_de_credito_classificada': {
             'description': 'Carteira de Crédito Classificada.',
             'type': 'numeric',
+            'raw_csv_header': 'Carteira de Crédito Classificada',
         },
         'passivo_circulante_e_exigivel_a_longo_prazo': {
             'description': 'Passivo Circulante e Exigível a Longo Prazo e Resultados de Exercícios Futuros.',
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Circulante e Exigível a Longo Prazo e Resultados de Exercícios Futuros',
         },
         'captacoes': {
             'description': 'Depósitos + Obrigações por Operações Compromissadas + Recursos de Aceites e Emissão de Títulos + Obrigações por Empréstimos e Repasses.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações',
         },
         'patrimonio_liquido': {
             'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio Líquido',
         },
         'lucro_liquido': {
             'description': 'Contas de Resultado Credoras + Contas de Resultado Devedoras - Juros Sobre Capital Social de Cooperativas.',
             'type': 'numeric',
+            'raw_csv_header': 'Lucro Líquido',
         },
         'numero_de_agencias': {
             'description': 'Número de Agências, incluídas as sedes (exceto para cooperativas).',
             'type': 'numeric',
+            'raw_csv_header': 'Número de Agências',
         },
         'numero_de_postos_de_atendimento': {
             'description': 'Número de Postos de Atendimento.',
             'type': 'numeric',
+            'raw_csv_header': 'Número de Postos de Atendimento',
         },
     }

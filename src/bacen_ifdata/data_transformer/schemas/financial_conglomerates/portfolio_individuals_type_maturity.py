@@ -44,14 +44,17 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -145,10 +152,14 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
                 '199': 'Conglomerado - Bancário I',
             },
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da instituição.',
+            'type': 'categorical',
+            'raw_csv_header': 'UF',
+        },
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
         # TOTAL DA CARTEIRA
         'total_carteira_pessoa_fisica': {
             'description': (
@@ -157,237 +168,294 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
                 'instituição financeira.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total da Carteira de Pessoa Física',
         },
         # 1. EMPRÉSTIMO COM CONSIGNAÇÃO EM FOLHA
         'consignacao_vencido_a_partir_15_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha',
         },
         'consignacao_a_vencer_ate_90_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A Vencer em até 90 Dias',
         },
         'consignacao_a_vencer_91_a_360_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A Vencer Entre 91 a 360 Dias',
         },
         'consignacao_a_vencer_361_a_1080_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A Vencer Entre 361 a 1080 Dias',
         },
         'consignacao_a_vencer_1081_a_1800_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A Vencer Entre 1081 a 1800 Dias',
         },
         'consignacao_a_vencer_1801_a_5400_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A Vencer Entre 1801 a 5400 Dias',
         },
         'consignacao_a_vencer_acima_5400_dias': {
             'description': 'Empréstimo com Consignação em Folha - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - A vencer Acima de 5400 Dias',
         },
         'consignacao_total': {
             'description': 'Empréstimo com Consignação em Folha - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo com Consignação em Folha - Total',
         },
         # 2. EMPRÉSTIMO SEM CONSIGNAÇÃO EM FOLHA
         'sem_consignacao_vencido_a_partir_15_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha',
         },
         'sem_consignacao_a_vencer_ate_90_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A Vencer em até 90 Dias',
         },
         'sem_consignacao_a_vencer_91_a_360_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A Vencer Entre 91 a 360 Dias',
         },
         'sem_consignacao_a_vencer_361_a_1080_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A Vencer Entre 361 a 1080 Dias',
         },
         'sem_consignacao_a_vencer_1081_a_1800_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A Vencer Entre 1081 a 1800 Dias',
         },
         'sem_consignacao_a_vencer_1801_a_5400_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A Vencer Entre 1801 a 5400 Dias',
         },
         'sem_consignacao_a_vencer_acima_5400_dias': {
             'description': 'Empréstimo sem Consignação em Folha - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - A vencer Acima de 5400 Dias',
         },
         'sem_consignacao_total': {
             'description': 'Empréstimo sem Consignação em Folha - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Empréstimo sem Consignação em Folha - Total',
         },
         # 3. VEÍCULOS
         'veiculos_vencido_a_partir_15_dias': {
             'description': 'Veículos - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos',
         },
         'veiculos_a_vencer_ate_90_dias': {
             'description': 'Veículos - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A Vencer em até 90 Dias',
         },
         'veiculos_a_vencer_91_a_360_dias': {
             'description': 'Veículos - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A Vencer Entre 91 a 360 Dias',
         },
         'veiculos_a_vencer_361_a_1080_dias': {
             'description': 'Veículos - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A Vencer Entre 361 a 1080 Dias',
         },
         'veiculos_a_vencer_1081_a_1800_dias': {
             'description': 'Veículos - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A Vencer Entre 1081 a 1800 Dias',
         },
         'veiculos_a_vencer_1801_a_5400_dias': {
             'description': 'Veículos - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A Vencer Entre 1801 a 5400 Dias',
         },
         'veiculos_a_vencer_acima_5400_dias': {
             'description': 'Veículos - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - A vencer Acima de 5400 Dias',
         },
         'veiculos_total': {
             'description': 'Veículos - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Veículos - Total',
         },
         # 4. HABITAÇÃO
         'habitacao_vencido_a_partir_15_dias': {
             'description': 'Habitação - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação',
         },
         'habitacao_a_vencer_ate_90_dias': {
             'description': 'Habitação - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A Vencer em até 90 Dias',
         },
         'habitacao_a_vencer_91_a_360_dias': {
             'description': 'Habitação - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A Vencer Entre 91 a 360 Dias',
         },
         'habitacao_a_vencer_361_a_1080_dias': {
             'description': 'Habitação - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A Vencer Entre 361 a 1080 Dias',
         },
         'habitacao_a_vencer_1081_a_1800_dias': {
             'description': 'Habitação - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A Vencer Entre 1081 a 1800 Dias',
         },
         'habitacao_a_vencer_1801_a_5400_dias': {
             'description': 'Habitação - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A Vencer Entre 1801 a 5400 Dias',
         },
         'habitacao_a_vencer_acima_5400_dias': {
             'description': 'Habitação - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - A vencer Acima de 5400 Dias',
         },
         'habitacao_total': {
             'description': 'Habitação - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitação - Total',
         },
         # 5. CARTÃO DE CRÉDITO
         'cartao_credito_vencido_a_partir_15_dias': {
             'description': 'Cartão de Crédito - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito',
         },
         'cartao_credito_a_vencer_ate_90_dias': {
             'description': 'Cartão de Crédito - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A Vencer em até 90 Dias',
         },
         'cartao_credito_a_vencer_91_a_360_dias': {
             'description': 'Cartão de Crédito - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A Vencer Entre 91 a 360 Dias',
         },
         'cartao_credito_a_vencer_361_a_1080_dias': {
             'description': 'Cartão de Crédito - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A Vencer Entre 361 a 1080 Dias',
         },
         'cartao_credito_a_vencer_1081_a_1800_dias': {
             'description': 'Cartão de Crédito - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A Vencer Entre 1081 a 1800 Dias',
         },
         'cartao_credito_a_vencer_1801_a_5400_dias': {
             'description': 'Cartão de Crédito - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A Vencer Entre 1801 a 5400 Dias',
         },
         'cartao_credito_a_vencer_acima_5400_dias': {
             'description': 'Cartão de Crédito - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - A vencer Acima de 5400 Dias',
         },
         'cartao_credito_total': {
             'description': 'Cartão de Crédito - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Cartão de Crédito - Total',
         },
         # 6. RURAL E AGROINDUSTRIAL
         'rural_agroindustrial_vencido_a_partir_15_dias': {
             'description': 'Rural e Agroindustrial - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial',
         },
         'rural_agroindustrial_a_vencer_ate_90_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer em até 90 Dias',
         },
         'rural_agroindustrial_a_vencer_91_a_360_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 91 a 360 Dias',
         },
         'rural_agroindustrial_a_vencer_361_a_1080_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 361 a 1080 Dias',
         },
         'rural_agroindustrial_a_vencer_1081_a_1800_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 1081 a 1800 dias',
         },
         'rural_agroindustrial_a_vencer_1801_a_5400_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 1801 a 5400 Dias',
         },
         'rural_agroindustrial_a_vencer_acima_5400_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Acima de 5400 Dias',
         },
         'rural_agroindustrial_total': {
             'description': 'Rural e Agroindustrial - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - Total',
         },
         # 7. OUTROS CRÉDITOS
         'outros_creditos_vencido_a_partir_15_dias': {
             'description': 'Outros Créditos - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos',
         },
         'outros_creditos_a_vencer_ate_90_dias': {
             'description': 'Outros Créditos - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer em até 90 Dias',
         },
         'outros_creditos_a_vencer_91_a_360_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer Entre 91 a 360 Dias',
         },
         'outros_creditos_a_vencer_361_a_1080_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer Entre 361 a 1080 Dias',
         },
         'outros_creditos_a_vencer_1081_a_1800_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer Entre 1081 a 1800 Dias',
         },
         'outros_creditos_a_vencer_1801_a_5400_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer Entre 1801 a 5400 Dias',
         },
         'outros_creditos_a_vencer_acima_5400_dias': {
             'description': 'Outros Créditos - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A vencer Acima de 5400 Dias',
         },
         'outros_creditos_total': {
             'description': 'Outros Créditos - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - Total',
         },
         # TOTAL EXTERIOR
         'total_exterior_pessoa_fisica': {
@@ -395,5 +463,6 @@ class FinancialConglomeratePortfolioIndividualsTypeMaturitySchema(BaseSchema):
                 'Volume das operações de crédito realizadas por IFs brasileiras no exterior para pessoas físicas.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total Exterior Pessoa Física',
         },
     }

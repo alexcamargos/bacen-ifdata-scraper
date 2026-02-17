@@ -43,14 +43,17 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Código do conglomerado ou CNPJ no cadastro do Banco Central.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': 'Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas.',
                 'b2': 'Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio ou Banco de Investimento.',
@@ -65,6 +68,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução nº 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -91,6 +95,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -102,6 +107,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
                 'financeiros ou das instituições independentes.'
             ),
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {
                 '1': 'Público',
                 '2': 'Privado Nacional',
@@ -111,10 +117,12 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'cidade': {
             'description': 'Cidade onde fica localizada a sede da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -123,26 +131,32 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'depositos_vista': {
             'description': 'Depósitos à Vista.',
             'type': 'numeric',
+            'raw_csv_header': 'Depósitos à Vista',
         },
         'depositos_poupanca': {
             'description': 'Depósitos de Poupança.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos de Poupança (a2)',
         },
         'depositos_interfinanceiros': {
             'description': 'Depósitos Interfinanceiros.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos Interfinanceiros (a3)',
         },
         'depositos_a_prazo': {
             'description': 'Depósitos a Prazo.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos a Prazo (a4)',
         },
         'conta_de_pagamento_pre_paga': {
             'description': 'Conta de Pagamento Pré-Paga.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Conta de Pagamento Pré-Paga (a5)',
         },
         'depositos_outros': {
             'description': (
@@ -151,30 +165,37 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
                 'Conta de Pagamento Pré-Paga.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósitos Outros (a6)',
         },
         'deposito_total': {
             'description': 'Depósito Total.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Depósito Total (a)',
         },
         'obrigacoes_operacoes_compromissadas': {
             'description': 'Obrigações por Operações Compromissadas.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Operações Compromissadas (b)',
         },
         'letras_de_credito_imobiliario': {
             'description': 'LCI - Letras de Crédito Imobiliário.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras de Crédito Imobiliário (c1)',
         },
         'letras_de_credito_agronegocio': {
             'description': 'LCA - Letras de Crédito do Agronegócio.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras de Crédito do Agronegócio (c2)',
         },
         'letras_financeiras': {
             'description': 'LF - Letras Financeiras.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Letras Financeiras (c3)',
         },
         'obrigacoes_titulos_e_valores_mobiliarios_exterior': {
             'description': 'Obrigações por Títulos e Valores Mobiliários no Exterior.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Títulos e Valores Mobiliários no Exterior (c4)',
         },
         'outros_recursos_de_aceites_e_emissao_de_titulos': {
             'description': (
@@ -182,14 +203,17 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
                 'Obrigações por Títulos e Valores Mobiliários no Exterior.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Outros Recursos de Aceites e Emissão de Títulos (c5)',
         },
         'recursos_de_aceites_e_emissao_de_titulos': {
             'description': 'Recursos de Aceites e Emissão de Títulos.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Recursos de Aceites e Emissão de Títulos (c)',
         },
         'obrigacoes_emprestimos_e_repasses': {
             'description': 'Obrigações por Empréstimos e Repasses.',
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Obrigações por Empréstimos e Repasses (d)',
         },
         'captacoes': {
             'description': (
@@ -197,25 +221,31 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
                 'Recursos de Aceites e Emissão de Títulos + Obrigações por Empréstimos e Repasses.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações - Captações (e) = (a) + (b) + (c) + (d)',
         },
         'instrumentos_derivativos': {
             'description': 'Instrumentos Financeiros Derivativos.',
             'type': 'numeric',
+            'raw_csv_header': 'Instrumentos Derivativos (f)',
         },
         'outras_obrigacoes': {
             'description': 'Outras Obrigações + Relações Interfinanceiras + Relações Interdependências.',
             'type': 'numeric',
+            'raw_csv_header': 'Outras Obrigações (g)',
         },
         'passivo_circulante_exigivel_a_longo_prazo': {
             'description': 'Passivo Circulante e Exigível a Longo Prazo.',
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Circulante e Exigível a Longo Prazo (h) = (e) + (f) + (g)',
         },
         'patrimonio_liquido': {
             'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio Líquido (i)',
         },
         'passivo_total': {
             'description': 'Passivo Circulante e Exigível a Longo Prazo + Patrimônio Líquido.',
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Total (j) = (h) + (i)',
         },
     }

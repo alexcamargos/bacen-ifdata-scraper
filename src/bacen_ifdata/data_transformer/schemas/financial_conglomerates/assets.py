@@ -40,17 +40,20 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
     """
 
     SCHEMA_DEFINITION: Final[dict[str, dict[str, Any]]] = {
-        'instituicao_financeira': {
+        'instituicao': {
             'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Código do conglomerado ou CNPJ no cadastro do Banco Central.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': 'Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas.',
                 'b2': 'Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio ou Banco de Investimento.',
@@ -65,6 +68,7 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução nº 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -91,6 +95,7 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -102,6 +107,7 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
                 'financeiros ou das instituições independentes.'
             ),
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {
                 '1': 'Público',
                 '2': 'Privado Nacional',
@@ -111,10 +117,12 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
         'cidade': {
             'description': 'Cidade onde fica localizada a sede da instituição financeira.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -123,46 +131,57 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do Relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'disponibilidades': {
             'description': 'Disponibilidades.',
             'type': 'numeric',
+            'raw_csv_header': 'Disponibilidades (a)',
         },
         'aplicacoes_interfinanceiras_liquidez': {
             'description': 'Aplicações Interfinanceiras de Liquidez.',
             'type': 'numeric',
+            'raw_csv_header': 'Aplicações Interfinanceiras de Liquidez (b)',
         },
         'tvm_e_instrumentos_financeiros_derivativos': {
             'description': 'Títulos e Valores Mobiliários e Instrumentos Financeiros Derivativos.',
             'type': 'numeric',
+            'raw_csv_header': 'TVM e Instrumentos Financeiros Derivativos (c)',
         },
         'operacoes_de_credito': {
-            'description': 'Operações de Crédito - Provisão sobre Operações de Crédito.',
+            'description': 'Operações de Crédito.',
             'type': 'numeric',
+            'raw_csv_header': 'Operações de Crédito',
         },
         'provisao_operacoes_de_credito': {
             'description': 'Provisão sobre Operações de Crédito.',
             'type': 'numeric',
+            'raw_csv_header': 'Operações de Crédito - Provisão sobre Operações de Crédito (d2)',
         },
         'operacoes_de_credito_liquidas_provisao': {
             'description': 'Operações de Crédito Líquidas de Provisão.',
             'type': 'numeric',
+            'raw_csv_header': 'Operações de Crédito - Operações de Crédito Líquidas de Provisão (d)',
         },
         'arrendamento_mercantil_a_receber': {
-            'description': 'Operações de Arrendamento Mercantil - Provisão sobre Arrendamento Mercantil.',
+            'description': 'Operações de Arrendamento Mercantil - Arrendamento Mercantil a Receber.',
             'type': 'numeric',
+            'raw_csv_header': 'Arrendamento Mercantil',
         },
         'imobilizado_de_arrendamento': {
             'description': 'Imobilizado de Arrendamento.',
             'type': 'numeric',
+            'raw_csv_header': 'Arrendamento Mercantil - Imobilizado de Arrendamento (e2)',
         },
         'credores_antecipacao_valor_residual': {
             'description': 'Credores por Antecipação de Valor Residual.',
             'type': 'numeric',
+            'raw_csv_header': 'Arrendamento Mercantil - Credores por Antecipação de Valor Residual (e3)',
         },
         'provisao_arrendamento_mercantil': {
             'description': 'Provisão sobre Arrendamento Mercantil.',
             'type': 'numeric',
+            'raw_csv_header': 'Arrendamento Mercantil - Provisão sobre Arrendamento Mercantil (e4)',
         },
         'arrendamento_mercantil_liquido_de_provisao': {
             'description': (
@@ -170,18 +189,22 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
                 'Credores por Antecipação de Valor Residual.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Arrendamento Mercantil - Arrendamento Mercantil Líquido de Provisão (e)',
         },
         'outros_creditos_liquido_de_provisao': {
             'description': 'Outros Créditos - Líquido de Provisão.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - Líquido de Provisão (f)',
         },
         'outros_ativos_realizaveis': {
             'description': 'Outros Valores e Bens + Relações Interfinanceiras + Relações Interdependências.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Ativos Realizáveis (g)',
         },
         'permanente_ajustado': {
             'description': 'Ativo Permanente - Imobilizado de Arrendamento.',
             'type': 'numeric',
+            'raw_csv_header': 'Permanente Ajustado (h)',
         },
         'ativo_total_ajustado': {
             'description': (
@@ -192,13 +215,16 @@ class FinancialConglomeratesAssetsSchema(BaseSchema):
                 'Interdependências + Ativo Permanente.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Ativo Total Ajustado (i) = (a) + (b) + (c) + (d) + (e) + (f) + (g) + (h)',
         },
         'credores_antecipacao_valor_residual_j': {
             'description': 'Credores por Antecipação de Valor Residual.',
             'type': 'numeric',
+            'raw_csv_header': 'Credores por Antecipação de Valor Residual (j)',
         },
         'ativo_total': {
             'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativo Total (k) = (i) - (j)',
         },
     }

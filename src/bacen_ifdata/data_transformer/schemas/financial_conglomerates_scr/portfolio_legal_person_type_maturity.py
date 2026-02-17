@@ -44,14 +44,17 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -146,12 +153,14 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
             },
         },
         'cidade': {
-            'description': 'Cidade da sede da instituição.',
+            'description': 'Cidade da sede da institution.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -160,6 +169,7 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'data_base': {
             'description': 'Data-base do relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'total_da_carteira_de_pessoa_juridica': {
             'description': (
@@ -168,105 +178,130 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
                 'instituição financeira.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total da Carteira de Pessoa Jurídica',
         },
         # Capital de Giro
         'capital_de_giro_vencido_a_partir_15_dias': {
             'description': 'Capital de Giro - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro',
         },
         'capital_de_giro_a_vencer_ate_90_dias': {
             'description': 'Capital de Giro - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A Vencer em até 90 Dias',
         },
         'capital_de_giro_a_vencer_de_91_ate_360_dias': {
             'description': 'Capital de Giro - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A Vencer Entre 91 a 360 Dias',
         },
         'capital_de_giro_a_vencer_de_361_ate_1080_dias': {
             'description': 'Capital de Giro - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A Vencer Entre 361 a 1080 Dias',
         },
         'capital_de_giro_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Capital de Giro - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A Vencer Entre 1081 a 1800 Dias',
         },
         'capital_de_giro_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Capital de Giro - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A Vencer Entre 1801 a 5400 Dias',
         },
         'capital_de_giro_a_vencer_acima_5400_dias': {
             'description': 'Capital de Giro - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - A vencer Acima de 5400 Dias',
         },
         'capital_de_giro_total': {
             'description': 'Capital de Giro - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro - Total',
         },
         # Investimento
         'investimento_vencido_a_partir_15_dias': {
             'description': 'Investimento - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento',
         },
         'investimento_a_vencer_ate_90_dias': {
             'description': 'Investimento - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A Vencer em até 90 Dias',
         },
         'investimento_a_vencer_de_91_ate_360_dias': {
             'description': 'Investimento - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A Vencer Entre 91 a 360 Dias',
         },
         'investimento_a_vencer_de_361_ate_1080_dias': {
             'description': 'Investimento - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A Vencer Entre 361 a 1080 Dias',
         },
         'investimento_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Investimento - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A Vencer Entre 1081 a 1800 Dias',
         },
         'investimento_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Investimento - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A Vencer Entre 1801 a 5400 Dias',
         },
         'investimento_a_vencer_acima_5400_dias': {
             'description': 'Investimento - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - A vencer Acima de 5400 Dias',
         },
         'investimento_total': {
             'description': 'Investimento - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Investimento - Total',
         },
         # Capital de Giro Rotativo
         'capital_de_giro_rotativo_vencido_a_partir_15_dias': {
             'description': 'Capital de Giro Rotativo - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo',
         },
         'capital_de_giro_rotativo_a_vencer_ate_90_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A Vencer em até 90 Dias',
         },
         'capital_de_giro_rotativo_a_vencer_de_91_ate_360_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A Vencer Entre 91 a 360 Dias',
         },
         'capital_de_giro_rotativo_a_vencer_de_361_ate_1080_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A Vencer Entre 361 a 1080 Dias',
         },
         'capital_de_giro_rotativo_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A Vencer Entre 1081 a 1800 Dias',
         },
         'capital_de_giro_rotativo_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A Vencer Entre 1801 a 5400 Dias',
         },
         'capital_de_giro_rotativo_a_vencer_acima_5400_dias': {
             'description': 'Capital de Giro Rotativo - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - A vencer Acima de 5400 Dias',
         },
         'capital_de_giro_rotativo_total': {
             'description': 'Capital de Giro Rotativo - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Capital de Giro Rotativo - Total',
         },
         # Operações com Recebíveis
         'operacoes_com_recebiveis_vencido_a_partir_15_dias': {
@@ -305,10 +340,12 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'comercio_exterior_vencido_a_partir_15_dias': {
             'description': 'Comércio Exterior - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'csv_header': 'Comércio Exterior',
         },
         'comercio_exterior_a_vencer_ate_90_dias': {
             'description': 'Comércio Exterior - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'csv_header': 'Comércio Exterior - A Vencer em até 90 Dias',
         },
         'comercio_exterior_a_vencer_de_91_ate_360_dias': {
             'description': 'Comércio Exterior - Operações a vencer entre 91 a 360 dias.',
@@ -329,19 +366,23 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'comercio_exterior_a_vencer_acima_5400_dias': {
             'description': 'Comércio Exterior - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'csv_header': 'Comércio Exterior - A vencer Acima de 5400 Dias',
         },
         'comercio_exterior_total': {
             'description': 'Comércio Exterior - Total do grupo.',
             'type': 'numeric',
+            'csv_header': 'Comércio Exterior - Total',
         },
         # Outros Créditos
         'outros_creditos_vencido_a_partir_15_dias': {
             'description': 'Outros Créditos - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'csv_header': 'Outros Créditos',
         },
         'outros_creditos_a_vencer_ate_90_dias': {
             'description': 'Outros Créditos - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'csv_header': 'Outros Créditos - A Vencer em até 90 Dias',
         },
         'outros_creditos_a_vencer_de_91_ate_360_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 91 a 360 dias.',
@@ -362,109 +403,135 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'outros_creditos_a_vencer_acima_5400_dias': {
             'description': 'Outros Créditos - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'csv_header': 'Outros Créditos - A vencer Acima de 5400 Dias',
         },
         'outros_creditos_total': {
             'description': 'Outros Créditos - Total do grupo.',
             'type': 'numeric',
+            'csv_header': 'Outros Créditos - Total',
         },
         # Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos
         'financiamento_infraestrutura_vencido_a_partir_15_dias': {
             'description': 'Financiamento de Infraestrutura - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos',
         },
         'financiamento_infraestrutura_a_vencer_ate_90_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A Vencer em até 90 Dias',
         },
         'financiamento_infraestrutura_a_vencer_de_91_ate_360_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A Vencer Entre 91 a 360 Dias',
         },
         'financiamento_infraestrutura_a_vencer_de_361_ate_1080_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A Vencer Entre 361 a 1080 Dias',
         },
         'financiamento_infraestrutura_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A Vencer Entre 1081 a 1800 Dias',
         },
         'financiamento_infraestrutura_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A Vencer Entre 1801 a 5400 Dias',
         },
         'financiamento_infraestrutura_a_vencer_acima_5400_dias': {
             'description': 'Financiamento de Infraestrutura - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - A vencer Acima de 5400 Dias',
         },
         'financiamento_infraestrutura_total': {
             'description': 'Financiamento de Infraestrutura - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos - Total',
         },
         # Rural e Agroindustrial
         'rural_e_agroindustrial_vencido_a_partir_15_dias': {
             'description': 'Rural e Agroindustrial - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial',
         },
         'rural_e_agroindustrial_a_vencer_ate_90_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer em até 90 Dias',
         },
         'rural_e_agroindustrial_a_vencer_de_91_ate_360_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 91 a 360 Dias',
         },
         'rural_e_agroindustrial_a_vencer_de_361_ate_1080_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 361 a 1080 Dias',
         },
         'rural_e_agroindustrial_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 1081 a 1800 Dias',
         },
         'rural_e_agroindustrial_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A Vencer Entre 1801 a 5400 Dias',
         },
         'rural_e_agroindustrial_a_vencer_acima_5400_dias': {
             'description': 'Rural e Agroindustrial - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - A vencer Acima de 5400 Dias',
         },
         'rural_e_agroindustrial_total': {
             'description': 'Rural e Agroindustrial - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Rural e Agroindustrial - Total',
         },
         # Habitacional
         'habitacional_vencido_a_partir_15_dias': {
             'description': 'Habitacional - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional',
         },
         'habitacional_a_vencer_ate_90_dias': {
             'description': 'Habitacional - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A Vencer em até 90 Dias',
         },
         'habitacional_a_vencer_de_91_ate_360_dias': {
             'description': 'Habitacional - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A Vencer Entre 91 a 360 Dias',
         },
         'habitacional_a_vencer_de_361_ate_1080_dias': {
             'description': 'Habitacional - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A Vencer Entre 361 a 1080 Dias',
         },
         'habitacional_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Habitacional - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A Vencer Entre 1081 a 1800 Dias',
         },
         'habitacional_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Habitacional - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A Vencer Entre 1801 a 5400 Dias',
         },
         'habitacional_a_vencer_acima_5400_dias': {
             'description': 'Habitacional - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - A vencer Acima de 5400 Dias',
         },
         'habitacional_total': {
             'description': 'Habitacional - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Habitacional - Total',
         },
         # Exterior
         'total_exterior_pessoa_juridica': {
@@ -472,5 +539,6 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
                 'Volume das operações de crédito realizadas por IFs brasileiras no exterior para pessoas jurídicas.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total Exterior Pessoa Jurídica',
         },
     }

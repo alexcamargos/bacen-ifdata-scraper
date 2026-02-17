@@ -43,14 +43,17 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Código da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -74,6 +77,7 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -100,6 +104,7 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -108,15 +113,18 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'cidade': {
             'description': 'Cidade da sede da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Cidade',
         },
         'uf': {
             'description': 'Unidade da Federação onde fica a sede da instituição.',
             'type': 'categorical',
+            'raw_csv_header': 'UF',
         },
         'regiao': {
             'description': 'Região geográfica onde fica a sede da instituição.',
@@ -125,18 +133,22 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do relatório.',
             'type': 'date',
+            'raw_csv_header': 'Data',
         },
         'ativo_total': {
             'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
             'type': 'numeric',
+            'raw_csv_header': 'Ativo Total',
         },
         'carteira_de_credito_classificada': {
             'description': 'Carteira de Crédito Classificada.',
             'type': 'numeric',
+            'raw_csv_header': 'Carteira de Crédito Classificada',
         },
         'passivo_circulante_e_exigivel_a_longo_prazo': {
             'description': 'Passivo Circulante e Exigível a Longo Prazo + Resultados de Exercícios Futuros.',
             'type': 'numeric',
+            'raw_csv_header': 'Passivo Circulante e Exigível a Longo Prazo e Resultados de Exercícios Futuros',
         },
         'captacoes': {
             'description': (
@@ -144,10 +156,12 @@ class FinancialConglomerateSummarySchema(BaseSchema):
                 'Letras Imobiliárias e Hipotecárias, Debêntures e Similares + Obrigações por Empréstimos e Repasses.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Captações',
         },
         'patrimonio_liquido': {
             'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
             'type': 'numeric',
+            'raw_csv_header': 'Patrimônio Líquido',
         },
         'lucro_liquido': {
             'description': (
@@ -156,13 +170,16 @@ class FinancialConglomerateSummarySchema(BaseSchema):
                 'Despesas de Juros sobre o Capital Social de Cooperativas).'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Lucro Líquido',
         },
         'numero_de_agencias': {
             'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',
             'type': 'numeric',
+            'raw_csv_header': 'Número de Agências',
         },
         'numero_de_postos_de_atendimento': {
             'description': 'Número de postos de atendimento da instituição ou do conglomerado.',
             'type': 'numeric',
+            'raw_csv_header': 'Número de Postos de Atendimento',
         },
     }

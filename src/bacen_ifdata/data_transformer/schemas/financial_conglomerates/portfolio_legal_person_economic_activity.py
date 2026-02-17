@@ -44,14 +44,17 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'raw_csv_header': 'Instituição',
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
             'type': 'numeric',
+            'raw_csv_header': 'Código',
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -75,6 +78,7 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -83,11 +87,13 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -114,6 +120,7 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
         'segmento': {
             'description': 'Segmentos de instituições financeiras.',
             'type': 'categorical',
+            'raw_csv_header': 'Segmento',
             'mapping': {
                 '2': 'Banco Comercial',
                 '4': 'BNDES',
@@ -145,10 +152,14 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
                 '199': 'Conglomerado - Bancário I',
             },
         },
-        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
-        'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
+        'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
+        'uf': {
+            'description': 'Unidade da Federação onde fica a sede da instituição.',
+            'type': 'categorical',
+            'raw_csv_header': 'UF',
+        },
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
         # TOTAL DA CARTEIRA
         'total_carteira_pessoa_juridica': {
             'description': (
@@ -157,317 +168,393 @@ class FinancialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchema
                 'instituição financeira.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total da Carteira de Pessoa Jurídica',
         },
         # 1. AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQUICULTURA
         'agricultura_vencido_a_partir_15_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura',
         },
         'agricultura_a_vencer_ate_90_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A Vencer em 90 Dias',
         },
         'agricultura_a_vencer_91_a_360_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A Vencer Entre 91 a 360 Dias',
         },
         'agricultura_a_vencer_361_a_1080_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A Vencer Entre 361 a 1080 Dias',
         },
         'agricultura_a_vencer_1081_a_1800_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A Vencer Entre 1081 a 1800 Dias',
         },
         'agricultura_a_vencer_1801_a_5400_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A Vencer Entre 1801 a 5400 Dias',
         },
         'agricultura_a_vencer_acima_5400_dias': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - A vencer Acima de 5400 Dias',
         },
         'agricultura_total': {
             'description': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Agricultura, Pecuária, Produção Florestal, Pesca e Aquicultura - Total',
         },
         # 2. INDÚSTRIAS DE TRANSFORMAÇÃO
         'industrias_transformacao_vencido_a_partir_15_dias': {
             'description': 'Indústrias de Transformação - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação',
         },
         'industrias_transformacao_a_vencer_ate_90_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A Vencer em 90 Dias',
         },
         'industrias_transformacao_a_vencer_91_a_360_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A Vencer Entre 91 a 360 Dias',
         },
         'industrias_transformacao_a_vencer_361_a_1080_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A Vencer Entre 361 a 1080 Dias',
         },
         'industrias_transformacao_a_vencer_1081_a_1800_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A Vencer Entre 1081 a 1800 Dias',
         },
         'industrias_transformacao_a_vencer_1801_a_5400_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A Vencer Entre 1801 a 5400 Dias',
         },
         'industrias_transformacao_a_vencer_acima_5400_dias': {
             'description': 'Indústrias de Transformação - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - A vencer Acima de 5400 Dias',
         },
         'industrias_transformacao_total': {
             'description': 'Indústrias de Transformação - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Indústrias de Transformação - Total',
         },
         # 3. CONSTRUÇÃO
         'construcao_vencido_a_partir_15_dias': {
             'description': 'Construção - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção',
         },
         'construcao_a_vencer_ate_90_dias': {
             'description': 'Construção - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A Vencer em 90 Dias',
         },
         'construcao_a_vencer_91_a_360_dias': {
             'description': 'Construção - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A Vencer Entre 91 a 360 Dias',
         },
         'construcao_a_vencer_361_a_1080_dias': {
             'description': 'Construção - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A Vencer Entre 361 a 1080 Dias',
         },
         'construcao_a_vencer_1081_a_1800_dias': {
             'description': 'Construção - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A Vencer Entre 1081 a 1800 Dias',
         },
         'construcao_a_vencer_1801_a_5400_dias': {
             'description': 'Construção - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A Vencer Entre 1801 a 5400 Dias',
         },
         'construcao_a_vencer_acima_5400_dias': {
             'description': 'Construção - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - A vencer Acima de 5400 Dias',
         },
         'construcao_total': {
             'description': 'Construção - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Construção - Total',
         },
         # 4. SERVIÇOS INDUSTRIAIS DE UTILIDADE PÚBLICA
         'servicos_industriais_vencido_a_partir_15_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública',
         },
         'servicos_industriais_a_vencer_ate_90_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - A Vencer em 90 Dias',
         },
         'servicos_industriais_a_vencer_91_a_360_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - A Vencer Entre 91 a 360 Dias',
         },
         'servicos_industriais_a_vencer_361_a_1080_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - A Vencer Entre 361 a 1080 Dias',
         },
         'servicos_industriais_a_vencer_1081_a_1800_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - a Vencer entre 1081 e 1800 Dias',
         },
         'servicos_industriais_a_vencer_1801_a_5400_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - A Vencer Entre 1801 a 5400 Dias',
         },
         'servicos_industriais_a_vencer_acima_5400_dias': {
             'description': 'Serviços Industriais de Utilidade Pública - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - A vencer Acima de 5400 Dias',
         },
         'servicos_industriais_total': {
             'description': 'Serviços Industriais de Utilidade Pública - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Serviços Industriais de Utilidade Pública - Total',
         },
         # 5. INDÚSTRIAS EXTRATIVAS
         'industrias_extrativas_vencido_a_partir_15_dias': {
             'description': 'Indústrias Extrativas - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas',
         },
         'industrias_extrativas_a_vencer_ate_90_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A Vencer em 90 Dias',
         },
         'industrias_extrativas_a_vencer_91_a_360_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A Vencer Entre 91 a 360 Dias',
         },
         'industrias_extrativas_a_vencer_361_a_1080_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A Vencer Entre 361 a 1080 Dias',
         },
         'industrias_extrativas_a_vencer_1081_a_1800_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A Vencer Entre 1081 a 1800 Dias',
         },
         'industrias_extrativas_a_vencer_1801_a_5400_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A Vencer Entre 1801 a 5400 Dias',
         },
         'industrias_extrativas_a_vencer_acima_5400_dias': {
             'description': 'Indústrias Extrativas - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - A vencer Acima de 5400 Dias',
         },
         'industrias_extrativas_total': {
             'description': 'Indústrias Extrativas - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Industrias Extrativas - Total',
         },
         # 6. COMÉRCIO, REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS
         'comercio_vencido_a_partir_15_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas',
         },
         'comercio_a_vencer_ate_90_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A Vencer em 90 Dias',
         },
         'comercio_a_vencer_91_a_360_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A Vencer Entre 91 a 360 Dias',
         },
         'comercio_a_vencer_361_a_1080_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A Vencer Entre 361 a 1080 Dias',
         },
         'comercio_a_vencer_1081_a_1800_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A Vencer Entre 1081 a 1800 Dias',
         },
         'comercio_a_vencer_1801_a_5400_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A Vencer Entre 1801 a 5400 Dias',
         },
         'comercio_a_vencer_acima_5400_dias': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - A vencer Acima de 5400 Dias',
         },
         'comercio_total': {
             'description': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Comércio, Reparação de Veículos Automotores e Motocicletas - Total',
         },
         # 7. ADMINISTRAÇÃO PÚBLICA, DEFESA E SEGURIDADE SOCIAL
         'administracao_publica_vencido_a_partir_15_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social',
         },
         'administracao_publica_a_vencer_ate_90_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A Vencer em 90 Dias',
         },
         'administracao_publica_a_vencer_91_a_360_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A Vencer Entre 91 a 360 Dias',
         },
         'administracao_publica_a_vencer_361_a_1080_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A Vencer Entre 361 a 1080 Dias',
         },
         'administracao_publica_a_vencer_1081_a_1800_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A Vencer Entre 1081 a 1800 Dias',
         },
         'administracao_publica_a_vencer_1801_a_5400_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A Vencer Entre 1801 a 5400 Dias',
         },
         'administracao_publica_a_vencer_acima_5400_dias': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - A vencer Acima de 5400 Dias',
         },
         'administracao_publica_total': {
             'description': 'Administração Pública, Defesa e Seguridade Social - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Administração Pública, Defesa e Seguridade Social - Total',
         },
         # 8. TRANSPORTE, ARMAZENAGEM E CORREIO
         'transporte_vencido_a_partir_15_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio',
         },
         'transporte_a_vencer_ate_90_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A Vencer em 90 Dias',
         },
         'transporte_a_vencer_91_a_360_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A Vencer Entre 91 a 360 Dias',
         },
         'transporte_a_vencer_361_a_1080_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A Vencer Entre 361 a 1080 Dias',
         },
         'transporte_a_vencer_1081_a_1800_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A Vencer Entre 1081 a 1800 Dias',
         },
         'transporte_a_vencer_1801_a_5400_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A Vencer Entre 1801 a 5400 Dias',
         },
         'transporte_a_vencer_acima_5400_dias': {
             'description': 'Transporte, Armazenagem e Correio - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - A vencer Acima de 5400 Dias',
         },
         'transporte_total': {
             'description': 'Transporte, Armazenagem e Correio - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Transporte, Armazenagem e Correio - Total',
         },
         # 9. OUTROS
         'outros_vencido_a_partir_15_dias': {
             'description': 'Outros - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros',
         },
         'outros_a_vencer_ate_90_dias': {
             'description': 'Outros - Operações a vencer em até 90 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - A Vencer em 90 Dias',
         },
         'outros_a_vencer_91_a_360_dias': {
             'description': 'Outros - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - A Vencer Entre 91 a 360 Dias',
         },
         'outros_a_vencer_361_a_1080_dias': {
             'description': 'Outros - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - A Vencer Entre 361 a 1080 Dias',
         },
         'outros_a_vencer_1081_a_1800_dias': {
             'description': 'Outros - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - a Vencer entre 1081 e 1800 Dias',
         },
         'outros_a_vencer_1801_a_5400_dias': {
             'description': 'Outros - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - A Vencer Entre 1801 a 5400 Dias',
         },
         'outros_a_vencer_acima_5400_dias': {
             'description': 'Outros - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - A vencer Acima de 5400 Dias',
         },
         'outros_total': {
             'description': 'Outros - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros - Total',
         },
         # COLUNAS FINAIS
         'atividade_nao_informada': {
             'description': 'Atividade não Informada ou não se Aplica.',
             'type': 'numeric',
+            'raw_csv_header': 'Atividade não Informada ou não se Aplica',
         },
         'total_nao_individualizado_pessoa_juridica': {
             'description': 'Total não Individualizado Pessoa Jurídica.',
             'type': 'numeric',
+            'raw_csv_header': 'Total não Individualizado Pessoa Jurídica',
         },
         'total_exterior_pessoa_juridica': {
             'description': (
                 'Volume das operações de crédito realizadas por IFs brasileiras no exterior para pessoas jurídicas.'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Total Exterior Pessoa Jurídica',
         },
     }
