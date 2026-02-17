@@ -44,6 +44,115 @@ def check_file_already_processed(output_directory: Path, file: str) -> bool:
     return (output_directory / file).exists()
 
 
+def _find_data_start_index(data: list[str]) -> int:
+    """Determines the start index of the data rows.
+
+    Args:
+        data (list[str]): The raw lines of the CSV file.
+
+    Returns:
+        int: The index where the data rows begin.
+    """
+
+    start = 1
+
+    for index in range(1, 6):
+        if index >= len(data):
+            break
+        current_line = data[index].split(';')
+        if current_line[0] == '':
+            start += 1
+        else:
+            break
+
+    return start
+
+
+def _fill_missing_header_values(header: list[str], data: list[str], start: int) -> list[str]:
+    """Fills empty header cells using values from subsequent header rows.
+
+    Args:
+        header (list[str]): The current header list to be updated.
+        data (list[str]): The raw lines of the CSV file.
+        start (int): The start index of the data rows.
+
+    Returns:
+        list[str]: The updated header list.
+    """
+
+    # Create a new header list to store the processed header values.
+    processed_header = header.copy()
+
+    for column_index, column_value in enumerate(processed_header):
+        if column_value == "":
+            for row_index in range(start - 1, 0, -1):
+                cols = data[row_index].split(";")
+                if len(cols) > column_index and cols[column_index].strip():
+                    processed_header[column_index] = cols[column_index].strip()
+                    break
+
+    return processed_header
+
+
+def _apply_header_grouping(header: list[str], original_line0: list[str]) -> list[str]:
+    """Applies group names to sub-columns.
+
+    Args:
+        header (list[str]): The current header list to be updated.
+        original_line0 (list[str]): The original first line of the CSV for group detection.
+
+    Returns:
+        list[str]: The updated header list.
+    """
+
+    # Create a new header list to store the processed header values.
+    processed_header = header.copy()
+
+    current_group = None
+    for column_index, column_header in enumerate(processed_header):
+        original_value = original_line0[column_index].strip() if column_index < len(original_line0) else ""
+
+        if original_value:
+            # This column had a value on line 0 — it's either a
+            # standalone column (e.g., "Instituição") or a group header.
+            next_is_empty = column_index + 1 < len(original_line0) and not original_line0[column_index + 1].strip()
+
+            if next_is_empty:
+                current_group = original_value
+            else:
+                current_group = None
+        elif current_group and column_header.strip():
+            # This column was empty on line 0 — it's a sub-column.
+            # Prepend the group name for a composite header.
+            processed_header[column_index] = f'{current_group} - {column_header}'
+
+    return processed_header
+
+
+def _process_csv_header(data: list[str]) -> tuple[list[str], int]:
+    """Processes the CSV header to handle groupings and inconsistencies.
+
+    Args:
+        data (list[str]): The raw lines of the CSV file.
+    Returns:
+        tuple[list[str], int]: A tuple containing the processed header list and the start index of data rows.
+    """
+
+    header = data[0].split(';')
+    start = _find_data_start_index(data)
+
+    # If the data starts after the first line, it indicates that there are multiple header lines due to grouping.
+    if start > 1:
+        # Save original line 0 to know which columns had group names
+        original_line0 = data[0].split(';')
+        # Fill missing header values using subsequent header rows and apply group names to sub-columns.
+        header = _fill_missing_header_values(header, data, start)
+        # Apply group names to sub-columns based on the original line 0.
+        header = _apply_header_grouping(header, original_line0)
+
+    return header, start
+
+
 # pylint: disable=too-many-locals
 def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool:
     """Normalizes a CSV file from Bacen If.Data by correcting its header
@@ -77,10 +186,10 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
         as defined in the configuration module (`CONFIG`).
     """
 
-    # Diretório onde os arquivos CSV baixados são armazenados.
+    # Directory where the raw CSV files are stored after being downloaded.
     input_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY, institution.name.lower(), report.name.lower())
 
-    # Diretório onde os arquivos CSV normalizados serão armazenados.
+    # Directory where the normalized CSV files will be stored.
     output_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower())
 
     # Check if the file has already been normalized.
@@ -103,24 +212,7 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
             # title may appear in either the first or third line, varying
             # according to the number of groupings in the headers.
             # This peculiarity presents a unique challenge in handling these files.
-            header = data[0].split(';')
-            start = 1
-
-            for index in range(1, 6):
-                current_line = data[index].split(';')
-                if current_line[0] == '':
-                    start += 1
-                else:
-                    break
-
-            if start > 1:
-                for column_index, column_value in enumerate(header):
-                    if column_value == '':
-                        for row_index in range(start - 1, 0, -1):
-                            cols = data[row_index].split(';')
-                            if len(cols) > column_index and cols[column_index].strip():
-                                header[column_index] = cols[column_index].strip()
-                                break
+            header, start = _process_csv_header(data)
 
             # On certain occasions, the CSV files provided by Bacen
             # feature a final column with no data in the header.
@@ -145,8 +237,10 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
             )
             data = data[:mismatch_index]
 
-            # Save the normalized file.
-            output_file.writelines(data)
+            # Reconstruct the header line with the corrected structure.
+            header_line = ';'.join(header) + '\n'
+            output_file.write(header_line)  # Write the corrected header line to the output file.
+            output_file.writelines(data)  # Write the remaining data lines to the output file without modification.
 
         # Return True if the file was successfully normalized.
         return True
