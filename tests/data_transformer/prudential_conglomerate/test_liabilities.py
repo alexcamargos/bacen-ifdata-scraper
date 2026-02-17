@@ -46,6 +46,7 @@ def test_prudential_conglomerate_liabilities_schema_structure():
         'instrumentos_derivativos': TransformationType.NUMERIC,
         'outras_obrigações': TransformationType.NUMERIC,
         'passivo_circulante_exigível_a_longo_prazo': TransformationType.NUMERIC,
+        'resultados_exercicios_futuros': TransformationType.NUMERIC,
         'patrimonio_liquido': TransformationType.NUMERIC,
         'passivo_total': TransformationType.NUMERIC,
     }

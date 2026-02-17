@@ -15,7 +15,7 @@ def test_prudential_conglomerate_assets_schema_structure():
     schema = PrudentialConglomeratesAssetsSchema()
 
     expected_structure = {
-        'instituicao_financeira': TransformationType.TEXT,
+        'instituicao': TransformationType.TEXT,
         'codigo': TransformationType.NUMERIC,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'segmento_resolucao': TransformationType.CATEGORICAL,

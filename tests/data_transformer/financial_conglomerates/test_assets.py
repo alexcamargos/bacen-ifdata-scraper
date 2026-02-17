@@ -15,7 +15,7 @@ def test_financial_conglomerates_assets_schema_structure():
     schema = FinancialConglomeratesAssetsSchema()
 
     expected_structure = {
-        'instituicao_financeira': TransformationType.TEXT,
+        'instituicao': TransformationType.TEXT,
         'codigo': TransformationType.NUMERIC,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'segmento_resolucao': TransformationType.CATEGORICAL,

@@ -65,6 +65,8 @@ def test_financial_conglomerates_scr_portfolio_legal_person_economic_activity_sc
     expected_structure.update(
         {
             'total_exterior_pessoa_juridica': TransformationType.NUMERIC,
+            'atividade_nao_informada': TransformationType.NUMERIC,
+            'total_nao_individualizado_pessoa_juridica': TransformationType.NUMERIC,
         }
     )
 
