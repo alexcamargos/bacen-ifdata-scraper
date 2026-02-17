@@ -18,12 +18,12 @@ class DatabaseService:
     """Manages DuckDB database operations."""
 
     def __init__(
-        self, database_path: Path = Config.DATABASE_FILE, connection: db.DuckDBPyConnection | None = None
+        self, database_path: Path = Config.SILVER_DATABASE_FILE, connection: db.DuckDBPyConnection | None = None
     ) -> None:
         """Initialize the DatabaseService.
 
         Args:
-            database_path (Path): Path to the DuckDB database file. Defaults to Config.DATABASE_FILE.
+            database_path (Path): Path to the DuckDB database file. Defaults to Config.SILVER_DATABASE_FILE.
             connection (duckdb.DuckDBPyConnection | None): An existing database connection.
                                                            Defaults to None, in which case a new connection will
                                                            be established when needed.
