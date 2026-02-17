@@ -50,7 +50,10 @@ def get_arguments() -> argparse.Namespace:
     parser.add_argument('-s', '--scraper', action='store_true', help='Download the reports.')
     parser.add_argument('-c', '--cleaner', action='store_true', help='Clean the downloaded reports.')
     parser.add_argument('-t', '--transformer', action='store_true', help='Transform the downloaded reports.')
-    parser.add_argument('-l', '--loader', action='store_true', help='Load the processed reports.')
+    parser.add_argument('-l', '--loader', action='store_true', help='Load the processed reports for silver layer.')
+    parser.add_argument(
+        '-a', '--analytics', action='store_true', help='Run the analytics layer, create the gold layer (dbt).'
+    )
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument(
         '--no-cleanup',
@@ -77,6 +80,7 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
         'cleaner': ('Running the cleaner...', pipeline_manager.run_cleaner),
         'transformer': ('Running the transformer...', pipeline_manager.run_transformer),
         'loader': ('Running the loader...', pipeline_manager.run_loader),
+        'analytics': ('Running the analytics...', pipeline_manager.run_analytics),
     }
 
     # Execute requested actions.
