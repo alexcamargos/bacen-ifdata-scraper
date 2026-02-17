@@ -53,8 +53,13 @@ class PrudentialConglomeratesTransformer(BaseTransformer):
         if 'cidade' in data_frame.columns:
             data_frame['cidade'] = data_frame['cidade'].str.title()
 
-        # Fills null values in the segment column
-        if 'segmento' in data_frame.columns:
-            data_frame['segmento'] = data_frame['segmento'].fillna('Não informado')
+        # Normalize 'consolidado_bancario' to lowercase to match seeds
+        if 'consolidado_bancario' in data_frame.columns:
+            data_frame['consolidado_bancario'] = data_frame['consolidado_bancario'].str.lower()
+
+        # Ensure 'segmento_resolucao' is categorical or string, but do NOT fillna with "Não informado"
+        # because the seed only contains s1-s5. Nulls are better for RI.
+        if 'segmento_resolucao' in data_frame.columns:
+            data_frame['segmento_resolucao'] = data_frame['segmento_resolucao'].astype('object')
 
         return data_frame
