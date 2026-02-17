@@ -46,3 +46,6 @@ class PipelineManagerProtocol(Protocol):
 
     def run_loader(self) -> None:
         """Execute the loading stage of the pipeline."""
+
+    def run_analytics(self) -> None:
+        """Execute the analytics stage of the pipeline (dbt)."""
