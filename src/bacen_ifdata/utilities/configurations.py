@@ -45,7 +45,11 @@ class Config:
     DOWNLOAD_FILE_NAME: str = 'dados.csv'
     PROCESSED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'processed'
     TRANSFORMED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'transformed'
-    DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'warehouse.duckdb'
+    DATA_ANALYTICS_DIRECTORY: Path = BASE_DIRECTORY / 'src' / 'bacen_ifdata' / 'data_analytics'
+
+    # Database Star Schema Architecture Paths.
+    SILVER_DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'silver_warehouse.duckdb'
+    GOLD_DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'gold_warehouse.duckdb'
 
 
 __all__ = ['Config']
