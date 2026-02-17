@@ -39,6 +39,7 @@ from bacen_ifdata.data_transformer.transformers.base import BaseTransformer
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.utilities.csv_loader import load_csv_data
 from bacen_ifdata.utilities.geographic_regions import STATE_TO_REGION as REGION
+from bacen_ifdata.utilities.string_utils import slugify
 
 
 class TransformationType(StrEnum):
@@ -140,6 +141,67 @@ class TransformerController:
 
         return data
 
+    def _build_column_rename_map(self, data: pd.DataFrame, schema: SchemaProtocol) -> dict[str, str]:
+        """Builds a mapping from CSV header column names to schema column names.
+
+        Uses Name-Based Mapping (Slugification) to find the correct column.
+        This provides robustness against column shifts (e.g. historical data
+        having extra columns).
+
+        For schemas with explicit csv_header metadata (used for hierarchical/grouped
+        CSV headers), the csv_header value is slugified and used as the lookup key.
+
+        Algorithm:
+        1. Slugify all CSV column names to create a lookup map.
+        2. Iterate through Schema fields.
+        3. If schema field has a csv_header, slugify it and match against CSV slugs.
+        4. Otherwise, match Schema field name against the Slugified CSV names.
+        5. If found, map "Original CSV Name" -> "Schema Field Name".
+
+        Args:
+            data (pd.DataFrame): The loaded DataFrame (with original CSV header).
+            schema (SchemaProtocol): The schema definition.
+
+        Returns:
+            dict[str, str]: Mapping of CSV column names to schema column names.
+        """
+
+        schema_names = schema.input_column_names
+        csv_columns = list(data.columns)
+
+        # Create a lookup map: {slugified_col_name: original_col_name}.
+        # We use a dictionary to map the normalized name back to the original CSV header.
+        csv_slug_map = {slugify(column): column for column in csv_columns}
+
+        rename_map: dict[str, str] = {}
+
+        for schema_field in schema_names:
+            # Check if schema defines an explicit CSV header for this field
+            csv_header = schema.get_raw_csv_header(schema_field) if hasattr(schema, 'get_raw_csv_header') else None
+            lookup_key = slugify(csv_header) if csv_header else schema_field
+
+            # Look up the schema field in the CSV slug map.
+            if lookup_key in csv_slug_map:
+                original_csv_col = csv_slug_map[lookup_key]
+
+                # Only map if the names are different (Pandas rename optimization).
+                if original_csv_col != schema_field:
+                    rename_map[original_csv_col] = schema_field
+            else:
+                # Handle Special Case: 'data' -> 'data_base'
+                if schema_field == 'data_base' and 'data' in csv_slug_map:
+                    original_csv_col = csv_slug_map['data']
+                    rename_map[original_csv_col] = 'data_base'
+                    continue
+
+                # Standardize 'instituicao'
+                if schema_field == 'instituicao' and 'instituicao_financeira' in csv_slug_map:
+                    original_csv_col = csv_slug_map['instituicao_financeira']
+                    rename_map[original_csv_col] = 'instituicao'
+                    continue
+
+        return rename_map
+
     def transform(self, file_path: Path, schema: SchemaProtocol, institution: Institutions) -> pd.DataFrame:
         """Transforms data from reports.
 
@@ -147,7 +209,7 @@ class TransformerController:
 
         Args:
             file_path (Path): The path to the CSV file to be transformed.
-            schema (SchemaProtocol): The schema for the report.
+            schema (SchemaProtocol): The schema for the reported.
             institution (Institutions): The institution type.
 
         Returns:
@@ -161,10 +223,22 @@ class TransformerController:
         transformation_map = self._build_transformation_map(transformer)
 
         # Configurations for correctly loading the data from CSV file.
-        options = {'sep': ';', 'names': schema.input_column_names, 'dtype': str}
+        # Processed CSVs now include the normalized header as the first line.
+        options = {'sep': ';', 'header': 0, 'dtype': str}
 
         # Load the data.
         data = self._load_data(file_path, options)
+
+        # Rename CSV header columns to match schema names (positional mapping).
+        # Extra columns in the CSV (not covered by the schema) are dropped.
+        rename_map = self._build_column_rename_map(data, schema)
+        if rename_map:
+            data = data.rename(columns=rename_map)
+
+        # Keep only columns defined in the schema (drop extras),
+        # ensuring we have the correct columns for transformation.
+        schema_columns = [column for column in schema.input_column_names if column in data.columns]
+        data = data[schema_columns]
 
         # Apply business rules, if any.
         data = transformer.apply_business_rules(data)
