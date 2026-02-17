@@ -11,8 +11,9 @@
 [![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=selenium&logoColor=white)](https://www.selenium.dev/)
 [![Polars](https://img.shields.io/badge/Polars-000000?style=for-the-badge&logo=polars&logoColor=white)](https://pola.rs/)
 [![DuckDB](https://img.shields.io/badge/DuckDB-FFFFFF?style=for-the-badge&logo=duckdb&logoColor=black)](https://duckdb.org/)
+[![dbt](https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white)](https://www.getdbt.com/)
 
-Este projeto automatiza a coleta, o processamento e a carga dos relatórios financeiros disponibilizados pelo Banco Central do Brasil através do portal IF.data. Diante do desafio de extrair dados valiosos de um formato de CSV não padronizado e de um processo de download manual, esta ferramenta utiliza **Selenium** para a automação da navegação e download, e scripts **Python** com **Polars** e **DuckDB** para a limpeza, transformação e estruturação dos dados.
+Este projeto automatiza a coleta, o processamento e a carga dos relatórios financeiros disponibilizados pelo Banco Central do Brasil através do portal IF.data. Diante do desafio de extrair dados valiosos de um formato de CSV não padronizado e de um processo de download manual, esta ferramenta utiliza **Selenium** para a automação da navegação e download, e scripts **Python** com **Polars**, **DuckDB** e **dbt** para a limpeza, transformação e modelagem dos dados.
 
 O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjunto de dados limpo, organizado e pronto para análise, eliminando a necessidade de trabalho manual e garantindo a precisão das informações através de um pipeline ETL (Extract, Transform, Load) completo.
 
@@ -55,6 +56,7 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
 - [x] **Limpeza (Clean):** Corrige arquivos CSV com formatação não-padrão, removendo cabeçalhos e informações consolidadas indesejadas.
 - [x] **Transformação (Transform):** Estrutura os dados limpos, aplicando schemas e transformações para prepará-los para análise.
 - [x] **Carga (Load):** Carrega os dados transformados em um banco de dados DuckDB para consulta e análise eficientes.
+- [x] **Analytics (Model):** Cria modelos dimencionais (Star Schema) prontos para BI usando dbt.
 - [x] **Setup Simplificado:** Suporte para instalação de dependências e execução com uv.
 - [x] **Relatório de Execução:** Gera um relatório ao final da execução do scraper com o total de arquivos baixados e o tempo de execução.
 
@@ -160,6 +162,14 @@ Finalmente, os dados transformados são carregados em um banco de dados DuckDB p
 uv run ifdata.py -l
 ```
 
+### Analytics (Modeling)
+
+Após a carga, a camada de analytics modela os dados em um Star Schema para Business Intelligence usando dbt. Use a flag `-a` ou `--analytics`.
+
+```bash
+uv run ifdata.py -a
+```
+
 ### Execução Padrão
 
 Se nenhum argumento for fornecido, o pipeline executará as etapas de limpeza e transformação por padrão:
@@ -171,6 +181,8 @@ uv run ifdata.py
 ## Arquitetura do Sistema
 
 Para informações detalhadas sobre a arquitetura do projeto, padrões de design utilizados, estrutura de diretórios e guia de contribuição, consulte a [documentação de arquitetura](docs/ARCHITECTURE.md).
+
+Para entender o modelo de dados e o processo de transformação (Bronze -> Gold), veja a [documentação do pipeline](docs/DATA_PIPELINE.md).
 
 ## Desafios e Aprendizados
 
@@ -187,6 +199,19 @@ Para informações detalhadas sobre a arquitetura do projeto, padrões de design
   - **Problema:** Os arquivos CSV disponibilizados pelo Bacen não seguem o padrão convencional. Eles incluem múltiplos cabeçalhos, linhas de resumo e agrupamentos de dados dentro do mesmo arquivo, tornando a importação direta com bibliotecas padrão inviável.
   - **Solução:** Desenvolvi um script de processamento em Python que lê cada arquivo linha por linha. Utilizando lógica condicional, o script identifica e ignora os cabeçalhos secundários e as linhas de resumo. Ele localiza o cabeçalho principal correto e extrai apenas as linhas de dados pertencentes às instituições financeiras, reescrevendo um novo arquivo CSV limpo e bem formatado.
   - **Aprendizado:** Este desafio aprofundou minhas habilidades em manipulação de arquivos e parsing de texto em baixo nível. Aprendi a importância de não confiar cegamente em formatos de arquivo e a desenvolver soluções robustas para lidar com dados sujos e inconsistentes, uma habilidade fundamental em qualquer projeto de engenharia ou ciência de dados.
+
+- **Desafio: Modelagem Dimensional para BI a Partir de Dados Heterogêneos**
+  - **Problema:** Com os dados já carregados no DuckDB (camada Silver), o próximo desafio era transformá-los em um formato adequado para análise de Business Intelligence. Os dados Silver, embora limpos, apresentavam diversos obstáculos para análises transversais:
+    - **Fragmentação por tipo de instituição:** Ativos, passivos e resultados estavam em tabelas separadas por tipo (Conglomerados Prudenciais, Financeiros, Instituições Individuais), impossibilitando comparações diretas entre o sistema financeiro como um todo.
+    - **Ausência de chaves padronizadas:** Não existiam chaves surrogadas ou dimensões compartilhadas; cada tabela operava de forma isolada.
+    - **Inconsistência de schemas entre períodos:** Relatórios de diferentes épocas possuíam estruturas distintas (colunas extras ou ausentes), exigindo tratamento especial para unificação temporal.
+    - **Dados desnormalizados e repetidos:** Informações de instituições (nome, código, segmento) eram replicadas em cada tabela de fato, gerando redundância e risco de inconsistência.
+  - **Solução:** Projetei e implementei um **Star Schema (Esquema Estrela)** usando **dbt** sobre DuckDB, criando uma camada Gold analítica:
+    1. **Dimensões unificadas (`dim_instituicao`):** Consolidei instituições de 3 fontes distintas em uma única dimensão com chave surrogada (`MD5`), permitindo análises transversais independentes do tipo de instituição.
+    2. **Dimensão de tempo (`dim_tempo`):** Criei uma dimensão temporal com chave numérica (`YYYYMMDD`), extraindo ano, trimestre e mês para facilitar filtros e agregações sem funções de data complexas.
+    3. **Fatos compostos (`fato_balanco_patrimonial`):** Unifiquei Ativos e Passivos via `FULL OUTER JOIN`, utilizando `COALESCE` para resiliência contra dados ausentes, consolidando o balanço patrimonial completo em uma única tabela.
+    4. **Dimensões estáticas via Seeds:** Mapeei categorias de crédito, risco e localização como arquivos CSV (Seeds do dbt), garantindo consistência e versionamento dessas tabelas de referência.
+  - **Aprendizado:** Este desafio consolidou minha experiência em **modelagem dimensional (Kimball)** e no uso de **dbt** como ferramenta de transformação analítica. Aprendi que a construção de um Data Warehouse eficiente não se resume a mover dados — exige decisões conscientes sobre granularidade, unificação de entidades e design de chaves. A separação clara entre Silver (dados operacionais) e Gold (dados analíticos) provou ser essencial para manter a rastreabilidade e permitir reprocessamento sem impactar a ingestão.
 
 ## Autor
 
