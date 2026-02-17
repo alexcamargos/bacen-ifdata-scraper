@@ -12,6 +12,7 @@ import pandas as pd
 import polars as pl
 import pytest
 
+# pylint: disable=import-outside-toplevel
 from .fixtures.mock_data import (
     MOCK_COMPLEX_CSV_CONTENT_PROCESSED,
     MOCK_COMPLEX_RAW_CSV_CONTENT,
@@ -148,7 +149,15 @@ def mock_dataframe_from_csv():
             pd.DataFrame: A DataFrame with schema-compliant column names
         """
 
-        names = [col for col in schema.column_names if col != 'regiao']
+        names = []
+        for column in schema.column_names:
+            if column == 'regiao':
+                continue
+
+            # Use csv_header if defined, otherwise fallback to column name (slug)
+            csv_header = schema.get_raw_csv_header(column) if hasattr(schema, 'get_raw_csv_header') else None
+            names.append(csv_header if csv_header else column)
+
         return pd.read_csv(StringIO(csv_string), sep=';', names=names, dtype=str, skiprows=1, header=0)
 
     return create_mock_df
