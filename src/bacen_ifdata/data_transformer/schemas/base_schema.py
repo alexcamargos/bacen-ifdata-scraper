@@ -139,3 +139,20 @@ class BaseSchema:
         """
 
         return self.SCHEMA_DEFINITION.get(column_name, {}).get('mapping')
+
+    def get_raw_csv_header(self, column_name: str) -> str | None:
+        """Return the explicit CSV header name for a column, if defined.
+
+        When the source CSV uses hierarchical/grouped headers, the cleaner produces
+        composite names (e.g., 'Empréstimo com Consignação em Folha - A Vencer em até 90 Dias').
+        This method returns the raw_csv_header metadata so the transformer can map it
+        to the schema's short field name.
+
+        Args:
+            column_name (str): The schema field name.
+
+        Returns:
+            str | None: The CSV header string if defined, otherwise None.
+        """
+
+        return self.SCHEMA_DEFINITION.get(column_name, {}).get('raw_csv_header')
