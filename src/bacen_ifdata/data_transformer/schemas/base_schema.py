@@ -140,7 +140,7 @@ class BaseSchema:
 
         return self.SCHEMA_DEFINITION.get(column_name, {}).get('mapping')
 
-    def get_raw_csv_header(self, column_name: str) -> str | None:
+    def get_raw_csv_header(self, column_name: str) -> str | list[str] | None:
         """Return the explicit CSV header name for a column, if defined.
 
         When the source CSV uses hierarchical/grouped headers, the cleaner produces
@@ -152,7 +152,7 @@ class BaseSchema:
             column_name (str): The schema field name.
 
         Returns:
-            str | None: The CSV header string if defined, otherwise None.
+            str | list[str] | None: The CSV header string (or list) if defined, otherwise None.
         """
 
         return self.SCHEMA_DEFINITION.get(column_name, {}).get('raw_csv_header')
