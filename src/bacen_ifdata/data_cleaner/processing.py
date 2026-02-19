@@ -200,7 +200,8 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
     # Normalize the file.
     try:
         with (
-            open(f'{input_path}\\{file}', 'r', encoding='utf-8') as input_file,
+            # Note: 'utf-8-sig' is used to handle potential BOM in the input CSV files.
+            open(f'{input_path}\\{file}', 'r', encoding='utf-8-sig') as input_file,
             open(f'{output_path}\\{file}', 'w', encoding='utf-8') as output_file,
         ):
             data = input_file.readlines()
