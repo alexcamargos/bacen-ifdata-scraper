@@ -141,6 +141,51 @@ class TransformerController:
 
         return data
 
+    def _generate_lookup_keys(self, schema: SchemaProtocol, field_name: str) -> list[str]:
+        """Generates potential lookup keys (slugs) for a schema field.
+
+        Args:
+            schema (SchemaProtocol): The schema definition.
+            field_name (str): The name of the field in the schema.
+
+        Returns:
+            list[str]: A list of slugified keys to search for in the CSV.
+        """
+
+        # Check if schema defines an explicit CSV header for this field
+        csv_header = schema.get_raw_csv_header(field_name) if hasattr(schema, 'get_raw_csv_header') else None
+
+        if isinstance(csv_header, list):
+            # If multiple headers are possible (e.g. historical name changes).
+            return [slugify(header) for header in csv_header]
+        if csv_header:
+            return [slugify(csv_header)]
+
+        # Use schema field name if no explicit header.
+        return [slugify(field_name)]
+
+    def _handle_special_mappings(self, field_name: str, csv_slug_map: dict[str, str]) -> tuple[str, str] | None:
+        """Handles hardcoded edge cases for column mapping when standard matching fails.
+
+        Args:
+            field_name (str): The schema field name being processed.
+            csv_slug_map (dict[str, str]): Map of slugified CSV columns to original names.
+
+        Returns:
+            tuple[str, str] | None: A tuple containing the original CSV column name and
+                                    the schema field name if a match is found, otherwise None.
+        """
+
+        # Handle Special Case: 'data' -> 'data_base'
+        if field_name == 'data_base' and 'data' in csv_slug_map:
+            return csv_slug_map['data'], 'data_base'
+
+        # Standardize 'instituicao'
+        if field_name == 'instituicao' and 'instituicao_financeira' in csv_slug_map:
+            return csv_slug_map['instituicao_financeira'], 'instituicao'
+
+        return None
+
     def _build_column_rename_map(self, data: pd.DataFrame, schema: SchemaProtocol) -> dict[str, str]:
         """Builds a mapping from CSV header column names to schema column names.
 
@@ -166,39 +211,30 @@ class TransformerController:
             dict[str, str]: Mapping of CSV column names to schema column names.
         """
 
-        schema_names = schema.input_column_names
-        csv_columns = list(data.columns)
-
         # Create a lookup map: {slugified_col_name: original_col_name}.
         # We use a dictionary to map the normalized name back to the original CSV header.
-        csv_slug_map = {slugify(column): column for column in csv_columns}
+        csv_slug_map = {slugify(column): column for column in data.columns}
 
         rename_map: dict[str, str] = {}
+        for schema_field in schema.input_column_names:
+            lookup_keys = self._generate_lookup_keys(schema, schema_field)
 
-        for schema_field in schema_names:
-            # Check if schema defines an explicit CSV header for this field
-            csv_header = schema.get_raw_csv_header(schema_field) if hasattr(schema, 'get_raw_csv_header') else None
-            lookup_key = slugify(csv_header) if csv_header else schema_field
+            # Try to match lookup keys against CSV columns.
+            match_found = False
+            for key in lookup_keys:
+                if key in csv_slug_map:
+                    original_csv_col = csv_slug_map[key]
+                    # Only map if the names are different (Pandas rename optimization).
+                    if original_csv_col != schema_field:
+                        rename_map[original_csv_col] = schema_field
+                    match_found = True
+                    break
 
-            # Look up the schema field in the CSV slug map.
-            if lookup_key in csv_slug_map:
-                original_csv_col = csv_slug_map[lookup_key]
+            if not match_found:
+                special_mapping = self._handle_special_mappings(schema_field, csv_slug_map)
 
-                # Only map if the names are different (Pandas rename optimization).
-                if original_csv_col != schema_field:
-                    rename_map[original_csv_col] = schema_field
-            else:
-                # Handle Special Case: 'data' -> 'data_base'
-                if schema_field == 'data_base' and 'data' in csv_slug_map:
-                    original_csv_col = csv_slug_map['data']
-                    rename_map[original_csv_col] = 'data_base'
-                    continue
-
-                # Standardize 'instituicao'
-                if schema_field == 'instituicao' and 'instituicao_financeira' in csv_slug_map:
-                    original_csv_col = csv_slug_map['instituicao_financeira']
-                    rename_map[original_csv_col] = 'instituicao'
-                    continue
+                if special_mapping:
+                    rename_map[special_mapping[0]] = special_mapping[1]
 
         return rename_map
 
