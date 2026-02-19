@@ -119,6 +119,12 @@ Icon?
 ehthumbs.db
 [Tt]humbs.db
 
+# dbt directories
+target/
+dbt_modules/
+dbt_packages/
+logs/
+
 # Custom files and directories to ignore
 # Add any additional files and directories you want to ignore in your project.
 
