@@ -241,7 +241,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'patrimonio_liquido': {
             'description': 'Patrimônio Líquido + Contas de Resultado Credoras + Contas de Resultado Devedoras.',
             'type': 'numeric',
-            'raw_csv_header': 'Patrimônio Líquido (i)',
+            'raw_csv_header': ['Patrimônio Líquido (i)', 'Patrimônio Líquido (j)'],
         },
         'passivo_total': {
             'description': 'Passivo Circulante e Exigível a Longo Prazo + Patrimônio Líquido.',
