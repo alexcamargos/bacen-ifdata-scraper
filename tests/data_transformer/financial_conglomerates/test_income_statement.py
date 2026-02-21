@@ -13,6 +13,7 @@ from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 
 def test_financial_conglomerates_income_statement_schema_structure():
     """Deve ter os nomes das colunas e tipos corretos definidos."""
+
     schema = FinancialConglomerateIncomeStatementSchema()
 
     expected_structure = {
@@ -72,6 +73,7 @@ def test_financial_conglomerates_income_statement_transform_integration(
     # Create mock DataFrame using the shared helper
     schema = FinancialConglomerateIncomeStatementSchema()
     mock_df = mock_dataframe_from_csv(mock_financial_conglomerates_income_statement_csv_data, schema)
+
     mocker.patch('bacen_ifdata.data_transformer.controller.load_csv_data', return_value=mock_df)
 
     # Use the shared transformer factory fixture
