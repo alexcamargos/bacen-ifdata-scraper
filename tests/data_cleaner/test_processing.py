@@ -3,7 +3,6 @@
 from enum import StrEnum
 from pathlib import Path
 
-import pytest
 from pytest_mock import MockerFixture
 
 from bacen_ifdata.data_cleaner.processing import check_file_already_processed, normalize_csv
@@ -54,8 +53,9 @@ def test_normalize_csv_success(mocker: MockerFixture):
     assert result is True
 
     # Verifica se a escrita foi chamada.
-    # A lógica de processamento deve pular cabeçalhos extras e rodapés, escrevendo apenas o conteúdo limpo.
-    mock_output_open.return_value.writelines.assert_called()
+    # O header normalizado é escrito via write() e os dados via writelines().
+    mock_output_open.return_value.write.assert_called()  # Header
+    mock_output_open.return_value.writelines.assert_called()  # Data
 
 
 def test_normalize_csv_already_processed(mocker: MockerFixture):

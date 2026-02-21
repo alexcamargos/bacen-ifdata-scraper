@@ -1,16 +1,16 @@
 """Unit tests for complex data processing scenarios in the data_cleaner module."""
 
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 from pytest_mock import MockerFixture
 
-from bacen_ifdata.data_cleaner.processing import check_file_already_processed, normalize_csv
+from bacen_ifdata.data_cleaner.processing import normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from tests.fixtures.cleaner.mock_data_cleaner import MOCK_COMPLEX_RAW_CSV_CONTENT
 
 
-class MockReport(Enum):
+class MockReport(StrEnum):
     """Mock report enum."""
 
     PORTFOLIO = 'portfolio_individuals_type_maturity'
@@ -47,23 +47,25 @@ def test_normalize_csv_complex_header(mocker: MockerFixture):
     # Get the written content
     handle = mock_output_open()
 
-    # Check the data written via writelines()
+    # The header is written via write(), data via writelines().
+    # 1. Verify the normalized header was written via write()
+    write_calls = handle.write.call_args_list
+    assert len(write_calls) > 0, "Header should be written via write()"
+    header_line = write_calls[0][0][0]
+    assert "Instituição" in header_line, "Header should contain 'Instituição'"
+
+    # 2. Check the data written via writelines()
     writelines_calls = handle.writelines.call_args_list
     assert len(writelines_calls) > 0
     data_lines = writelines_calls[0][0][0]  # The list of strings passed to writelines
 
-    # 1. Verify Header Removed (Headless CSV)
-    # The output should NOT contain the header line, it should start with data.
-    first_line = data_lines[0]
-    assert "Instituição" not in first_line
-    assert "Empréstimo" not in first_line
-
-    # 2. Verify Data Integrity
-    # Assert that valid data lines are preserved and come first
-    assert "BANCO TESTE 01" in first_line
+    # 3. Verify Data Integrity
+    # Assert that valid data lines are preserved
+    first_data_line = data_lines[0]
+    assert "BANCO TESTE 01" in first_data_line
     assert "BANCO TESTE 02" in "".join(data_lines)
 
-    # 3. Verify Footer Removal
+    # 4. Verify Footer Removal
     # The raw file ends with "Rodapé desnecessário..."
     # The processed file should NOT have it.
     assert "Rodapé desnecessário" not in "".join(data_lines)
