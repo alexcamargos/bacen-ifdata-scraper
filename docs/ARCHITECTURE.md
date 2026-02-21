@@ -18,6 +18,7 @@ Este documento descreve a arquitetura, padrões de design e estrutura do projeto
     - [Cleaner (Clean)](#cleaner-clean)
     - [Transformer (Transform)](#transformer-transform)
     - [Loader (Load)](#loader-load)
+    - [Analytics (Gold Layer)](#analytics-gold-layer)
   - [Interfaces e Protocols](#interfaces-e-protocols)
   - [Configurações](#configurações)
   - [Guia de Contribuição](#guia-de-contribuição)
@@ -27,7 +28,6 @@ Este documento descreve a arquitetura, padrões de design e estrutura do projeto
     - [Testes](#testes)
     - [Commits](#commits)
   - [Referências](#referências)
-
 
 ## Visão Geral
 
@@ -40,7 +40,6 @@ O sistema implementa um pipeline **ETL (Extract, Transform, Load)** completo par
 | **Transform** | Estruturação dos dados usando schemas Pydantic     |
 | **Load**      | Persistência em banco DuckDB para análise          |
 
-
 ## Stack Tecnológica
 
 | Tecnologia | Versão | Propósito                      |
@@ -51,8 +50,8 @@ O sistema implementa um pipeline **ETL (Extract, Transform, Load)** completo par
 | DuckDB     | ≥1.1   | Banco de dados analítico       |
 | Pydantic   | ≥2.9   | Validação de schemas           |
 | Pandera    | ≥0.26  | Validação de DataFrames        |
+| dbt        | ≥1.7   | Transformação (Analytics)      |
 | uv         | -      | Gerenciador de dependências    |
-
 
 ## Arquitetura Geral
 
@@ -74,6 +73,7 @@ flowchart TB
         CLN["Cleaner<br/>(CSV)"]
         TRF["Transformer<br/>(Schema)"]
         LDR["Loader<br/>(DuckDB)"]
+        ANA["Analytics<br/>(dbt)"]
     end
 
     subgraph infra["Infrastructure"]
@@ -85,10 +85,10 @@ flowchart TB
 
     CLI --> APP
     PIPE --> SCR & CLN & TRF & LDR
+    LDR --> ANA
     SCR --> SESSION --> BROWSER
     APP -.->|Lazy Init| SESSION
 ```
-
 
 ## Padrões de Design
 
@@ -114,7 +114,6 @@ def _get_session(self) -> SessionProtocol:
 ```
 
 Isso permite executar `cleaner` ou `transformer` sem iniciar o Firefox.
-
 
 ## Estrutura do Projeto
 
@@ -154,6 +153,11 @@ bacen-ifdata-scraper/
 │   ├── data_loader/             # Carga (DuckDB)
 │   │   └── controller.py
 │   │
+│   ├── data_analytics/          # Modelagem Dimensional (dbt)
+│   │   ├── models/              # Modelos SQL (Bronze/Gold)
+│   │   ├── seeds/               # Arquivos estáticos (CSV)
+│   │   └── dbt_project.yml      # Configuração dbt
+│   │
 │   └── utilities/
 │       ├── configurations.py    # Config class
 │       └── ...
@@ -161,7 +165,6 @@ bacen-ifdata-scraper/
 ├── tests/
 └── docs/
 ```
-
 
 ## Fluxo de Inicialização
 
@@ -195,7 +198,6 @@ sequenceDiagram
     Browser-->>PM: session ready
 ```
 
-
 ## Subsistemas ETL
 
 ### Scraper (Extract)
@@ -221,13 +223,11 @@ Automatiza download de relatórios do portal IF.data via Selenium.
 - `INDIVIDUAL_INSTITUTIONS`
 - `FOREIGN_EXCHANGE`
 
-
 ### Cleaner (Clean)
 
 **Diretório:** `src/bacen_ifdata/data_cleaner/`
 
 Corrige CSVs com formatação não-padrão (múltiplos cabeçalhos, linhas de resumo).
-
 
 ### Transformer (Transform)
 
@@ -245,13 +245,26 @@ Estrutura dados usando schemas definidos por instituição.
 | `CATEGORICAL` | Categorização        |
 | `TEXT`        | Limpeza de strings   |
 
-
 ### Loader (Load)
 
 **Diretório:** `src/bacen_ifdata/data_loader/`
 
 Carrega dados transformados no DuckDB.
 
+### Analytics (Gold Layer)
+
+**Diretório:** `src/bacen_ifdata/data_analytics/`
+
+Responsável pela modelagem dimensional (Star Schema) usando **dbt**.
+
+**Camadas:**
+
+| Camada     | Tipo       | Descrição                                   |
+| ---------- | ---------- | ------------------------------------------- |
+| **Silver** | View/Table | Espelho das tabelas carregadas pelo Loader. |
+| **Gold**   | Table      | Fatos e Dimensões otimizados para BI.       |
+
+Para detalhes profundos sobre a transformação de dados da camada Silver para Gold (Star Schema), consulte a [Documentação do Pipeline de Dados](DATA_PIPELINE.md).
 
 ## Interfaces e Protocols
 
@@ -279,7 +292,6 @@ class PipelineManagerProtocol(Protocol):
 - Desacopla código de alto nível de implementações
 - Documenta contratos de forma explícita
 
-
 ## Configurações
 
 **Arquivo:** `src/bacen_ifdata/utilities/configurations.py`
@@ -296,7 +308,6 @@ class Config:
 ```
 
 A classe é `frozen=True` para garantir imutabilidade.
-
 
 ## Guia de Contribuição
 
