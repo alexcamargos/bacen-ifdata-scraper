@@ -1,0 +1,12 @@
+bacen_ifdata:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('GOLD_DB_PATH') }}"
+      extensions:
+        - httpfs
+        - parquet
+      attach:
+        - path: "{{ env_var('SILVER_DB_PATH') }}"
+          alias: silver
