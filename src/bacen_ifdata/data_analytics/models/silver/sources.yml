@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: silver
+    database: silver
+    schema: main
+    tables:
+      # Financial Conglomerates
+      - name: financial_conglomerates_summary
+      - name: financial_conglomerates_assets
+      - name: financial_conglomerates_liabilities
+      - name: financial_conglomerates_income_statement
+      - name: financial_conglomerates_capital_information
+      - name: financial_conglomerates_portfolio_individuals_type_maturity
+      - name: financial_conglomerates_portfolio_legal_person_type_maturity
+      - name: financial_conglomerates_portfolio_legal_person_economic_activity
+      - name: financial_conglomerates_portfolio_legal_person_business_size
+      - name: financial_conglomerates_portfolio_risk_level
+      - name: financial_conglomerates_portfolio_geographic_region
+      - name: financial_conglomerates_portfolio_indexer
+      - name: financial_conglomerates_portfolio_number_clients_operations
+      
+      # Financial Conglomerates SCR
+      - name: financial_conglomerates_scr_portfolio_individuals_type_maturity
+      - name: financial_conglomerates_scr_portfolio_legal_person_type_maturity
+      - name: financial_conglomerates_scr_portfolio_legal_person_economic_activity
+      - name: financial_conglomerates_scr_portfolio_legal_person_business_size
+      - name: financial_conglomerates_scr_portfolio_risk_level
+      - name: financial_conglomerates_scr_portfolio_geographic_region
+      - name: financial_conglomerates_scr_portfolio_indexer
+      - name: financial_conglomerates_scr_portfolio_number_clients_operations
+
+      # Foreign Exchange
+      - name: foreign_exchange_quarterly_foreign_currency_flow
+
+      # Individual Institutions
+      - name: individual_institutions_summary
+      - name: individual_institutions_assets
+      - name: individual_institutions_liabilities
+      - name: individual_institutions_income_statement
+
+      # Prudential Conglomerates
+      - name: prudential_conglomerates_summary
+      - name: prudential_conglomerates_assets
+      - name: prudential_conglomerates_liabilities
+      - name: prudential_conglomerates_income_statement
+      - name: prudential_conglomerates_capital_information
+      - name: prudential_conglomerates_segmentation

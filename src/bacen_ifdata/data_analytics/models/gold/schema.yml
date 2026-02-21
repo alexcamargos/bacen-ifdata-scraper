@@ -1,0 +1,367 @@
+version: 2
+
+models:
+  - name: dim_instituicao
+    description: "Dimensão de Instituições. Unifica dados de Conglomerados Prudenciais, Financeiros e Instituições Independentes."
+    columns:
+      - name: id_instituicao
+        description: "Chave primária substituta (Surrogate Key) gerada via MD5 do código da instituição."
+        tests:
+          - unique
+          - not_null
+      - name: codigo_origem
+        description: "Código original da instituição no Bacen."
+      - name: nome
+        description: "Nome da instituição."
+      - name: tipo_instituicao
+        description: "Tipo da fonte de dados (Conglomerado Prudencial, Financeiro, etc)."
+      - name: id_segmento
+        description: "Chave estrangeira para dim_segmento (Segmento Prudencial)."
+        tests:
+          - relationships:
+              to: ref('dim_segmento')
+              field: id_segmento
+      - name: id_localizacao
+        description: "Chave estrangeira para dim_localizacao (região, UF, cidade)."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_localizacao')
+              field: id_localizacao
+      - name: id_controle
+        description: "Chave estrangeira para dim_controle (Tipo de Controle)."
+        tests:
+          - relationships:
+              to: ref('dim_controle')
+              field: id_controle
+      - name: id_consolidado
+        description: "Chave estrangeira para dim_consolidado (Consolidado Bancário)."
+        tests:
+          - relationships:
+              to: ref('dim_consolidado')
+              field: id_consolidado
+      - name: id_classe
+        description: "Chave estrangeira para dim_classe_instituicao (Tipo detalhado)."
+        tests:
+          - relationships:
+              to: ref('dim_classe_instituicao')
+              field: id_classe
+      - name: nome_conglomerado
+        description: "Nome do conglomerado ao qual a instituição pertence. Específico para Instituições Individuais."
+
+  - name: dim_localizacao
+    description: "Dimensão de Localidade (Cidade, UF, Região)."
+    columns:
+      - name: id_localizacao
+        description: "Chave primária (MD5 de Cidade + UF + Região)."
+        tests:
+          - unique
+          - not_null
+      - name: cidade
+        description: "Cidade da instituição."
+      - name: uf
+        description: "Unidade Federativa."
+      - name: regiao
+        description: "Região Geográfica."
+
+  - name: dim_segmento
+    description: "Dimensão de Segmento Prudencial (S1, S2, etc)."
+    columns:
+      - name: id_segmento
+        tests:
+          - unique
+          - not_null
+      - name: codigo
+      - name: descricao
+
+  - name: dim_controle
+    description: "Dimensão de Tipo de Controle de Capital."
+    columns:
+      - name: id_controle
+        tests:
+          - unique
+          - not_null
+      - name: codigo
+      - name: descricao
+
+  - name: dim_consolidado
+    description: "Dimensão de Tipo de Consolidado Bancário."
+    columns:
+      - name: id_consolidado
+        tests:
+          - unique
+          - not_null
+      - name: codigo
+      - name: descricao
+
+  - name: dim_classe_instituicao
+    description: "Dimensão de Classe/Tipo Detalhado da Instituição."
+    columns:
+      - name: id_classe
+        tests:
+          - unique
+          - not_null
+      - name: codigo
+      - name: descricao
+
+  - name: dim_tempo
+    description: "Dimensão de Tempo baseada nas datas base dos relatórios."
+    columns:
+      - name: id_data
+        description: "Chave primária (YYYYMMDD) inteira."
+        tests:
+          - unique
+          - not_null
+      - name: data
+        description: "Data completa."
+
+  - name: fato_balanco_patrimonial
+    description: "Fato consolidada de Ativos e Passivos para todas as instituições."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: ativo_total
+        description: "Ativo Total."
+      - name: patrimonio_liquido
+        description: "Patrimônio Líquido."
+      - name: passivo_total
+        description: "Passivo Total (Exigível + PL)."
+      - name: disponibilidades
+        description: "Caixa e Equivalentes de Caixa."
+      - name: operacoes_de_credito
+        description: "Carteira de Crédito Total."
+      - name: captacoes
+        description: "Total de Captações (Depósitos + Outras Obrigações)."
+      - name: depositos
+        description: "Depósitos Totais."
+
+  - name: fato_capital_prudencial
+    description: "Fato com informações de Capital Regulatório (Basileia III)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: indice_basileia
+        description: "Índice de Basileia (PR / RWA)."
+      - name: rwa_total
+        description: "Ativos Ponderados pelo Risco Total."
+
+  - name: fato_carteira_credito_indexador
+    description: "Fato detalhando a carteira de crédito por indexador (Selic, IPCA, etc)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: cdi
+        description: "Carteira indexada ao CDI."
+      - name: selic
+        description: "Carteira indexada à SELIC."
+
+  - name: fato_operacoes_clientes
+    description: "Fato com contagem de clientes e operações ativas."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: quantidade_clientes
+        description: "Número de clientes com operações ativas."
+
+  - name: fato_demonstracao_resultado
+    description: "Fato consolidada de Demonstração de Resultados (DRE)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: receitas_intermediacao_financeira
+        description: "Receitas Totais de Intermediação."
+      - name: despesas_intermediacao_financeira
+        description: "Despesas Totais de Intermediação."
+      - name: resultado_intermediacao_financeira
+        description: "Resultado Bruto da Intermediação."
+      - name: despesas_administrativas
+        description: "Total de Despesas Administrativas."
+      - name: despesas_pessoal
+        description: "Despesas de Pessoal."
+      - name: despesas_tributarias
+        description: "Despesas de Impostos e Taxas."
+      - name: lucro_liquido
+        description: "Lucro Líquido final."
+      - name: rendas_operacoes_de_credito
+        description: "Rendas de operações de crédito."
+      - name: despesas_captacao
+        description: "Custos de captação de recursos."
+      - name: resultado_provisao_creditos_dificil_liquidacao
+        description: "Impacto das provisões para devedores duvidosos (PDD)."
+
+  - name: fato_carteira_credito_totais
+    description: "Fato auxiliar com totais de carteira e valores não individualizados que não entram nos breakdowns dimensionais."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: total_carteira_pj
+        description: "Valor Total da Carteira PJ informado nos relatórios."
+      - name: total_nao_individualizado_pj
+        description: "Parcela da carteira PJ não classificada por atividade (valor baixo ou sem info)."
+      - name: total_geral_risco
+        description: "Valor Total da Carteira sujeita a Risco (conferência)."
+      - name: total_carteira_pf
+        description: "Valor Total da Carteira PF informado nos relatórios."
+      - name: total_exterior_pf
+        description: "Valor Total da Carteira PF no Exterior."
+
+  - name: fato_resumo_financeiro
+    description: "Fato com métricas financeiras resumidas (Ativo Total, Lucro, Patrimônio) para visualização rápida."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: ativo_total
+        description: "Ativo Total em milhares de R$."
+      - name: carteira_credito
+        description: "Carteira de Crédito Classificada em milhares de R$."
+      - name: passivo_exigivel
+        description: "Passivo Circulante e Exigível a Longo Prazo."
+      - name: captacoes
+        description: "Captações Totais."
+      - name: patrimonio_liquido
+        description: "Patrimônio Líquido."
+      - name: lucro_liquido
+        description: "Lucro Líquido do período."
+      - name: quantidade_agencias
+        description: "Número de agências físicas."
+      - name: quantidade_postos_atendimento
+        description: "Número de postos de atendimento."
+      - name: roe
+        description: "Return on Equity (Lucro / PL)."
+      - name: roa
+        description: "Return on Assets (Lucro / Ativo Total)."
+
+  - name: fato_carteira_credito_produto
+    description: "Fato detalhando a carteira de crédito por produto e modalidade."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+      - name: id_data
+        tests:
+          - not_null
+
+  - name: fato_carteira_credito_atividade
+    description: "Fato detalhando a carteira de crédito por atividade econômica (CNAE/Setor)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+
+  - name: fato_carteira_credito_porte
+    description: "Fato detalhando a carteira de crédito por porte do tomador (PJ)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+
+  - name: fato_risco_credito
+    description: "Fato detalhando a carteira de crédito por nível de risco."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+      - name: id_nivel_risco
+        tests:
+          - not_null
+
+  - name: fato_regiao_credito
+    description: "Fato detalhando a carteira de crédito por região geográfica."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+      - name: id_regiao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_regiao')
+              field: id_regiao
+
+  - name: fato_movimentacao_cambio
+    description: "Fato de Movimentação no Mercado de Câmbio (Fluxo de Moedas)."
+    columns:
+      - name: id_instituicao
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_instituicao')
+              field: id_instituicao
+      - name: id_data
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_tempo')
+              field: id_data
+      - name: total_geral_valor
+        description: "Valor total das operações (Primário + Interbancário) em milhares de USD."
