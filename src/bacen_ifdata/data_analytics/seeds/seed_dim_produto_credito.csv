@@ -1,0 +1,15 @@
+id_produto,nome_produto,tipo_pessoa,prefixo_coluna
+1,Consignado,PF,consignacao
+2,Sem Consignacao,PF,sem_consignacao
+3,Veiculos,PF,veiculos
+4,Habitacao,PF,habitacao
+5,Cartao de Credito,PF,cartao_credito
+6,Rural e Agroindustrial,Ambos,rural_agroindustrial
+7,Outros Creditos,Ambos,outros_creditos
+8,Capital de Giro,PJ,capital_giro
+9,Investimento,PJ,investimento
+10,Cheque Especial e Conta Garantida,PJ,cheque_especial_conta_garantida
+11,Operacoes com Recebiveis,PJ,operacoes_recebiveis
+12,Comercio Exterior,PJ,comercio_exterior
+13,Financiamento Infraestrutura,PJ,financiamento_infraestrutura
+14,Habitacao PJ,PJ,habitacional

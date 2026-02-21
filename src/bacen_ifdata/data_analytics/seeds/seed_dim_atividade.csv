@@ -1,0 +1,11 @@
+id_atividade,nome_atividade,prefixo_coluna
+1,Agricultura,agricultura
+2,Industrias de Transformacao,industrias_transformacao
+3,Construcao,construcao
+4,Servicos Industriais,servicos_industriais
+5,Industrias Extrativas,industrias_extrativas
+6,Comercio,comercio
+7,Administracao Publica,administracao_publica
+8,Transporte,transporte
+9,Outros,outros
+10,Exterior,total_exterior

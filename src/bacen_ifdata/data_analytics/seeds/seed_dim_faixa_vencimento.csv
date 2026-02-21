@@ -1,0 +1,8 @@
+id_faixa,nome_faixa,ordem,sufixo_coluna
+1,Vencido acima de 15 dias,1,_vencido_a_partir_15_dias
+2,A vencer ate 90 dias,2,_a_vencer_ate_90_dias
+3,A vencer 91 a 360 dias,3,_a_vencer_91_a_360_dias
+4,A vencer 361 a 1080 dias,4,_a_vencer_361_a_1080_dias
+5,A vencer 1081 a 1800 dias,5,_a_vencer_1081_a_1800_dias
+6,A vencer 1801 a 5400 dias,6,_a_vencer_1801_a_5400_dias
+7,A vencer acima de 5400 dias,7,_a_vencer_acima_5400_dias

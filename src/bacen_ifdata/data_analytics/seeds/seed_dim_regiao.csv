@@ -1,0 +1,8 @@
+id_regiao,nome_regiao,coluna
+1,Sudeste,sudeste
+2,Centro-Oeste,centro_oeste
+3,Nordeste,nordeste
+4,Norte,norte
+5,Sul,sul
+6,Nao Informado,regiao_nao_informada
+7,Exterior,total_exterior

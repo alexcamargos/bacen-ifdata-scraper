@@ -1,0 +1,7 @@
+id_porte,nome_porte,coluna
+1,Micro,micro
+2,Pequena,pequena
+3,Media,media
+4,Grande,grande
+5,Indisponivel,indisponivel
+6,Exterior,total_exterior_pessoa_juridica
