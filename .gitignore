@@ -125,6 +125,8 @@ dbt_modules/
 dbt_packages/
 logs/
 
+!src/bacen_ifdata/data_analytics/**/*.sql
+
 # Custom files and directories to ignore
 # Add any additional files and directories you want to ignore in your project.
 
