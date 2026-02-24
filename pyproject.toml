@@ -1,6 +1,6 @@
 [project]
 name = "bacen-ifdata-scraper"
-version = "0.0.2"
+version = "0.0.3"
 description = "Um sistema ETL ponta a ponta para extrair, transformar e carregar relatórios financeiros do portal IF.data do Banco Central do Brasil."
 authors = [{ name = "Alexsander Lopes Camargos", email = "alcamargos@vivaldi.net" }]
 readme = "README.md"
