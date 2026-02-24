@@ -15,6 +15,8 @@ models:
         description: "Nome da instituição."
       - name: tipo_instituicao
         description: "Tipo da fonte de dados (Conglomerado Prudencial, Financeiro, etc)."
+      - name: tipo_relatorio_bcb
+        description: "Classificação padronizada para os 4 tipos oficiais de relatório do BCB IF.data."
       - name: id_segmento
         description: "Chave estrangeira para dim_segmento (Segmento Prudencial)."
         tests:
@@ -365,3 +367,213 @@ models:
               field: id_data
       - name: total_geral_valor
         description: "Valor total das operações (Primário + Interbancário) em milhares de USD."
+
+  - name: view_resumo_financeiro_relatorios
+    description: "Data Mart View unificando o Fato Resumo Financeiro com as Dimensões, facilitando o filtro por Tipo de Relatório BCB."
+    columns:
+      - name: id_instituicao
+        description: "Chave da instituição (FK para dim_instituicao)."
+      - name: id_data
+        description: "Chave da data (FK para dim_tempo)."
+      - name: nome_instituicao
+        description: "Nome da instituição."
+      - name: tipo_relatorio_bcb
+        description: "Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence."
+
+  - name: view_balanco_patrimonial_relatorios
+    description: "Data Mart View unificando o Fato Balanço Patrimonial (Ativos e Passivos) com as Dimensões, para o relatório completo do IF.data."
+    columns:
+      - name: id_instituicao
+        description: "Chave da instituição (FK para dim_instituicao)."
+      - name: id_data
+        description: "Chave da data (FK para dim_tempo)."
+      - name: nome_instituicao
+        description: "Nome da instituição."
+      - name: tipo_instituicao
+        description: "Classificação Original."
+      - name: nome_conglomerado
+        description: "Nome do conglomerado pertencente."
+      - name: tipo_relatorio_bcb
+        description: "Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence."
+      - name: segmento
+        description: "Segmento de atuação."
+      - name: cidade
+        description: "Cidade da sede."
+      - name: uf
+        description: "UF da sede."
+      - name: regiao
+        description: "Região da sede."
+      - name: tipo_de_controle
+        description: "Qual a natureza do controle acionário (Público, Privado Nacional, etc)."
+      - name: tcb
+        description: "Sigla do Tipo de Consolidado Bancário (ex: b1, b2, b3C, n4)."
+      - name: consolidado_bancario
+        description: "Descrição completa do Tipo de Consolidado Bancário."
+      - name: classe_instituicao
+        description: "Classe da instituição."
+      - name: data_base
+        description: "Ativo: (a) Disponibilidades"
+      - name: aplicacoes_interfinanceiras_liquidez
+        description: "Ativo: (b) Aplicações Interfinanceiras de Liquidez"
+      - name: tvm_derivativos
+        description: "Ativo: (c) TVM e Instrumentos Financeiros Derivativos"
+      - name: operacoes_de_credito
+        description: "Ativo: (d1) Operações de Crédito"
+      - name: provisao_operacoes_de_credito
+        description: "Ativo: (d2) Provisão sobre Operações de Crédito"
+      - name: operacoes_de_credito_liquidas_provisao
+        description: "Ativo: (d) Operações de Crédito Líquidas de Provisão"
+      - name: arrendamento_mercantil_a_receber
+        description: "Ativo: (e1) Arrendamento Mercantil a Receber"
+      - name: imobilizado_de_arrendamento
+        description: "Ativo: (e2) Imobilizado de Arrendamento"
+      - name: credores_antecipacao_valor_residual
+        description: "Ativo: (e3) / (j) Credores por Antecipação de Valor Residual"
+      - name: provisao_arrendamento_mercantil
+        description: "Ativo: (e4) Provisão sobre Arrendamento Mercantil"
+      - name: arrendamento_mercantil_liquido_de_provisao
+        description: "Ativo: (e) Arrendamento Mercantil Líquido de Provisão"
+      - name: outros_creditos_liquido_de_provisao
+        description: "Ativo: (f) Outros Créditos - Líquido de Provisão"
+      - name: outros_ativos_realizaveis
+        description: "Ativo: (g) Outros Ativos Realizáveis"
+      - name: permanente_ajustado
+        description: "Ativo: (h) Permanente Ajustado"
+      - name: ativo_total_ajustado
+        description: "Ativo: (i) Ativo Total Ajustado"
+      - name: ativo_total
+        description: "Ativo: (k) Ativo Total"
+      - name: depositos_vista
+        description: "Passivo: (a1) Depósitos à Vista"
+      - name: depositos_poupanca
+        description: "Passivo: (a2) Depósitos de Poupança"
+      - name: depositos_interfinanceiros
+        description: "Passivo: (a3) Depósitos Interfinanceiros"
+      - name: depositos_a_prazo
+        description: "Passivo: (a4) Depósitos a Prazo"
+      - name: conta_de_pagamento_pre_paga
+        description: "Passivo: (a5) Conta de Pagamento Pré-Paga"
+      - name: depositos_outros
+        description: "Passivo: (a6) Depósitos Outros"
+      - name: depositos
+        description: "Passivo: (a) Depósito Total"
+      - name: captacoes_mercado_aberto
+        description: "Passivo: (b) Obrigações por Operações Compromissadas"
+      - name: letras_de_credito_imobiliario
+        description: "Passivo: (c1) Letras de Crédito Imobiliário"
+      - name: letras_de_credito_agronegocio
+        description: "Passivo: (c2) Letras de Crédito do Agronegócio"
+      - name: letras_financeiras
+        description: "Passivo: (c3) Letras Financeiras"
+      - name: obrigacoes_titulos_e_valores_mobiliarios_exterior
+        description: "Passivo: (c4) Obrigações por Títulos e Valores Mobiliários no Exterior"
+      - name: outros_recursos_de_aceites_e_emissao_de_titulos
+        description: "Passivo: (c5) Outros Recursos de Aceites e Emissão de Títulos"
+      - name: recursos_aceites_cambiais
+        description: "Passivo: (c) Recursos de Aceites e Emissão de Títulos"
+      - name: obrigacoes_emprestimos_repasses
+        description: "Passivo: (d) Obrigações por Empréstimos e Repasses"
+      - name: captacoes
+        description: "Passivo: (e) Captações Totais"
+      - name: obrigacoes_por_instr_financeiros_derivativos
+        description: "Passivo: (f) Instrumentos Derivativos"
+      - name: outras_obrigacoes
+        description: "Passivo: (g) Outras Obrigações"
+      - name: passivo_circulante_exigivel_longo_prazo
+        description: "Passivo: (h) Passivo Circulante e Exigível a Longo Prazo"
+      - name: patrimonio_liquido
+        description: "Passivo: (i) Patrimônio Líquido"
+      - name: passivo_total
+        description: "Passivo: (j) Passivo Total"
+
+  - name: view_dre_relatorios
+    description: "Data Mart View unificando o Fato Demonstração de Resultados com as Dimensões."
+    columns:
+      - name: id_instituicao
+        description: "Chave da instituição (FK para dim_instituicao)."
+      - name: id_data
+        description: "Chave da data (FK para dim_tempo)."
+      - name: nome_instituicao
+        description: "Nome da instituição."
+      - name: tipo_instituicao
+        description: "Classificação Original."
+      - name: nome_conglomerado
+        description: "Nome do conglomerado pertencente."
+      - name: tipo_relatorio_bcb
+        description: "Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence."
+      - name: segmento
+        description: "Segmento de atuação."
+      - name: cidade
+        description: "Cidade da sede."
+      - name: uf
+        description: "UF da sede."
+      - name: regiao
+        description: "Região da sede."
+      - name: tipo_de_controle
+        description: "Qual a natureza do controle acionário (Público, Privado Nacional, etc)."
+      - name: tcb
+        description: "Sigla do Tipo de Consolidado Bancário (ex: b1, b2, b3C, n4)."
+      - name: consolidado_bancario
+        description: "Descrição completa do Tipo de Consolidado Bancário."
+      - name: classe_instituicao
+        description: "Classe da instituição."
+      - name: data_base
+        description: "Data-base de referência."
+      - name: receitas_intermediacao_financeira
+        description: "(a) Receitas de Intermediação Financeira"
+      - name: rendas_operacoes_de_credito
+        description: "(a1) Rendas de Operações de Crédito"
+      - name: rendas_operacoes_de_arrendamento_mercantil
+        description: "(a2) Rendas de Operações de Arrendamento Mercantil"
+      - name: rendas_operacoes_tvm
+        description: "(a3) Rendas de Operações com TVM"
+      - name: rendas_operacoes_instrumentos_financeiros_derivativos
+        description: "(a4) Rendas de Operações com Instrumentos Financeiros Derivativos"
+      - name: resultado_operacoes_cambio
+        description: "(a5/b4) Resultado de Operações de Câmbio"
+      - name: rendas_aplicacoes_compulsorias
+        description: "(a6) Rendas de Aplicações Compulsórias"
+      - name: despesas_intermediacao_financeira
+        description: "(b) Despesas de Intermediação Financeira"
+      - name: despesas_captacao
+        description: "(b1) Despesas de Captação"
+      - name: despesas_obrigacoes_emprestimos_repasses
+        description: "(b2) Despesas de Obrigações por Empréstimos e Repasses"
+      - name: despesas_operacoes_arrendamento_mercantil
+        description: "(b3) Despesas de Operações de Arrendamento Mercantil"
+      - name: resultado_provisao_creditos_dificil_liquidacao
+        description: "(b5) Resultado de Provisão para Créditos de Difícil Liquidação"
+      - name: resultado_intermediacao_financeira
+        description: "(c) Resultado de Intermediação Financeira"
+      - name: rendas_prestacao_servicos
+        description: "(d1) Rendas de Prestação de Serviços"
+      - name: rendas_tarifas_bancarias
+        description: "(d2) Rendas de Tarifas Bancárias"
+      - name: despesas_pessoal
+        description: "(d3) Despesas de Pessoal"
+      - name: despesas_administrativas
+        description: "(d4) Despesas Administrativas"
+      - name: despesas_tributarias
+        description: "(d5) Despesas Tributárias"
+      - name: resultado_participacoes
+        description: "(d6) Resultado de Participações"
+      - name: outras_receitas_operacionais
+        description: "(d7) Outras Receitas Operacionais"
+      - name: outras_despesas_operacionais
+        description: "(d8) Outras Despesas Operacionais"
+      - name: outras_receitas_despesas_operacionais
+        description: "(d) Outras Receitas/Despesas Operacionais"
+      - name: resultado_operacional
+        description: "(e) Resultado Operacional"
+      - name: resultado_nao_operacional
+        description: "(f) Resultado Não Operacional"
+      - name: resultado_antes_tributacao
+        description: "(g) Resultado antes da Tributação, Lucro e Participação"
+      - name: imposto_renda_contribuicao_social
+        description: "(h) Imposto de Renda e Contribuição Social"
+      - name: participacao_lucros
+        description: "(i) Participação nos Lucros"
+      - name: lucro_liquido
+        description: "(j) Lucro Líquido"
+      - name: juros_sobre_capital
+        description: "(k) Juros Sobre Capital Social/Próprio"
