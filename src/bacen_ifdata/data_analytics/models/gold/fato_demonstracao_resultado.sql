@@ -45,7 +45,7 @@ dre AS (
         dre.rendas_operacoes_de_arrendamento_mercantil,
         dre.rendas_operacoes_tvm,
         dre.rendas_operacoes_instrumentos_financeiros_derivativos,
-        dre.rendas_operacoes_cambio,
+        dre.rendas_operacoes_cambio as resultado_operacoes_cambio,
         dre.rendas_aplicacoes_compulsorias,
         -- Despesas
         dre.despesas_intermediacao_financeira,
@@ -71,12 +71,11 @@ dre AS (
         -- Resultado Nao Operacional
         dre.resultado_nao_operacional,
         -- Apuracao Final
-        dre.resultado_antes_tributacao_participacao as resultado_antes_tributacao,
+        dre.resultado_antes_tributacao_participacao as resultado_antes_tributacao_lucro_participacao,
         dre.imposto_renda_contribuicao_social,
         dre.participacao_lucros,
         dre.lucro_liquido,
-        NULL as juros_sobre_capital_social_cooperativas,
-        dre.juros_sobre_capital_proprio,
+        dre.juros_sobre_capital_proprio as juros_sobre_capital,
         (r.lucro_liquido / NULLIF(r.patrimonio_liquido, 0)) as roe,
         (r.lucro_liquido / NULLIF(r.ativo_total, 0)) as roa
     FROM {{ source('silver', 'prudential_conglomerates_income_statement') }} dre
@@ -96,7 +95,7 @@ dre AS (
         dre.rendas_operacoes_de_arrendamento_mercantil,
         dre.rendas_operacoes_tvm,
         dre.rendas_operacoes_instrumentos_financeiros_derivativos,
-        dre.resultado_operacoes_cambio as rendas_operacoes_cambio,
+        dre.resultado_operacoes_cambio,
         dre.rendas_aplicacoes_compulsorias,
         -- Despesas
         dre.despesas_intermediacao_financeira,
@@ -122,12 +121,11 @@ dre AS (
         -- Resultado Nao Operacional
         dre.resultado_nao_operacional,
         -- Apuracao Final
-        dre.resultado_antes_tributacao_lucro_participacao as resultado_antes_tributacao,
+        dre.resultado_antes_tributacao_lucro_participacao,
         dre.imposto_renda_contribuicao_social,
         dre.participacao_lucros,
         dre.lucro_liquido,
-        dre.juros_sobre_capital_social_cooperativas,
-        NULL as juros_sobre_capital_proprio,
+        dre.juros_sobre_capital_social_cooperativas as juros_sobre_capital,
         (r.lucro_liquido / NULLIF(r.patrimonio_liquido, 0)) as roe,
         (r.lucro_liquido / NULLIF(r.ativo_total, 0)) as roa
     FROM {{ source('silver', 'financial_conglomerates_income_statement') }} dre
@@ -147,7 +145,7 @@ dre AS (
         dre.rendas_operacoes_de_arrendamento_mercantil,
         dre.rendas_operacoes_tvm,
         dre.rendas_operacoes_instrumentos_financeiros_derivativos,
-        dre.resultado_operacoes_cambio as rendas_operacoes_cambio,
+        dre.resultado_operacoes_cambio,
         dre.rendas_aplicacoes_compulsorias,
         -- Despesas
         dre.despesas_intermediacao_financeira,
@@ -173,12 +171,11 @@ dre AS (
         -- Resultado Nao Operacional
         dre.resultado_nao_operacional,
         -- Apuracao Final
-        dre.resultado_antes_tributacao_lucro_participacao as resultado_antes_tributacao,
+        dre.resultado_antes_tributacao_lucro_participacao,
         dre.imposto_renda_contribuicao_social,
         dre.participacao_lucros,
         dre.lucro_liquido,
-        dre.juros_sobre_capital_social_cooperativas,
-        NULL as juros_sobre_capital_proprio,
+        dre.juros_sobre_capital_social_cooperativas as juros_sobre_capital,
         (r.lucro_liquido / NULLIF(r.patrimonio_liquido, 0)) as roe,
         (r.lucro_liquido / NULLIF(r.ativo_total, 0)) as roa
     FROM {{ source('silver', 'individual_institutions_income_statement') }} dre
@@ -188,14 +185,14 @@ dre AS (
 
 SELECT
     {{ generate_instituicao_id('codigo', 'tipo_instituicao') }} as id_instituicao,
-    strftime(try_cast(data_base as date), '%Y%m%d')::int as id_data,
+    {{ format_date_id('data_base') }} as id_data,
     -- Receitas
     receitas_intermediacao_financeira,
     rendas_operacoes_de_credito,
     rendas_operacoes_de_arrendamento_mercantil,
     rendas_operacoes_tvm,
     rendas_operacoes_instrumentos_financeiros_derivativos,
-    rendas_operacoes_cambio,
+    resultado_operacoes_cambio,
     rendas_aplicacoes_compulsorias,
     -- Despesas
     despesas_intermediacao_financeira,
@@ -219,10 +216,11 @@ SELECT
     -- Resultados
     resultado_operacional,
     resultado_nao_operacional,
-    resultado_antes_tributacao,
+    resultado_antes_tributacao_lucro_participacao as resultado_antes_tributacao,
     imposto_renda_contribuicao_social,
     participacao_lucros,
     lucro_liquido,
-    juros_sobre_capital_social_cooperativas,
-    juros_sobre_capital_proprio
+    juros_sobre_capital,
+    roe,
+    roa
 FROM dre
