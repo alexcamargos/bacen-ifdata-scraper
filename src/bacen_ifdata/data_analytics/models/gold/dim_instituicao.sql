@@ -239,6 +239,12 @@ final_with_id AS (
         codigo_origem,
         nome,
         tipo_instituicao,
+        CASE 
+            WHEN tipo_instituicao = 'Instituicao Individual' THEN 'Instituições Individuais'
+            WHEN tipo_instituicao IN ('Conglomerado Financeiro', 'Conglomerado Financeiro (SCR)') THEN 'Conglomerados Financeiros e Instituições Independentes'
+            WHEN tipo_instituicao = 'Conglomerado Prudencial' THEN 'Conglomerados Prudenciais e Instituições Independentes'
+            WHEN tipo_instituicao = 'Instituição de Câmbio' THEN 'Instituições com Operações de Câmbio'
+        END AS tipo_relatorio_bcb,
         md5(cast(lower(nullif(segmento, '')) as varchar)) as id_segmento,
         md5(cast(coalesce(cidade, '') || coalesce(uf, '') || coalesce(regiao, '') as varchar)) as id_localizacao,
         md5(cast(nullif(tipo_de_controle, '') as varchar)) as id_controle,
