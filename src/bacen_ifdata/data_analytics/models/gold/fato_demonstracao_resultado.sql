@@ -37,6 +37,7 @@ dre AS (
     -- Conglomerados Prudenciais
     SELECT
         dre.codigo,
+        dre.instituicao as nome_instituicao_historico,
         dre.data_base,
         'Conglomerado Prudencial' as tipo_instituicao,
         -- Receitas
@@ -87,6 +88,7 @@ dre AS (
     -- Conglomerados Financeiros
     SELECT
         dre.codigo,
+        dre.instituicao as nome_instituicao_historico,
         dre.data_base,
         'Conglomerado Financeiro' as tipo_instituicao,
         -- Receitas
@@ -137,6 +139,7 @@ dre AS (
     -- Instituições Individuais
     SELECT
         dre.codigo,
+        dre.instituicao as nome_instituicao_historico,
         dre.data_base,
         'Instituicao Individual' as tipo_instituicao,
         -- Receitas
@@ -186,6 +189,7 @@ dre AS (
 SELECT
     {{ generate_instituicao_id('codigo', 'tipo_instituicao') }} as id_instituicao,
     {{ format_date_id('data_base') }} as id_data,
+    nome_instituicao_historico,
     -- Receitas
     receitas_intermediacao_financeira,
     rendas_operacoes_de_credito,
