@@ -28,6 +28,9 @@ class MockTransformer:
     def apply_business_rules(self, df: DataFrame) -> DataFrame:
         return df
 
+    def deduplicate_dataset(self, df: DataFrame, schema=None) -> DataFrame:
+        return df
+
 
 # pylint: disable=too-few-public-methods
 class MockSchema:
