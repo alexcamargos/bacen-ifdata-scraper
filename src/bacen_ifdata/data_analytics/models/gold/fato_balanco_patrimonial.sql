@@ -3,6 +3,7 @@
 WITH prudential_sources AS (
     SELECT 
         COALESCE(a.codigo, l.codigo) as codigo,
+        a.instituicao as nome_instituicao_historico,
         COALESCE(a.data_base, l.data_base) as data_base,
         a.disponibilidades,
         a.aplicacoes_interfinanceiras_liquidez,
@@ -42,14 +43,15 @@ WITH prudential_sources AS (
         l."outras_obrigações" as outras_obrigacoes,
         l."passivo_circulante_exigível_a_longo_prazo" as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'prudential_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'prudential_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) l
+    FROM (SELECT * FROM {{ source('silver', 'prudential_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
+    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'prudential_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
 prudential AS (
     SELECT
         codigo,
+        nome_instituicao_historico,
         data_base,
         'Conglomerado Prudencial' as tipo_consolidado,
         -- Ativos
@@ -97,6 +99,7 @@ prudential AS (
 financial_sources AS (
     SELECT 
         COALESCE(a.codigo, l.codigo) as codigo,
+        a.instituicao as nome_instituicao_historico,
         COALESCE(a.data_base, l.data_base) as data_base,
         a.disponibilidades,
         a.aplicacoes_interfinanceiras_liquidez,
@@ -136,14 +139,15 @@ financial_sources AS (
         l.outras_obrigacoes,
         l.passivo_circulante_exigivel_a_longo_prazo as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'financial_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'financial_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) l
+    FROM (SELECT * FROM {{ source('silver', 'financial_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
+    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'financial_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
 financial AS (
     SELECT
         codigo,
+        nome_instituicao_historico,
         data_base,
         'Conglomerado Financeiro' as tipo_consolidado,
         -- Ativos
@@ -191,6 +195,7 @@ financial AS (
 individual_sources AS (
     SELECT 
         COALESCE(a.codigo, l.codigo) as codigo,
+        a.instituicao as nome_instituicao_historico,
         COALESCE(a.data_base, l.data_base) as data_base,
         a.disponibilidades,
         a.aplicacoes_interfinanceiras_liquidez,
@@ -230,14 +235,15 @@ individual_sources AS (
         l.outras_obrigacoes,
         l.passivo_circulante_exigivel_a_longo_prazo as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'individual_institutions_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'individual_institutions_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY codigo) = 1) l
+    FROM (SELECT * FROM {{ source('silver', 'individual_institutions_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
+    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'individual_institutions_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
 individual AS (
     SELECT
         codigo,
+        nome_instituicao_historico,
         data_base,
         'Instituicao Individual' as tipo_consolidado,
         -- Ativos
@@ -294,6 +300,7 @@ SELECT
     {{ generate_instituicao_id('codigo', 'tipo_consolidado') }} as id_instituicao,
     {{ format_date_id('data_base') }} as id_data,
     tipo_consolidado,
+    nome_instituicao_historico,
     
     -- Ativos
     disponibilidades,
