@@ -301,6 +301,6 @@ class TransformerController:
             data = self._create_region_column(data)
 
         # Apply deduplication as the final step to ensure clean data for Silver layer.
-        data = transformer.deduplicate_dataset(data, schema)
+        data = transformer.deduplicate_dataset(data)
 
         return data
