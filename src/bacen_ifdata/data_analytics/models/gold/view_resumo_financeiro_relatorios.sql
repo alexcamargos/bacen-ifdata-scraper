@@ -29,6 +29,7 @@ SELECT
     -- Instituição
     i.codigo_origem,
     i.nome as nome_instituicao,
+    f.nome_instituicao_historico,
     i.tipo_instituicao,
     i.nome_conglomerado,
     
