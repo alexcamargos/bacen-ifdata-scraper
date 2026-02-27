@@ -4,6 +4,7 @@ WITH dados_brutos AS (
     -- Conglomerados Prudenciais
     SELECT
         codigo,
+        instituicao as nome_instituicao_historico,
         data_base,
         'Conglomerado Prudencial' as tipo_instituicao,
         ativo_total,
@@ -23,6 +24,7 @@ WITH dados_brutos AS (
     -- Conglomerados Financeiros
     SELECT
         codigo,
+        instituicao as nome_instituicao_historico,
         data_base,
         'Conglomerado Financeiro' as tipo_instituicao,
         ativo_total,
@@ -42,6 +44,7 @@ WITH dados_brutos AS (
     -- Instituições Independentes
     SELECT
         codigo,
+        instituicao as nome_instituicao_historico,
         data_base,
         'Instituicao Individual' as tipo_instituicao,
         ativo_total,
@@ -62,6 +65,7 @@ SELECT
     {{ format_date_id('d.data_base') }} as id_data,  -- FK para dim_tempo
 
     -- Métricas
+    d.nome_instituicao_historico,
     d.ativo_total,
     d.carteira_credito,
     d.passivo_exigivel,
