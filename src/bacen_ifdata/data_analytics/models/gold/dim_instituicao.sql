@@ -6,6 +6,7 @@ WITH prudential AS (
         instituicao as nome,
         segmento_resolucao as segmento,
         'Conglomerado Prudencial' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -20,6 +21,7 @@ financial AS (
         instituicao as nome,
         segmento_resolucao as segmento,
         'Conglomerado Financeiro' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -34,6 +36,7 @@ individual AS (
         instituicao as nome,
         NULL as segmento,
         'Instituicao Individual' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -48,6 +51,7 @@ exchange AS (
         instituicao as nome,
         segmento_resolucao as segmento,
         'Instituição de Câmbio' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -64,6 +68,7 @@ portfolio_fallback AS (
         instituicao as nome,
         segmento_resolucao as segmento,
         'Conglomerado Financeiro (SCR)' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -81,6 +86,7 @@ portfolio_fallback_standard AS (
         instituicao as nome,
         segmento_resolucao as segmento,
         'Conglomerado Financeiro' as tipo_instituicao,
+        data_base,
         cidade, uf, regiao,
         tipo_de_controle,
         consolidado_bancario,
@@ -94,131 +100,131 @@ portfolio_fallback_standard AS (
 
 unificacao AS (
     -- Conglomerados Prudenciais - Resumo
-    SELECT codigo_origem, nome, segmento, tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM prudential
+    SELECT codigo_origem, nome, segmento, tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM prudential
     UNION
     -- Conglomerados Prudenciais - Ativo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_assets') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_assets') }}
     UNION
     -- Conglomerados Prudenciais - Passivo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_liabilities') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_liabilities') }}
     UNION
     -- Conglomerados Prudenciais - Demonstração de Resultado
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_income_statement') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_income_statement') }}
     UNION
     -- Conglomerados Prudenciais - Informações de Capital
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_capital_information') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_capital_information') }}
     UNION
     -- Conglomerados Prudenciais - Segmentação
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_segmentation') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Prudencial' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'prudential_conglomerates_segmentation') }}
 
     UNION
 
     -- Conglomerados Financeiros - Resumo
-    SELECT codigo_origem, nome, segmento, tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM financial
+    SELECT codigo_origem, nome, segmento, tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM financial
     UNION
     -- Conglomerados Financeiros - Ativo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_assets') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_assets') }}
     UNION
     -- Conglomerados Financeiros - Passivo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_liabilities') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_liabilities') }}
     UNION
     -- Conglomerados Financeiros - Demonstração de Resultado
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_income_statement') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_income_statement') }}
     UNION
     -- Conglomerados Financeiros - Informações de Capital
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_capital_information') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_capital_information') }}
 
     UNION
 
     -- SCR Portfolios (Financial Conglomerates) - Carteira PJ Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_individuals_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_individuals_type_maturity') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Carteira PJ Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_type_maturity') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Carteira PJ Atividade Econômica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_economic_activity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_economic_activity') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Carteira PJ Porte
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_business_size') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_business_size') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Nível de Risco
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_risk_level') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_risk_level') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Região Geográfica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_geographic_region') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_geographic_region') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Indexador
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_indexer') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_indexer') }}
     UNION
     -- SCR Portfolios (Financial Conglomerates) - Quantidade de Clientes
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_number_clients_operations') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_portfolio_number_clients_operations') }}
 
     UNION
 
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Carteira PF Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_individuals_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_individuals_type_maturity') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Carteira PJ Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_type_maturity') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Carteira PJ Atividade Econômica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_economic_activity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_economic_activity') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Carteira PJ Porte
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_business_size') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_business_size') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Nível de Risco
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_risk_level') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_risk_level') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Região Geográfica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_geographic_region') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_geographic_region') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Indexador
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_indexer') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_indexer') }}
     UNION
     -- SCR Portfolios Independent (Financial Conglomerates SCR) - Quantidade de Clientes
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_number_clients_operations') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro (SCR)' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, segmento as tipo_de_instituicao, NULL as nome_conglomerado FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_number_clients_operations') }}
 
     UNION
 
     -- Financial Conglomerates Portfolios (Standard) - Carteira PF Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_individuals_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_individuals_type_maturity') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Carteira PJ Modalidade e Prazo
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_type_maturity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_type_maturity') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Carteira PJ Atividade Econômica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_economic_activity') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_economic_activity') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Carteira PJ Porte
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_business_size') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_legal_person_business_size') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Nível de Risco
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_risk_level') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_risk_level') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Região Geográfica
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_geographic_region') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_geographic_region') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Indexador
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_indexer') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_indexer') }}
     UNION
     -- Financial Conglomerates Portfolios (Standard) - Quantidade de Clientes
-    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_number_clients_operations') }}
+    SELECT codigo as codigo_origem, instituicao as nome, segmento_resolucao as segmento, 'Conglomerado Financeiro' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, NULL, NULL FROM {{ source('silver', 'financial_conglomerates_portfolio_number_clients_operations') }}
 
     UNION
 
     -- Instituições Individuais - Resumo
-    SELECT codigo_origem, nome, segmento, tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM individual
+    SELECT codigo_origem, nome, segmento, tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, nome_conglomerado FROM individual
     UNION
     -- Instituições Individuais - Ativo
-    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_assets') }}
+    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_assets') }}
     UNION
     -- Instituições Individuais - Passivo
-    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_liabilities') }}
+    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_liabilities') }}
     UNION
     -- Instituições Individuais - Demonstração de Resultado
-    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_income_statement') }}
+    SELECT codigo as codigo_origem, instituicao as nome, NULL as segmento, 'Instituicao Individual' as tipo_instituicao, data_base, cidade, uf, regiao, tipo_de_controle, consolidado_bancario, tipo_de_instituicao, conglomerado FROM {{ source('silver', 'individual_institutions_income_statement') }}
 
     UNION
 
@@ -239,6 +245,9 @@ final_with_id AS (
         codigo_origem,
         nome,
         tipo_instituicao,
+        -- Não vamos expor o data_base na dimensão final (ela é uma SCD Tipo 1 lenta ou unificada),
+        -- ele servirá apenas no QUALIFY para ordenar.
+        data_base,
         CASE 
             WHEN tipo_instituicao = 'Instituicao Individual' THEN 'Instituições Individuais'
             WHEN tipo_instituicao IN ('Conglomerado Financeiro', 'Conglomerado Financeiro (SCR)') THEN 'Conglomerados Financeiros e Instituições Independentes'
@@ -254,5 +263,26 @@ final_with_id AS (
     FROM unificacao
 )
 
-SELECT * FROM final_with_id
-QUALIFY row_number() OVER (PARTITION BY id_instituicao ORDER BY nome DESC, codigo_origem DESC) = 1
+SELECT
+    id_instituicao,
+    codigo_origem,
+    nome,
+    tipo_instituicao,
+    tipo_relatorio_bcb,
+    id_segmento,
+    id_localizacao,
+    id_controle,
+    id_consolidado,
+    id_classe,
+    nome_conglomerado
+FROM final_with_id
+QUALIFY row_number() OVER (
+    PARTITION BY id_instituicao 
+    ORDER BY 
+        data_base DESC,
+        CASE WHEN id_consolidado IS NOT NULL THEN 1 ELSE 0 END DESC,
+        CASE WHEN id_segmento IS NOT NULL THEN 1 ELSE 0 END DESC,
+        CASE WHEN id_controle IS NOT NULL THEN 1 ELSE 0 END DESC,
+        nome DESC, 
+        codigo_origem DESC
+) = 1
