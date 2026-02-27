@@ -21,6 +21,3 @@ models:
     # Config keys by path
     gold:
       +materialized: table
-    silver:
-      +materialized: view
-      +schema: main
