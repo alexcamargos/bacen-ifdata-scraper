@@ -65,10 +65,8 @@ class BaseTransformer:
 
         return numeric_series.round().astype('Int64')
 
-    def apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
-        """Applies specific business rules to the DataFrame.
-
-        This method is intended to be overridden by subclasses to apply specific logic.
+    def _remove_exact_duplicates(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Removes exact duplicates (character by character replication).
 
         Args:
             data_frame (pd.DataFrame): The DataFrame to be processed.
@@ -77,7 +75,113 @@ class BaseTransformer:
             pd.DataFrame: The processed DataFrame.
         """
 
-        return data_frame
+        return data_frame.drop_duplicates(keep='first').copy()
+
+    def _get_identifier_columns(self, data_frame: pd.DataFrame) -> list[str]:
+        """Identifies columns that act as identifiers.
+
+        This method looks for common identifier columns based on the expected schema.
+
+        Args:
+            data_frame (pd.DataFrame): The DataFrame to be analyzed.
+
+        Returns:
+            list[str]: A list of column names that act as identifiers.
+        """
+
+        candidate_identifier_columns = [
+            'codigo',
+            'instituicao',
+            'data_base',
+            'tcb',
+            'segmento_resolucao',
+            'tipo_de_consolidacao',
+            'tipo_de_controle',
+            'cidade',
+            'uf',
+            'regiao',
+        ]
+        return [column for column in candidate_identifier_columns if column in data_frame.columns]
+
+    def _get_financial_columns(self, data_frame: pd.DataFrame, identifier_columns: list[str]) -> list[str]:
+        """Identifies columns that contain financial data.
+
+        This method assumes that financial columns are those that are not identified as ID columns.
+
+        Args:
+            data_frame (pd.DataFrame): The DataFrame to be analyzed.
+            identifier_columns (list[str]): The list of identifier columns.
+
+        Returns:
+            list[str]: A list of column names that contain financial data.
+        """
+
+        return [column for column in data_frame.columns if column not in identifier_columns]
+
+    def _remove_redundant_empty_rows(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Removes rows where all financial columns are NaN, but ONLY if there is
+        another valid row for the same institution on the same date.
+
+        This method identifies rows that are "empty of financial data" (i.e., all financial columns are NaN)
+        and checks if there are other rows with the same 'codigo' and 'data_base' that contain financial data.
+        If such rows exist, the empty row is considered redundant and is removed.
+
+        Args:
+            data_frame (pd.DataFrame): The DataFrame to be processed.
+        Returns:
+            pd.DataFrame: The processed DataFrame with redundant empty rows removed.
+        """
+
+        identifier_columns = self._get_identifier_columns(data_frame)
+
+        # We need at least 'codigo' and 'data_base' to determine redundancy.
+        if 'codigo' not in identifier_columns or 'data_base' not in identifier_columns:
+            return data_frame
+
+        financial_columns = self._get_financial_columns(data_frame, identifier_columns)
+
+        if not financial_columns:
+            return data_frame
+
+        # A row is "empty of financial data" if all financial columns are NA.
+        is_financial_empty = data_frame[financial_columns].isna().all(axis=1)
+
+        # If no empty rows, return early.
+        if not is_financial_empty.any():
+            return data_frame
+
+        # Work on a copy to avoid SettingWithCopy warnings.
+        df_processed = data_frame.copy()
+        df_processed['__is_financial_empty'] = is_financial_empty
+
+        # Count total rows per institution per date.
+        df_processed['__group_count'] = df_processed.groupby(['codigo', 'data_base'])['codigo'].transform('count')
+
+        # Drop rule: If financial data is empty AND group count > 1, drop it.
+        rows_to_remove_mask = df_processed['__is_financial_empty'] & (df_processed['__group_count'] > 1)
+
+        return df_processed[~rows_to_remove_mask].drop(columns=['__is_financial_empty', '__group_count'])
+
+    def deduplicate_dataset(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Removes exact duplicates and empty rows that have a populated counterpart.
+
+        Args:
+            data_frame (pd.DataFrame): The DataFrame to be deduplicated.
+
+        Returns:
+            pd.DataFrame: The deduplicated DataFrame.
+        """
+
+        if data_frame.empty:
+            return data_frame
+
+        # Remove exact duplicates first to ensure we are working with a clean dataset.
+        clean_df = self._remove_exact_duplicates(data_frame)
+
+        # Remove redundant empty rows based on the presence of valid rows for the same institution and date.
+        clean_df = self._remove_redundant_empty_rows(clean_df)
+
+        return clean_df
 
     def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
         """Transforms numeric columns in the DataFrame to a standard numeric format.
@@ -161,5 +265,19 @@ class BaseTransformer:
         for column in columns:
             if column in data_frame.columns:
                 data_frame[column] = data_frame[column].astype('string').str.strip()
+
+        return data_frame
+
+    def apply_business_rules(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Applies specific business rules to the DataFrame.
+
+        This method is intended to be overridden by subclasses to apply specific logic.
+
+        Args:
+            data_frame (pd.DataFrame): The DataFrame to be processed.
+
+        Returns:
+            pd.DataFrame: The processed DataFrame.
+        """
 
         return data_frame
