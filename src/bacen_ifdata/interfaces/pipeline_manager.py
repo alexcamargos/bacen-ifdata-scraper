@@ -35,16 +35,16 @@ class PipelineManagerProtocol(Protocol):
     must provide for orchestrating the data pipeline stages.
     """
 
-    def run_scraper(self) -> None:
+    def run_scraper(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the scraping stage of the pipeline."""
 
-    def run_cleaner(self) -> None:
+    def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the cleaning stage of the pipeline."""
 
-    def run_transformer(self) -> None:
+    def run_transformer(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the transformation stage of the pipeline."""
 
-    def run_loader(self) -> None:
+    def run_loader(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the loading stage of the pipeline."""
 
     def run_analytics(self) -> None:
