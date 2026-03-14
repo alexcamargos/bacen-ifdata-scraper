@@ -54,6 +54,16 @@ def get_arguments() -> argparse.Namespace:
     parser.add_argument(
         '-a', '--analytics', action='store_true', help='Run the analytics layer, create the gold layer (dbt).'
     )
+    parser.add_argument(
+        '-i',
+        '--institution',
+        type=str,
+        default=None,
+        help='Filter execution by institution name (e.g., PRUDENTIAL_CONGLOMERATES).',
+    )
+    parser.add_argument(
+        '-r', '--report', type=str, default=None, help='Filter execution by report name (e.g., SUMMARY).'
+    )
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument(
         '--no-cleanup',
@@ -75,7 +85,7 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
 
     # Mapping of arg names to their log message and runner method.
-    actions: dict[str, tuple[str, Callable[[], None]]] = {
+    actions: dict[str, tuple[str, Callable[..., None]]] = {
         'scraper': ('Running the scraper...', pipeline_manager.run_scraper),
         'cleaner': ('Running the cleaner...', pipeline_manager.run_cleaner),
         'transformer': ('Running the transformer...', pipeline_manager.run_transformer),
@@ -83,19 +93,29 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
         'analytics': ('Running the analytics...', pipeline_manager.run_analytics),
     }
 
+    # Extract filter args.
+    kwargs = {}
+    if getattr(args, 'institution', None):
+        kwargs['institution'] = args.institution
+    if getattr(args, 'report', None):
+        kwargs['report'] = args.report
+
     # Execute requested actions.
     action_executed = False
     for argument_name, (message, runner) in actions.items():
         if getattr(args, argument_name):
             logger.info(message)
-            runner()  # pylint: disable=not-callable
+            if argument_name == 'analytics':
+                runner()  # Analytics does not take filter kwargs.
+            else:
+                runner(**kwargs)  # pylint: disable=not-callable
             action_executed = True
 
     # If no specific action was requested, run the default pipeline.
     if not action_executed:
         logger.info('No specific action requested, running default pipeline (cleaner and transformer)...')
-        pipeline_manager.run_cleaner()
-        pipeline_manager.run_transformer()
+        pipeline_manager.run_cleaner(**kwargs)
+        pipeline_manager.run_transformer(**kwargs)
 
 
 if __name__ == '__main__':
