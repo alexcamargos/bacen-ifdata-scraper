@@ -16,6 +16,7 @@
 
 import os
 import subprocess
+from enum import StrEnum
 
 from loguru import logger
 
@@ -83,7 +84,43 @@ class PipelineManager:
         self._database_service.reset_database()
         self._database_service.close()
 
-    def run_scraper(self) -> None:
+    def _get_execution_targets(
+        self, institution_filter: str | None = None, report_filter: str | None = None
+    ) -> list[tuple[Institutions, StrEnum]]:
+        """Determine which institutions and reports to process based on filters.
+
+        Args:
+            institution_filter: Optional name of the institution Enum to filter by.
+            report_filter: Optional name of the report Enum to filter by.
+
+        Returns:
+            A list of tuples (Institution, Report) to process.
+        """
+
+        targets = []
+
+        # Find matching institution enum if filter provided
+        target_inst = None
+        if institution_filter:
+            try:
+                # Get the enum member by its name (e.g. 'PRUDENTIAL_CONGLOMERATES')
+                target_inst = Institutions[institution_filter.upper()]
+            except KeyError:
+                logger.warning(f"Institution filter '{institution_filter}' not found. Ignoring filter.")
+
+        for institution in Institutions:
+            if target_inst and institution != target_inst:
+                continue
+                
+            for report in REPORTS[institution]:
+                if report_filter and report.name.upper() != report_filter.upper():
+                    continue
+                    
+                targets.append((institution, report))
+
+        return targets
+
+    def run_scraper(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the scraper."""
 
         if self.pipeline.session is None:
@@ -94,17 +131,17 @@ class PipelineManager:
             data_base: list[str] = self.pipeline.session.get_data_bases()
 
             # Run the scraper...
-            for institution in Institutions:
-                for report in REPORTS[institution]:
-                    # Validate the report selection.
-                    cutoff_data_base = validate_report_selection(institution, report, data_base)
+            targets = self._get_execution_targets(institution, report)
+            for inst, rep in targets:
+                # Validate the report selection.
+                cutoff_data_base = validate_report_selection(inst, rep, data_base)
 
-                    for data in cutoff_data_base:
-                        # Download the reports.
-                        logger.info(
-                            f'Downloading report "{report.name}" from ' f'{institution.name} referring to "{data}"...'
-                        )
-                        self.pipeline.scraper(data, institution, report)
+                for data in cutoff_data_base:
+                    # Download the reports.
+                    logger.info(
+                        f'Downloading report "{rep.name}" from ' f'{inst.name} referring to "{data}"...'
+                    )
+                    self.pipeline.scraper(data, inst, rep)
         except IfDataScraperException as error:
             logger.exception(error.message)
 
@@ -119,32 +156,39 @@ class PipelineManager:
         # more content-less files remaining.
         self._clean_download_directory()
 
-    def run_cleaner(self) -> None:
+    def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the cleaner."""
 
         # Run the cleaner.
-        for process_institution in Institutions:
-            for process_report in REPORTS[process_institution]:
-                self.pipeline.cleaner(process_institution, process_report)
+        targets = self._get_execution_targets(institution, report)
+        for process_institution, process_report in targets:
+            self.pipeline.cleaner(process_institution, process_report)
 
-    def run_transformer(self) -> None:
+    def run_transformer(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the transformer."""
 
         # Run the transformer for all institutions.
-        for process_institution in Institutions:
-            for process_report in REPORTS[process_institution]:
-                self.pipeline.transformer(process_institution, process_report)
+        targets = self._get_execution_targets(institution, report)
+        for process_institution, process_report in targets:
+            self.pipeline.transformer(process_institution, process_report)
 
-    def run_loader(self) -> None:
+    def run_loader(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the loader."""
 
-        # Reset the database before loading to prevent data duplication.
-        self._reset_database()
+        targets = self._get_execution_targets(institution, report)
+        
+        # If no filters are provided, we can safely reset the whole database
+        if not institution and not report:
+            self._reset_database()
 
-        # Run the loader for all institutions.
-        for loaded_institution in Institutions:
-            for loaded_report in REPORTS[loaded_institution]:
-                self.pipeline.loader(loaded_institution, loaded_report)
+        # Run the loader.
+        for loaded_institution, loaded_report in targets:
+            # If a filter was applied, we only drop the specific tables we are reloading.
+            if institution or report:
+                table_name = f"{loaded_institution.name.lower()}_{loaded_report.name.lower()}"
+                self._database_service.drop_table(table_name)
+                
+            self.pipeline.loader(loaded_institution, loaded_report)
 
     def run_analytics(self) -> None:
         """Executes the analytics layer (dbt) to transform Bronze data into Gold (Star Schema).
