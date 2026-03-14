@@ -157,6 +157,20 @@ class DatabaseService:
             logger.error(f"Error resetting database: {error}")
             raise
 
+    def drop_table(self, table_name: str) -> None:
+        """Drop a specific table if it exists.
+
+        Args:
+            table_name (str): The name of the table to drop.
+        """
+
+        try:
+            self.connection.execute(f'DROP TABLE IF EXISTS "{table_name}";')
+            logger.info(f"Table '{table_name}' dropped specifically.")
+        except db.Error as error:
+            logger.error(f"Error dropping table '{table_name}': {error}")
+            raise
+
     def create_table(self, table_name: str, schema: BaseSchema) -> None:
         """Create a table in the database if it does not exist.
 
