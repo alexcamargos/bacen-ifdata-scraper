@@ -101,9 +101,23 @@ pj_mapped AS (
     WHERE p.tipo_pessoa IN ('PJ', 'Ambos')
 ),
 combined AS (
-    SELECT * FROM pf_mapped
+    SELECT
+        codigo,
+        data_base,
+        tipo_instituicao,
+        id_produto,
+        id_faixa,
+        valor
+    FROM pf_mapped
     UNION ALL
-    SELECT * FROM pj_mapped
+    SELECT
+        codigo,
+        data_base,
+        tipo_instituicao,
+        id_produto,
+        id_faixa,
+        valor
+    FROM pj_mapped
 )
 
 SELECT
