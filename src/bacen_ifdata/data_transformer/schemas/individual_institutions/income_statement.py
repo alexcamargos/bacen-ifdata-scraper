@@ -154,7 +154,7 @@ class IndividualInstitutionIncomeStatementSchema(BaseSchema):
         'rendas_operacoes_de_credito': {
             'description': 'Rendas de Operações de Crédito.',
             'type': 'numeric',
-            'raw_csv_header': 'Resultado de Intermediação Financeira - Rendas de Operações de Crédito (a1)',
+            'raw_csv_header': ['Resultado de Intermediação Financeira', 'Resultado de Intermediação Financeira - Rendas de Operações de Crédito (a1)'],
         },
         'rendas_operacoes_de_arrendamento_mercantil': {
             'description': 'Rendas de Operações de Arrendamento Mercantil.',
@@ -164,7 +164,10 @@ class IndividualInstitutionIncomeStatementSchema(BaseSchema):
         'rendas_operacoes_tvm': {
             'description': 'Rendas de Operações com Títulos e Valores Mobiliários.',
             'type': 'numeric',
-            'raw_csv_header': 'Resultado de Intermediação Financeira - Rendas de Operações com Títulos e Valores Mobiliários (a3)',
+            'raw_csv_header': [
+                'Resultado de Intermediação Financeira - Rendas de Operações com Títulos e Valores Mobiliários (a3)',
+                'Resultado de Intermediação Financeira - Rendas de Operações com TVM (a3)',
+            ],
         },
         'rendas_operacoes_instrumentos_financeiros_derivativos': {
             'description': 'Rendas de Operações com Instrumentos Financeiros Derivativos.',
@@ -232,7 +235,7 @@ class IndividualInstitutionIncomeStatementSchema(BaseSchema):
         'rendas_prestacao_servicos': {
             'description': 'Rendas de Prestação de Serviços.',
             'type': 'numeric',
-            'raw_csv_header': 'Outras Receitas/Despesas Operacionais - Rendas de Prestação de Serviços (d1)',
+            'raw_csv_header': ['Outras Receitas/Despesas Operacionais', 'Outras Receitas/Despesas Operacionais - Rendas de Prestação de Serviços (d1)'],
         },
         'rendas_tarifas_bancarias': {
             'description': 'Rendas de Tarifas Bancárias.',

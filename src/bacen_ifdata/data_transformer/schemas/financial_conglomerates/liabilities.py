@@ -136,7 +136,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'depositos_vista': {
             'description': 'Depósitos à Vista.',
             'type': 'numeric',
-            'raw_csv_header': 'Depósitos à Vista',
+            'raw_csv_header': ['Captações', 'Captações - Depósitos à Vista (a1)', 'Depósitos à Vista'],
         },
         'depositos_poupanca': {
             'description': 'Depósitos de Poupança.',
@@ -156,7 +156,7 @@ class FinancialConglomerateLiabilitiesSchema(BaseSchema):
         'conta_de_pagamento_pre_paga': {
             'description': 'Conta de Pagamento Pré-Paga.',
             'type': 'numeric',
-            'raw_csv_header': 'Captações - Conta de Pagamento Pré-Paga (a5)',
+            'raw_csv_header': ['Captações - Conta de Pagamento Pré-Paga (a5)', 'Captações - Conta de Pagamento Pré-Paga (a4)'],
         },
         'depositos_outros': {
             'description': (
