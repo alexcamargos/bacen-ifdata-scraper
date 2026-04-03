@@ -210,6 +210,9 @@ class PipelineManager:
         env = os.environ.copy()
         env['SILVER_DB_PATH'] = str(Cfg.SILVER_DATABASE_FILE)
         env['GOLD_DB_PATH'] = str(Cfg.GOLD_DATABASE_FILE)
+        # Ensure subprocess Python uses UTF-8 consistently on Windows.
+        env['PYTHONUTF8'] = '1'
+        env['PYTHONIOENCODING'] = 'utf-8'
 
         # Remove existing Gold database to ensure a clean slate for dbt transformations.
         if Cfg.GOLD_DATABASE_FILE.exists():
