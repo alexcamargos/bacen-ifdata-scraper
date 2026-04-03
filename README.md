@@ -122,6 +122,21 @@ source .venv/bin/activate
 uv sync
 ```
 
+Configure as variáveis de ambiente do projeto para permitir execução do dbt via pipeline e standalone:
+
+```bash
+# Crie o arquivo de variáveis a partir do exemplo
+cp .env.example .env
+```
+
+No Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Edite o arquivo `.env` se necessário para ajustar os caminhos locais dos bancos DuckDB.
+
 > **Observação:** Antes de iniciar o processo de captura, certifique-se de que o [GeckoDriver](https://github.com/mozilla/geckodriver/releases) (para Firefox) esteja devidamente instalado e configurado no `PATH` do seu sistema.
 
 ## Uso do Pipeline
@@ -168,6 +183,22 @@ Após a carga, a camada de analytics modela os dados em um Star Schema para Busi
 
 ```bash
 uv run ifdata.py -a
+```
+
+### dbt standalone com uv
+
+Também é possível executar apenas a camada analytics sem chamar o pipeline:
+
+```bash
+cd src/bacen_ifdata/data_analytics
+uv run --env-file ../../../.env dbt build
+```
+
+Execução seletiva de modelos e testes:
+
+```bash
+uv run --env-file ../../../.env dbt run -s view_resumo_financeiro_relatorios
+uv run --env-file ../../../.env dbt test -s view_resumo_financeiro_relatorios
 ```
 
 ### Execução Padrão
