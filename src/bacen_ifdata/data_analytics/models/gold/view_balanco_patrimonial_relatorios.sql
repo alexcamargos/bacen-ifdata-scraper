@@ -1,7 +1,48 @@
 {{ config(materialized='view') }}
 
 WITH fatos AS (
-    SELECT * FROM {{ ref('fato_balanco_patrimonial') }}
+    SELECT
+        id_instituicao,
+        id_data,
+        nome_instituicao_historico,
+        disponibilidades,
+        aplicacoes_interfinanceiras_liquidez,
+        tvm_derivativos,
+        operacoes_de_credito,
+        provisao_operacoes_de_credito,
+        operacoes_de_credito_liquidas_provisao,
+        arrendamento_mercantil_a_receber,
+        imobilizado_de_arrendamento,
+        credores_antecipacao_valor_residual,
+        provisao_arrendamento_mercantil,
+        arrendamento_mercantil_liquido_de_provisao,
+        outros_creditos_liquido_de_provisao,
+        outros_ativos_realizaveis,
+        permanente_ajustado,
+        ativo_total_ajustado,
+        ativo_total,
+        depositos_vista,
+        depositos_poupanca,
+        depositos_interfinanceiros,
+        depositos_a_prazo,
+        conta_de_pagamento_pre_paga,
+        depositos_outros,
+        depositos,
+        captacoes_mercado_aberto,
+        letras_de_credito_imobiliario,
+        letras_de_credito_agronegocio,
+        letras_financeiras,
+        obrigacoes_titulos_e_valores_mobiliarios_exterior,
+        outros_recursos_de_aceites_e_emissao_de_titulos,
+        recursos_aceites_cambiais,
+        obrigacoes_emprestimos_repasses,
+        captacoes,
+        obrigacoes_por_instr_financeiros_derivativos,
+        outras_obrigacoes,
+        passivo_circulante_exigivel_longo_prazo,
+        patrimonio_liquido,
+        passivo_total
+    FROM {{ ref('fato_balanco_patrimonial') }}
 ),
 dim_inst AS (
     SELECT
@@ -23,7 +64,10 @@ dim_inst AS (
     FROM {{ ref('int_instituicao_enriquecida') }}
 ),
 dim_tempo AS (
-    SELECT * FROM {{ ref('dim_tempo') }}
+    SELECT
+        id_data,
+        data
+    FROM {{ ref('dim_tempo') }}
 )
 
 SELECT
