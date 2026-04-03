@@ -118,6 +118,39 @@ models:
     - not_null
   - name: data
     description: Data completa.
+- name: int_instituicao_enriquecida
+  description: Modelo intermediário reutilizável com enriquecimento dimensional da
+    instituição para consumo dos data marts de relatório.
+  columns:
+  - name: id_instituicao
+    description: Chave única da instituição enriquecida.
+    tests:
+    - unique
+    - not_null
+  - name: codigo_origem
+    description: Código original da instituição no Bacen.
+  - name: nome_instituicao
+    description: Nome oficial da instituição na dimensão.
+  - name: tipo_relatorio_bcb
+    description: Tipo de relatório oficial do BCB associado à instituição.
+  - name: segmento
+    description: Código de segmento prudencial em formato padronizado.
+  - name: segmento_descricao
+    description: Descrição textual do segmento prudencial.
+  - name: cidade
+    description: Cidade da sede.
+  - name: uf
+    description: Unidade federativa da sede.
+  - name: regiao
+    description: Região geográfica da sede.
+  - name: tipo_de_controle
+    description: Descrição do tipo de controle acionário.
+  - name: tcb
+    description: Código do tipo de consolidado bancário.
+  - name: consolidado_bancario
+    description: Descrição do tipo de consolidado bancário.
+  - name: classe_instituicao
+    description: Classe detalhada da instituição.
 - name: fato_balanco_patrimonial
   description: Fato consolidada de Ativos e Passivos para todas as instituições.
   columns:
