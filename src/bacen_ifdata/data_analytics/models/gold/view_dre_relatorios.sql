@@ -1,7 +1,43 @@
 {{ config(materialized='view') }}
 
 WITH fatos AS (
-    SELECT * FROM {{ ref('fato_demonstracao_resultado') }}
+    SELECT
+        id_instituicao,
+        id_data,
+        nome_instituicao_historico,
+        rendas_operacoes_de_credito,
+        rendas_operacoes_de_arrendamento_mercantil,
+        rendas_operacoes_tvm,
+        rendas_operacoes_instrumentos_financeiros_derivativos,
+        resultado_operacoes_cambio,
+        rendas_aplicacoes_compulsorias,
+        receitas_intermediacao_financeira,
+        despesas_captacao,
+        despesas_obrigacoes_emprestimos_repasses,
+        despesas_operacoes_arrendamento_mercantil,
+        despesas_operacoes_cambio,
+        resultado_provisao_creditos_dificil_liquidacao,
+        despesas_intermediacao_financeira,
+        resultado_intermediacao_financeira,
+        rendas_prestacao_servicos,
+        rendas_tarifas_bancarias,
+        despesas_pessoal,
+        despesas_administrativas,
+        despesas_tributarias,
+        resultado_participacoes,
+        outras_receitas_operacionais,
+        outras_despesas_operacionais,
+        outras_receitas_despesas_operacionais,
+        resultado_operacional,
+        resultado_nao_operacional,
+        resultado_antes_tributacao,
+        imposto_renda_contribuicao_social,
+        participacao_lucros,
+        lucro_liquido,
+        juros_sobre_capital,
+        roe,
+        roa
+    FROM {{ ref('fato_demonstracao_resultado') }}
 ),
 dim_inst AS (
     SELECT
@@ -23,7 +59,10 @@ dim_inst AS (
     FROM {{ ref('int_instituicao_enriquecida') }}
 ),
 dim_tempo AS (
-    SELECT * FROM {{ ref('dim_tempo') }}
+    SELECT
+        id_data,
+        data
+    FROM {{ ref('dim_tempo') }}
 )
 
 SELECT
