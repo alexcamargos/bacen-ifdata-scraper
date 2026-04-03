@@ -1,7 +1,21 @@
 {{ config(materialized='view') }}
 
 WITH fatos AS (
-    SELECT * FROM {{ ref('fato_resumo_financeiro') }}
+    SELECT
+        id_instituicao,
+        id_data,
+        nome_instituicao_historico,
+        ativo_total,
+        carteira_credito,
+        passivo_exigivel,
+        captacoes,
+        patrimonio_liquido,
+        lucro_liquido,
+        quantidade_agencias,
+        quantidade_postos_atendimento,
+        roe,
+        roa
+    FROM {{ ref('fato_resumo_financeiro') }}
 ),
 dim_inst AS (
     SELECT
@@ -22,7 +36,10 @@ dim_inst AS (
     FROM {{ ref('int_instituicao_enriquecida') }}
 ),
 dim_tempo AS (
-    SELECT * FROM {{ ref('dim_tempo') }}
+    SELECT
+        id_data,
+        data
+    FROM {{ ref('dim_tempo') }}
 )
 
 SELECT
