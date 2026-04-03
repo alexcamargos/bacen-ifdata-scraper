@@ -17,7 +17,9 @@
 import os
 import subprocess
 from enum import StrEnum
+from pathlib import Path
 
+from dotenv import load_dotenv
 from loguru import logger
 
 from bacen_ifdata import Pipeline
@@ -111,11 +113,11 @@ class PipelineManager:
         for institution in Institutions:
             if target_inst and institution != target_inst:
                 continue
-                
+
             for report in REPORTS[institution]:
                 if report_filter and report.name.upper() != report_filter.upper():
                     continue
-                    
+
                 targets.append((institution, report))
 
         return targets
@@ -138,9 +140,7 @@ class PipelineManager:
 
                 for data in cutoff_data_base:
                     # Download the reports.
-                    logger.info(
-                        f'Downloading report "{rep.name}" from ' f'{inst.name} referring to "{data}"...'
-                    )
+                    logger.info(f'Downloading report "{rep.name}" from ' f'{inst.name} referring to "{data}"...')
                     self.pipeline.scraper(data, inst, rep)
         except IfDataScraperException as error:
             logger.exception(error.message)
@@ -176,7 +176,7 @@ class PipelineManager:
         """Main function for executing the loader."""
 
         targets = self._get_execution_targets(institution, report)
-        
+
         # If no filters are provided, we can safely reset the whole database
         if not institution and not report:
             self._reset_database()
@@ -187,7 +187,7 @@ class PipelineManager:
             if institution or report:
                 table_name = f"{loaded_institution.name.lower()}_{loaded_report.name.lower()}"
                 self._database_service.drop_table(table_name)
-                
+
             self.pipeline.loader(loaded_institution, loaded_report)
 
     def run_analytics(self) -> None:
@@ -206,18 +206,39 @@ class PipelineManager:
             logger.error(f'Analytics directory not found: {dbt_project_directory}')
             raise FileNotFoundError(f'dbt project directory not found: {dbt_project_directory}')
 
+        # Load .env files so dbt can run both from pipeline and standalone.
+        project_env_file = Cfg.BASE_DIRECTORY / '.env'
+        analytics_env_file = dbt_project_directory / '.env'
+
+        # Load environment variables from both .env files,
+        # with the analytics .env taking precedence if there are conflicts.
+        load_dotenv(project_env_file, override=False)
+        load_dotenv(analytics_env_file, override=False)
+
         # Set environment variables for dbt
+        # Prioritize values from .env if available, otherwise use defaults from Cfg.
+        silver_db_path = os.getenv('SILVER_DB_PATH') or str(Cfg.SILVER_DATABASE_FILE)
+        gold_db_path = os.getenv('GOLD_DB_PATH') or str(Cfg.GOLD_DATABASE_FILE)
+
+        # Prepare the environment variables for the subprocess call to dbt.
         env = os.environ.copy()
-        env['SILVER_DB_PATH'] = str(Cfg.SILVER_DATABASE_FILE)
-        env['GOLD_DB_PATH'] = str(Cfg.GOLD_DATABASE_FILE)
-        # Ensure subprocess Python uses UTF-8 consistently on Windows.
-        env['PYTHONUTF8'] = '1'
-        env['PYTHONIOENCODING'] = 'utf-8'
+        env.update(
+            {
+                'SILVER_DB_PATH': silver_db_path,
+                'GOLD_DB_PATH': gold_db_path,
+                # Ensure subprocess Python uses UTF-8 consistently on Windows.
+                'PYTHONUTF8': '1',
+                'PYTHONIOENCODING': 'utf-8',
+            }
+        )
 
         # Remove existing Gold database to ensure a clean slate for dbt transformations.
-        if Cfg.GOLD_DATABASE_FILE.exists():
-            Cfg.GOLD_DATABASE_FILE.unlink()
-            logger.info(f"Existing Gold database removed: {Cfg.GOLD_DATABASE_FILE}")
+        # We use gold_db_path (which may have been overridden by .env) instead of Cfg.GOLD_DATABASE_FILE
+        # to ensure consistency between the manager and the dbt model output.
+        gold_db_file = Path(gold_db_path)
+        if gold_db_file.exists():
+            gold_db_file.unlink()
+            logger.info(f'Existing Gold database removed: {gold_db_file}')
 
         try:
             # Execute dbt build (runs models and tests)
