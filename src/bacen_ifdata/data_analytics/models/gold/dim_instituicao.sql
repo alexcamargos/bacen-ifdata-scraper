@@ -229,13 +229,25 @@ unificacao AS (
     UNION
 
     -- Câmbio
-    SELECT * FROM exchange
+    SELECT
+        codigo_origem, nome, segmento, tipo_instituicao, data_base,
+        cidade, uf, regiao, tipo_de_controle, consolidado_bancario,
+        tipo_de_instituicao, nome_conglomerado
+    FROM exchange
     UNION
     -- Fallback SCR
-    SELECT * FROM portfolio_fallback
+    SELECT
+        codigo_origem, nome, segmento, tipo_instituicao, data_base,
+        cidade, uf, regiao, tipo_de_controle, consolidado_bancario,
+        tipo_de_instituicao, nome_conglomerado
+    FROM portfolio_fallback
     UNION
     -- Fallback Standard
-    SELECT * FROM portfolio_fallback_standard
+    SELECT
+        codigo_origem, nome, segmento, tipo_instituicao, data_base,
+        cidade, uf, regiao, tipo_de_controle, consolidado_bancario,
+        tipo_de_instituicao, nome_conglomerado
+    FROM portfolio_fallback_standard
 )
 ,
 
