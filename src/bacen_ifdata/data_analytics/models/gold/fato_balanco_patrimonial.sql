@@ -43,8 +43,57 @@ WITH prudential_sources AS (
         l."outras_obrigações" as outras_obrigacoes,
         l."passivo_circulante_exigível_a_longo_prazo" as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'prudential_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'prudential_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
+    FROM (
+        SELECT
+            codigo,
+            instituicao,
+            data_base,
+            disponibilidades,
+            aplicacoes_interfinanceiras_liquidez,
+            tvm_e_instrumentos_financeiros_derivativos,
+            operacoes_de_credito,
+            provisao_operacoes_de_credito,
+            operacoes_de_credito_liquidas_provisao,
+            arrendamento_mercantil_a_receber,
+            imobilizado_de_arrendamento,
+            credores_antecipacao_valor_residual,
+            provisao_arrendamento_mercantil,
+            arrendamento_mercantil_liquido_de_provisao,
+            outros_creditos_liquido_de_provisao,
+            outros_ativos_realizaveis,
+            permanente_ajustado,
+            ativo_total_ajustado,
+            ativo_total
+        FROM {{ source('silver', 'prudential_conglomerates_assets') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1
+    ) a
+    FULL OUTER JOIN (
+        SELECT
+            codigo,
+            data_base,
+            depositos_vista,
+            depositos_poupanca,
+            depositos_interfinanceiros,
+            depositos_a_prazo,
+            conta_de_pagamento_pre_paga,
+            depositos_outros,
+            deposito_total,
+            "obrigações_operações_compromissadas",
+            letras_de_credito_imobiliario,
+            letras_de_credito_agronegocio,
+            letras_financeiras,
+            obrigacoes_titulos_e_valores_mobiliarios_exterior,
+            outros_recursos_de_aceites_e_emissao_de_titulos,
+            recursos_de_aceites_e_emissao_de_titulos,
+            obrigacoes_emprestimos_e_repasses,
+            captacoes,
+            instrumentos_derivativos,
+            "outras_obrigações",
+            "passivo_circulante_exigível_a_longo_prazo",
+            patrimonio_liquido
+        FROM {{ source('silver', 'prudential_conglomerates_liabilities') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1
+    ) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
@@ -139,8 +188,57 @@ financial_sources AS (
         l.outras_obrigacoes,
         l.passivo_circulante_exigivel_a_longo_prazo as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'financial_conglomerates_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'financial_conglomerates_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
+    FROM (
+        SELECT
+            codigo,
+            instituicao,
+            data_base,
+            disponibilidades,
+            aplicacoes_interfinanceiras_liquidez,
+            tvm_e_instrumentos_financeiros_derivativos,
+            operacoes_de_credito,
+            provisao_operacoes_de_credito,
+            operacoes_de_credito_liquidas_provisao,
+            arrendamento_mercantil_a_receber,
+            imobilizado_de_arrendamento,
+            credores_antecipacao_valor_residual,
+            provisao_arrendamento_mercantil,
+            arrendamento_mercantil_liquido_de_provisao,
+            outros_creditos_liquido_de_provisao,
+            outros_ativos_realizaveis,
+            permanente_ajustado,
+            ativo_total_ajustado,
+            ativo_total
+        FROM {{ source('silver', 'financial_conglomerates_assets') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1
+    ) a
+    FULL OUTER JOIN (
+        SELECT
+            codigo,
+            data_base,
+            depositos_vista,
+            depositos_poupanca,
+            depositos_interfinanceiros,
+            depositos_a_prazo,
+            conta_de_pagamento_pre_paga,
+            depositos_outros,
+            deposito_total,
+            obrigacoes_operacoes_compromissadas,
+            letras_de_credito_imobiliario,
+            letras_de_credito_agronegocio,
+            letras_financeiras,
+            obrigacoes_titulos_e_valores_mobiliarios_exterior,
+            outros_recursos_de_aceites_e_emissao_de_titulos,
+            recursos_de_aceites_e_emissao_de_titulos,
+            obrigacoes_emprestimos_e_repasses,
+            captacoes,
+            instrumentos_derivativos,
+            outras_obrigacoes,
+            passivo_circulante_exigivel_a_longo_prazo,
+            patrimonio_liquido
+        FROM {{ source('silver', 'financial_conglomerates_liabilities') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1
+    ) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
@@ -235,8 +333,57 @@ individual_sources AS (
         l.outras_obrigacoes,
         l.passivo_circulante_exigivel_a_longo_prazo as passivo_circulante_exigivel_longo_prazo,
         l.patrimonio_liquido
-    FROM (SELECT * FROM {{ source('silver', 'individual_institutions_assets') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1) a
-    FULL OUTER JOIN (SELECT * FROM {{ source('silver', 'individual_institutions_liabilities') }} QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1) l
+    FROM (
+        SELECT
+            codigo,
+            instituicao,
+            data_base,
+            disponibilidades,
+            aplicacoes_interfinanceiras_liquidez,
+            tvm_e_instrumentos_financeiros_derivativos,
+            operacoes_de_credito,
+            provisao_operacoes_de_credito,
+            operacoes_de_credito_liquidas_provisao,
+            arrendamento_mercantil_a_receber,
+            imobilizado_de_arrendamento,
+            credores_antecipacao_valor_residual,
+            provisao_arrendamento_mercantil,
+            arrendamento_mercantil_liquido_de_provisao,
+            outros_creditos_liquido_de_provisao,
+            outros_ativos_realizaveis,
+            permanente_ajustado,
+            ativo_total_ajustado,
+            ativo_total
+        FROM {{ source('silver', 'individual_institutions_assets') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY ativo_total DESC NULLS LAST, codigo) = 1
+    ) a
+    FULL OUTER JOIN (
+        SELECT
+            codigo,
+            data_base,
+            depositos_vista,
+            depositos_poupanca,
+            depositos_interfinanceiros,
+            depositos_a_prazo,
+            conta_de_pagamento_pre_paga,
+            depositos_outros,
+            deposito_total,
+            obrigacoes_operacoes_compromissadas,
+            letras_de_credito_imobiliario,
+            letras_de_credito_agronegocio,
+            letras_financeiras,
+            obrigacoes_titulos_e_valores_mobiliarios_exterior,
+            outros_recursos_de_aceites_e_emissao_de_titulos,
+            recursos_de_aceites_e_emissao_de_titulos,
+            obrigacoes_emprestimos_e_repasses,
+            captacoes,
+            instrumentos_derivativos,
+            outras_obrigacoes,
+            passivo_circulante_exigivel_a_longo_prazo,
+            patrimonio_liquido
+        FROM {{ source('silver', 'individual_institutions_liabilities') }}
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY codigo, data_base ORDER BY deposito_total DESC NULLS LAST, codigo) = 1
+    ) l
       ON a.codigo = l.codigo AND a.data_base = l.data_base
 ),
 
@@ -289,11 +436,137 @@ individual AS (
 ),
 
 unificacao AS (
-    SELECT * FROM prudential
+    SELECT
+        codigo,
+        nome_instituicao_historico,
+        data_base,
+        tipo_consolidado,
+        disponibilidades,
+        aplicacoes_interfinanceiras_liquidez,
+        tvm_derivativos,
+        operacoes_de_credito,
+        provisao_operacoes_de_credito,
+        operacoes_de_credito_liquidas_provisao,
+        arrendamento_mercantil_a_receber,
+        imobilizado_de_arrendamento,
+        credores_antecipacao_valor_residual,
+        provisao_arrendamento_mercantil,
+        arrendamento_mercantil_liquido_de_provisao,
+        outros_creditos_liquido_de_provisao,
+        outros_ativos_realizaveis,
+        permanente_ajustado,
+        ativo_total_ajustado,
+        ativo_total,
+        depositos_vista,
+        depositos_poupanca,
+        depositos_interfinanceiros,
+        depositos_a_prazo,
+        conta_de_pagamento_pre_paga,
+        depositos_outros,
+        depositos,
+        captacoes_mercado_aberto,
+        letras_de_credito_imobiliario,
+        letras_de_credito_agronegocio,
+        letras_financeiras,
+        obrigacoes_titulos_e_valores_mobiliarios_exterior,
+        outros_recursos_de_aceites_e_emissao_de_titulos,
+        recursos_aceites_cambiais,
+        obrigacoes_emprestimos_repasses,
+        captacoes,
+        obrigacoes_por_instr_financeiros_derivativos,
+        outras_obrigacoes,
+        passivo_circulante_exigivel_longo_prazo,
+        patrimonio_liquido,
+        passivo_total
+    FROM prudential
     UNION ALL
-    SELECT * FROM financial
+    SELECT
+        codigo,
+        nome_instituicao_historico,
+        data_base,
+        tipo_consolidado,
+        disponibilidades,
+        aplicacoes_interfinanceiras_liquidez,
+        tvm_derivativos,
+        operacoes_de_credito,
+        provisao_operacoes_de_credito,
+        operacoes_de_credito_liquidas_provisao,
+        arrendamento_mercantil_a_receber,
+        imobilizado_de_arrendamento,
+        credores_antecipacao_valor_residual,
+        provisao_arrendamento_mercantil,
+        arrendamento_mercantil_liquido_de_provisao,
+        outros_creditos_liquido_de_provisao,
+        outros_ativos_realizaveis,
+        permanente_ajustado,
+        ativo_total_ajustado,
+        ativo_total,
+        depositos_vista,
+        depositos_poupanca,
+        depositos_interfinanceiros,
+        depositos_a_prazo,
+        conta_de_pagamento_pre_paga,
+        depositos_outros,
+        depositos,
+        captacoes_mercado_aberto,
+        letras_de_credito_imobiliario,
+        letras_de_credito_agronegocio,
+        letras_financeiras,
+        obrigacoes_titulos_e_valores_mobiliarios_exterior,
+        outros_recursos_de_aceites_e_emissao_de_titulos,
+        recursos_aceites_cambiais,
+        obrigacoes_emprestimos_repasses,
+        captacoes,
+        obrigacoes_por_instr_financeiros_derivativos,
+        outras_obrigacoes,
+        passivo_circulante_exigivel_longo_prazo,
+        patrimonio_liquido,
+        passivo_total
+    FROM financial
     UNION ALL
-    SELECT * FROM individual
+    SELECT
+        codigo,
+        nome_instituicao_historico,
+        data_base,
+        tipo_consolidado,
+        disponibilidades,
+        aplicacoes_interfinanceiras_liquidez,
+        tvm_derivativos,
+        operacoes_de_credito,
+        provisao_operacoes_de_credito,
+        operacoes_de_credito_liquidas_provisao,
+        arrendamento_mercantil_a_receber,
+        imobilizado_de_arrendamento,
+        credores_antecipacao_valor_residual,
+        provisao_arrendamento_mercantil,
+        arrendamento_mercantil_liquido_de_provisao,
+        outros_creditos_liquido_de_provisao,
+        outros_ativos_realizaveis,
+        permanente_ajustado,
+        ativo_total_ajustado,
+        ativo_total,
+        depositos_vista,
+        depositos_poupanca,
+        depositos_interfinanceiros,
+        depositos_a_prazo,
+        conta_de_pagamento_pre_paga,
+        depositos_outros,
+        depositos,
+        captacoes_mercado_aberto,
+        letras_de_credito_imobiliario,
+        letras_de_credito_agronegocio,
+        letras_financeiras,
+        obrigacoes_titulos_e_valores_mobiliarios_exterior,
+        outros_recursos_de_aceites_e_emissao_de_titulos,
+        recursos_aceites_cambiais,
+        obrigacoes_emprestimos_repasses,
+        captacoes,
+        obrigacoes_por_instr_financeiros_derivativos,
+        outras_obrigacoes,
+        passivo_circulante_exigivel_longo_prazo,
+        patrimonio_liquido,
+        passivo_total
+    FROM individual
 )
 
 SELECT
