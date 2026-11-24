@@ -160,10 +160,16 @@ def _inventory() -> dict[InputKey, RawInput]:
                     )
                     if metadata['sha256'] != checksum:
                         raise ValueError(f'Raw checksum mismatch: {path}')
-                    source_url = metadata['source_url']
-                    collected_at = datetime.fromisoformat(
-                        metadata['collected_at'],
-                    )
+                    if metadata.get('source_type') == 'local_csv':
+                        source = Config.DOWNLOAD_DIRECTORY
+                        source_url = (
+                            source / metadata['source_path']
+                        ).resolve().as_uri()
+                    else:
+                        source_url = metadata['source_url']
+                        collected_at = datetime.fromisoformat(
+                            metadata['collected_at'],
+                        )
                 entry = RawInput(
                     institution, report, date.fromisoformat(f'{month}-01'),
                     path, checksum, source_url, collected_at,
