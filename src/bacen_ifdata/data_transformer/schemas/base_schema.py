@@ -26,7 +26,9 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from collections.abc import Iterable
 from functools import cached_property
+from pathlib import Path
 from typing import Any
 
 
@@ -73,6 +75,51 @@ class BaseSchema:
         """Return column names expected in the input CSV (excluding calculated columns)."""
 
         return [column for column in self.column_names if column not in self.CALCULATED_COLUMNS]
+
+    @cached_property
+    def required_input_columns(self) -> tuple[str, ...]:
+        """Return the input columns marked as required in this report.
+
+        Args:
+            None.
+
+        Returns:
+            Required input column names in schema order.
+
+        Raises:
+            KeyError: A declared input column has no field definition.
+        """
+        return tuple(
+            column for column in self.input_column_names
+            if self.SCHEMA_DEFINITION[column].get('required', False)
+        )
+
+    def validate_required_columns(
+        self, columns: Iterable[str], source: Path
+    ) -> None:
+        """Check that the input contains each required column exactly once.
+
+        Args:
+            columns: Canonical CSV column names, after any header mapping.
+            source: CSV path to include in validation errors.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: A required column is missing or repeated.
+        """
+        header = tuple(columns)
+        for column in self.required_input_columns:
+            count = header.count(column)
+            if count == 0:
+                raise ValueError(
+                    f'{source}: missing required column {column!r}.'
+                )
+            if count > 1:
+                raise ValueError(
+                    f'{source}: duplicate required column {column!r}.'
+                )
 
     @cached_property
     def numeric_columns(self) -> list[str]:
