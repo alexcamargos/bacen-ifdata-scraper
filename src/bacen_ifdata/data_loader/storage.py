@@ -97,10 +97,11 @@ class DatabaseService:
 
         columns_str = ", ".join(columns_struct)
         column_names_str = ", ".join([f'"{col}"' for col in columns])
+        csv_literal = csv_path.as_posix().replace("'", "''")
 
         return (
             f"INSERT INTO {table_name} ({column_names_str}) SELECT * FROM read_csv("
-            f"'{csv_path.as_posix()}', "
+            f"'{csv_literal}', "
             f"header=True, "
             f"delim=',', "
             f"quote='\"', "
