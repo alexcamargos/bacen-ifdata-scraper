@@ -1,13 +1,38 @@
+"""Export the financial summary of the selected IF.data release.
+
+Args:
+    None.
+
+Returns:
+    None.
+
+Raises:
+    None.
+"""
+
 import duckdb
 import pandas as pd
 
-def main():
+from bacen_ifdata.utilities.releases import warehouse_path
+
+
+def main() -> None:
     """
     Exporta dados de Resumo Financeiro no schema Gold para Parquet.
     Normaliza o nome da instituição para a versão mais recente e
     adiciona uma flag de descontinuidade (is_descontinuada).
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        duckdb.Error: A consulta ou a abertura do banco falhou.
+        OSError: A versão publicada ou o arquivo de destino está inacessível.
     """
-    con = duckdb.connect("data/gold_warehouse.duckdb")
+    con = duckdb.connect(str(warehouse_path('gold')), read_only=True)
 
     query = """
     WITH base AS (

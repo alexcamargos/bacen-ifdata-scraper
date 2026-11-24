@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import sys
 import tempfile
 from pathlib import Path
 from typing import Dict
@@ -10,13 +9,8 @@ from typing import Dict
 import duckdb
 from loguru import logger
 
-# pylint: disable=wrong-import-position
-# Add the project root to the sys.path to allow absolute imports
-project_root = Path(__file__).resolve().parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
-from src.bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.utilities.configurations import Config as Cfg
+from bacen_ifdata.utilities.releases import current_release
 
 
 def get_bronze_row_counts() -> Dict[str, int]:
@@ -62,21 +56,36 @@ def get_bronze_row_counts() -> Dict[str, int]:
     return counts
 
 
-def check_bronze_silver_integrity(silver_db_connection: duckdb.DuckDBPyConnection) -> bool:
+def check_bronze_silver_integrity(
+    silver_db_connection: duckdb.DuckDBPyConnection,
+    *,
+    use_ledger: bool = False,
+) -> bool:
     """Compares Bronze CSV row counts with Silver DuckDB table row counts.
 
     Logs results and returns True if all counts match, False otherwise.
 
     Args:
         silver_db_connection (duckdb.DuckDBPyConnection): Connection to the Silver DuckDB database.
+        use_ledger: Read expected counts from the published Silver ledger.
 
     Returns:
         bool: True if all counts match, False otherwise.
+
+    Raises:
+        duckdb.Error: The published ledger or a Silver table is unreadable.
     """
 
     logger.info(" Starting Bronze vs Silver Integrity Check ")
 
-    bronze_counts = get_bronze_row_counts()
+    if use_ledger:
+        bronze_counts = dict(silver_db_connection.execute("""
+            SELECT institution || '_' || report, SUM(row_count)
+            FROM ifdata_control.applied_inputs
+            GROUP BY institution, report
+        """).fetchall())
+    else:
+        bronze_counts = get_bronze_row_counts()
 
     # Get Silver tables
     silver_tables = silver_db_connection.execute("SHOW TABLES").fetchall()
@@ -410,8 +419,19 @@ def generate_institution_report(
             logger.error(f"Report type '{report_type}' not implemented yet.")
 
 
-def main():
-    """Main function to run the audit checks and optionally generate a report."""
+def main() -> None:
+    """Run audit checks and optionally generate an institutional report.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        duckdb.Error: The selected warehouses cannot be queried.
+        OSError: The published release cannot be opened.
+    """
 
     parser = argparse.ArgumentParser(description="Audit data integrity between Bronze, Silver, and Gold layers.")
     parser.add_argument("--generate-report", type=str, help="Institution ID to generate a report for.")
@@ -421,21 +441,25 @@ def main():
 
     args = parser.parse_args()
 
-    # Connect databases
-    if not Cfg.SILVER_DATABASE_FILE.exists():
-        logger.error(f"Silver DB not found at {Cfg.SILVER_DATABASE_FILE}")
+    release = current_release(Cfg.DATA_DIRECTORY)
+    silver_path = release.silver if release else Cfg.SILVER_DATABASE_FILE
+    gold_path = release.gold if release else Cfg.GOLD_DATABASE_FILE
+    if not silver_path.is_file():
+        logger.error(f"Silver DB not found at {silver_path}")
         return
-    if not Cfg.GOLD_DATABASE_FILE.exists():
-        logger.error(f"Gold DB not found at {Cfg.GOLD_DATABASE_FILE}")
+    if not gold_path.is_file():
+        logger.error(f"Gold DB not found at {gold_path}")
         return
 
-    silver_db_connection = duckdb.connect(str(Cfg.SILVER_DATABASE_FILE), read_only=True)
-    gold_db_connection = duckdb.connect(str(Cfg.GOLD_DATABASE_FILE), read_only=True)
+    silver_db_connection = duckdb.connect(str(silver_path), read_only=True)
+    gold_db_connection = duckdb.connect(str(gold_path), read_only=True)
 
     all_passed = True
 
     # 1. Bronze vs Silver Check
-    if not check_bronze_silver_integrity(silver_db_connection):
+    if not check_bronze_silver_integrity(
+        silver_db_connection, use_ledger=release is not None,
+    ):
         all_passed = False
 
     # 2. Duplicate Checks
