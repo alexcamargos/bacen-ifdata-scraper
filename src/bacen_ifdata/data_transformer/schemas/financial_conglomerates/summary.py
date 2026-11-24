@@ -44,11 +44,13 @@ class FinancialConglomerateSummarySchema(BaseSchema):
             'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Código da instituição ou do conglomerado no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -134,6 +136,7 @@ class FinancialConglomerateSummarySchema(BaseSchema):
             'description': 'Data-base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'ativo_total': {
             'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
@@ -174,12 +177,12 @@ class FinancialConglomerateSummarySchema(BaseSchema):
         },
         'numero_de_agencias': {
             'description': 'Número de agências da instituição ou do conglomerado, incluídas as sedes (exceto para cooperativas).',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Número de Agências',
         },
         'numero_de_postos_de_atendimento': {
             'description': 'Número de postos de atendimento da instituição ou do conglomerado.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Número de Postos de Atendimento',
         },
     }
