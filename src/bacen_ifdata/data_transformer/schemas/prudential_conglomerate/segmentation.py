@@ -43,14 +43,17 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text',
+            'required': True,
         },
         'codigo': {
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -98,6 +101,7 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -106,12 +110,17 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date',
+            'required': True,
+        },
         'instituicao_sujeita_apuracao_exposicao_total': {
             'description': (
                 'Para cálculo do porte da instituição é considerada a exposição total, calculada '
@@ -120,10 +129,16 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
                 '(art 3º, Res 4553/2017).'
             ),
             'type': 'text',
+            'raw_csv_header': (
+                'Instituição Sujeita à Apuração da Exposição Total'
+            ),
         },
         'instituicao_sujeita_apuracao_patrimonio_referencia': {
             'description': 'Informação se a instituição é sujeita à apuração do Patrimônio de Referência (art. 2º, Res 4553/2007).',
             'type': 'text',
+            'raw_csv_header': (
+                'Instituição Sujeita à Apuração do Patrimônio de Referência'
+            ),
         },
         'instituicao_utiliza_metodologia_simplificada': {
             'description': (
@@ -141,6 +156,7 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
                 'na Circular n° 3.748, de 27 de fevereiro de 2015'
             ),
             'type': 'numeric',
+            'raw_csv_header': 'Exposição Total ou Ativo Total (R$ mil)',
         },
         'total_ativos_consolidados_exterior': {
             'description': (
@@ -149,14 +165,19 @@ class PrudentialConglomerateSegmentationSchema(BaseSchema):
                 'balanço patrimonial (art. 4º Res 4553/2017).'
             ),
             'type': 'numeric',
+            'raw_csv_header': (
+                'Total de Ativos Consolidados no Exterior (US$ mil)'
+            ),
         },
         'data_ultima_alteracao_segmento': {
             'description': 'Data da última alteração do segmento da instituição.',
             'type': 'date',
+            'raw_csv_header': 'Data da Última Alteração de Segmento',
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
