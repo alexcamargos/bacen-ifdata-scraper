@@ -16,7 +16,7 @@ def test_prudential_conglomerate_summary_schema_structure():
 
     expected_structure = {
         'instituicao': TransformationType.TEXT,
-        'codigo': TransformationType.NUMERIC,
+        'codigo': TransformationType.INTEGER,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'segmento_resolucao': TransformationType.CATEGORICAL,
         'tipo_de_consolidacao': TransformationType.CATEGORICAL,
@@ -34,8 +34,8 @@ def test_prudential_conglomerate_summary_schema_structure():
         'patrimonio_de_referencia': TransformationType.NUMERIC,
         'indice_de_basileia': TransformationType.PERCENTAGE,
         'indice_de_imobilizacao': TransformationType.PERCENTAGE,
-        'numero_de_agencias': TransformationType.NUMERIC,
-        'numero_de_postos_de_atendimento': TransformationType.NUMERIC,
+        'numero_de_agencias': TransformationType.INTEGER,
+        'numero_de_postos_de_atendimento': TransformationType.INTEGER,
     }
 
     assert set(schema.column_names) == set(expected_structure.keys())
@@ -72,7 +72,11 @@ def test_prudential_conglomerate_transform_integration(
         expected_type = schema.get_type(column)
         if expected_type in (TransformationType.TEXT, TransformationType.CATEGORICAL):
             assert pd.api.types.is_object_dtype(result[column]) or pd.api.types.is_string_dtype(result[column])
-        elif expected_type in (TransformationType.NUMERIC, TransformationType.PERCENTAGE):
+        elif expected_type in (
+            TransformationType.INTEGER,
+            TransformationType.NUMERIC,
+            TransformationType.PERCENTAGE,
+        ):
             assert pd.api.types.is_numeric_dtype(result[column])
         elif expected_type == TransformationType.DATE:
             assert pd.api.types.is_datetime64_any_dtype(result[column])
