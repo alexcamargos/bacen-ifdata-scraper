@@ -45,11 +45,13 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
             'description': 'Nome da instituição.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (TCB).',
@@ -115,7 +117,11 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text', 'raw_csv_header': 'Cidade'},
         'uf': {'description': 'Estado (Unidade da Federação).', 'type': 'categorical', 'raw_csv_header': 'UF'},
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date', 'raw_csv_header': 'Data',
+            'required': True,
+        },
         'capital_principal_para_comparacao_com_rwa': {
             'description': 'Parcela do capital de melhor qualidade e imediatamente disponível para absorver perdas.',
             'type': 'numeric',
@@ -129,7 +135,11 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'patrimonio_referencia_nivel_i_para_comparacao_com_rwa': {
             'description': 'Parcela do capital formada pela soma das parcelas do Capital Principal e Capital Complementar.',
             'type': 'numeric',
-            'raw_csv_header': 'MISSING_IN_CSV',
+            'raw_csv_header': (
+                'Patrimônio de Referência para Comparação com o RWA - '
+                'Patrimônio de Referência Nível I para Comparação com RWA '
+                '(c) = (a) + (b)'
+            ),
         },
         'capital_nivel_ii': {
             'description': (
@@ -142,12 +152,23 @@ class FinancialConglomerateCapitalInformationSchema(BaseSchema):
         'patrimonio_referencia_para_comparacao_com_rwa': {
             'description': 'Montante de capital regulatório formado pela soma das parcelas de Capital Nível I e Capital Nível II.',
             'type': 'numeric',
-            'raw_csv_header': 'Patrimônio de Referência para Comparação com o RWA - Patrimônio de Referência para Comparação com o RWA (e) = (a) + (d)',
+            'raw_csv_header': [
+                'Patrimônio de Referência para Comparação com o RWA - '
+                'Patrimônio de Referência para Comparação com o RWA '
+                '(e) = (c) + (d)',
+                'Patrimônio de Referência para Comparação com o RWA - '
+                'Patrimônio de Referência para Comparação com o RWA',
+            ],
         },
         'rwa_risco_credito': {
             'description': 'Parcela dos ativos ponderados pelo risco (RWA) referente à exposição ao risco de crédito.',
             'type': 'numeric',
-            'raw_csv_header': 'Ativos Ponderados pelo Risco (RWA) - RWA para Risco de Crédito (f)',
+            # The cleaner keeps the group label for its first measure.
+            'raw_csv_header': [
+                'Ativos Ponderados pelo Risco (RWA) - '
+                'RWA para Risco de Crédito (f)',
+                'Ativos Ponderados pelo Risco (RWA)',
+            ],
         },
         'rwacam': {
             'description': 'Parcela do RWA referente às exposições em ouro, em moeda estrangeira e em ativos sujeitos à variação cambial.',
