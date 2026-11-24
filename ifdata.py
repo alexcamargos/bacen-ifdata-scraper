@@ -37,6 +37,8 @@ from bacen_ifdata.application import Application
 from bacen_ifdata.interfaces import PipelineManagerProtocol
 from bacen_ifdata.measure_coverage import audit_measure_coverage
 from bacen_ifdata.scraper.storage.collection import PERIOD
+from bacen_ifdata.scraper.storage.local_versioning import version_local_reports
+from bacen_ifdata.utilities.configurations import Config
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -90,6 +92,10 @@ def get_arguments() -> argparse.Namespace:
         help='Combine local originals across all months by scope and report.',
     )
     parser.add_argument(
+        '--version-local-csv', action='store_true',
+        help='Version locally stored flat CSVs without downloading them.',
+    )
+    parser.add_argument(
         '--update', action='store_true',
         help='Load changed reports and publish a tested warehouse release.',
     )
@@ -111,8 +117,10 @@ def get_arguments() -> argparse.Namespace:
         parser.error('--refresh requires --data-base and excludes --repair-raw')
     if args.repair_raw or args.refresh:
         args.scraper = True
-    if args.data_base and not args.scraper:
-        parser.error('--data-base requires --scraper or --repair-raw')
+    if args.data_base and not (args.scraper or args.version_local_csv):
+        parser.error(
+            '--data-base requires --scraper or --version-local-csv',
+        )
     if args.update and any((
         args.cleaner, args.transformer, args.loader, args.analytics,
     )):
@@ -122,6 +130,7 @@ def get_arguments() -> argparse.Namespace:
     if args.audit_coverage and any((
         args.scraper, args.cleaner, args.transformer, args.loader,
         args.analytics, args.update, args.consolidate_csv,
+        args.version_local_csv,
     )):
         parser.error('--audit-coverage must run as a separate read-only action')
     return args
@@ -163,8 +172,15 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
         audit_measure_coverage(**kwargs)
         return
 
-    # Execute requested actions.
     action_executed = False
+    if getattr(args, 'version_local_csv', False):
+        version_local_reports(
+            Config.DOWNLOAD_DIRECTORY, Config.SCRATCH_DIRECTORY,
+            **kwargs, period=getattr(args, 'data_base', None),
+        )
+        action_executed = True
+
+    # Execute requested actions.
     for argument_name, (message, runner) in actions.items():
         if getattr(args, argument_name):
             logger.info(message)
