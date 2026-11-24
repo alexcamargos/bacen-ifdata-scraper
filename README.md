@@ -139,6 +139,30 @@ Edite o arquivo `.env` se necessário para ajustar os caminhos locais dos bancos
 
 > **Observação:** Antes de iniciar o processo de captura, certifique-se de que o [GeckoDriver](https://github.com/mozilla/geckodriver/releases) (para Firefox) esteja devidamente instalado e configurado no `PATH` do seu sistema.
 
+## Publicação no PyPI
+
+A cada push na `main`, o GitHub Actions consulta no PyPI a versão definida em
+`[project].version` no `pyproject.toml`. Se a versão ainda não estiver no
+índice, o workflow gera a wheel e a distribuição fonte com `uv build` e envia
+os dois arquivos. Os pushes com uma versão já publicada pulam essas etapas.
+
+No primeiro uso, cadastre um Trusted Publisher do GitHub Actions nas
+configurações do projeto no PyPI com os valores abaixo. A autenticação usa OIDC
+e dispensa um token de API no GitHub.
+[Configurar Trusted Publishers](https://pypi.org/manage/project/bacen-ifdata-scraper/settings/publishing/).
+
+| Campo | Valor |
+| --- | --- |
+| Owner | `alexcamargos` |
+| Repository name | `bacen-ifdata-scraper` |
+| Workflow name | `publish-pypi.yml` |
+| Environment name | `pypi` |
+
+Para publicar uma nova versão após o cadastro, atualize a versão com
+`uv version <nova-versão>` e envie o commit à `main`. Se o upload falhar após
+enviar um dos arquivos, reexecute o job de publicação da mesma execução para
+aproveitar os artefatos já gerados e completar o envio.
+
 ## Uso do Pipeline
 
 O `ifdata.py` é a interface de linha de comando para controlar o pipeline ETL.
