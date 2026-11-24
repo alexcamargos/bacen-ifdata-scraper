@@ -43,9 +43,20 @@ from bacen_ifdata.utilities.string_utils import slugify
 
 
 class TransformationType(StrEnum):
-    """Supported data transformation types."""
+    """Supported data transformation types.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        None.
+    """
 
     NUMERIC = 'numeric'
+    INTEGER = 'integer'
     PERCENTAGE = 'percentage'
     DATE = 'date'
     CATEGORICAL = 'categorical'
@@ -101,10 +112,14 @@ class TransformerController:
 
         Returns:
             dict: Mapping of transformation types to their corresponding methods.
+
+        Raises:
+            None.
         """
 
         return {
             TransformationType.NUMERIC: transformer.transform_numeric_columns,
+            TransformationType.INTEGER: transformer.transform_integer_columns,
             TransformationType.PERCENTAGE: transformer.transform_percentage_columns,
             TransformationType.DATE: transformer.transform_date_columns,
             TransformationType.CATEGORICAL: transformer.transform_categorical_columns,
@@ -238,7 +253,12 @@ class TransformerController:
 
         return rename_map
 
-    def transform(self, file_path: Path, schema: SchemaProtocol, institution: Institutions) -> pd.DataFrame:
+    def transform(
+        self,
+        file_path: Path,
+        schema: SchemaProtocol,
+        institution: Institutions,
+    ) -> pd.DataFrame:
         """Transforms data from reports.
 
         This method is responsible for transforming the data from reports.
@@ -250,6 +270,9 @@ class TransformerController:
 
         Returns:
             pd.DataFrame: The transformed DataFrame.
+
+        Raises:
+            ValueError: The CSV violates the report schema.
         """
 
         # Get the appropriate transformer for this institution.
@@ -265,11 +288,11 @@ class TransformerController:
         # Load the data.
         data = self._load_data(file_path, options)
 
-        # Rename CSV header columns to match schema names (positional mapping).
-        # Extra columns in the CSV (not covered by the schema) are dropped.
+        # Map historical headers before checking for required fields.
         rename_map = self._build_column_rename_map(data, schema)
         if rename_map:
             data = data.rename(columns=rename_map)
+        schema.validate_required_columns(data.columns, file_path)
 
         # Keep only columns defined in the schema (drop extras),
         # ensuring we have the correct columns for transformation.
@@ -288,16 +311,24 @@ class TransformerController:
             if column_type:
                 columns_by_type.setdefault(column_type, []).append(column_name)
 
-        # Iterate over the grouped column types and apply the correct transformation.
         for column_type, columns in columns_by_type.items():
             transform_function = transformation_map.get(column_type)
-
-            # Call the transformation function, passing the relevant columns
             if transform_function:
-                data = transform_function(data, columns)
+                try:
+                    data = transform_function(data, columns)
+                except ValueError as error:
+                    raise ValueError(f'{file_path}: {error}') from error
 
-        # Create the region column based on the state column and insert it after the "uf" column.
-        if 'cidade' in data.columns:
+        for column in schema.required_input_columns:
+            values = data[column]
+            invalid = values.isna() | values.eq('')
+            if invalid.any():
+                raise ValueError(
+                    f'{file_path}: {invalid.sum()} missing or invalid '
+                    f'value(s) in required column {column!r}.'
+                )
+
+        if 'regiao' in schema.column_names and 'uf' in data.columns:
             data = self._create_region_column(data)
 
         # Apply deduplication as the final step to ensure clean data for Silver layer.
