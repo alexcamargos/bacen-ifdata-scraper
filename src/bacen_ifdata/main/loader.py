@@ -29,26 +29,41 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from contextlib import nullcontext
+from datetime import date
 from enum import StrEnum
 
 from loguru import logger
 
 from bacen_ifdata.data_loader.controller import LoaderController
+from bacen_ifdata.data_loader.storage import DatabaseService
 from bacen_ifdata.data_transformer.schemas.mapper import SCHEMA_BY_INSTITUTION_AND_REPORT
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
+from bacen_ifdata.scraper.storage.collection import PERIOD
 from bacen_ifdata.scraper.storage.processing import build_directory_path
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(institution: Institutions, report: StrEnum) -> None:
-    """Main function for the transformer.
-
-    This function orchestrates the loading process for the reports
-    downloaded from the Banco Central do Brasil's IF.data tool.
+def main(
+    institution: Institutions,
+    report: StrEnum,
+    *,
+    database_service: DatabaseService | None = None,
+) -> None:
+    """Load one report's historical files with period validation.
 
     Args:
         institution (Institutions): The institution for which the reports will be loaded.
         report (StrEnum): The report that will be loaded.
+        database_service: An open service in the caller's transaction, if any.
+
+    Returns:
+        None.
+
+    Raises:
+        ValueError: A file has an invalid name, report header or period.
+        OSError: A CSV file cannot be read.
+        duckdb.Error: DuckDB cannot load the report.
     """
 
     # Check if we have schemas for this institution.
@@ -67,11 +82,30 @@ def main(institution: Institutions, report: StrEnum) -> None:
     input_data_path = build_directory_path(
         Cfg.TRANSFORMED_FILES_DIRECTORY, institution.name.lower(), report.name.lower()
     )
-    # Create the controller object.
-    controller = LoaderController()
-
-    # List all CSV files in the input data directory.
-    for file in input_data_path.glob('*.csv'):
-        logger.info(f'Loading {report.name} ({file.name}) from {institution.name}.')
-        # Load the data into the database.
-        controller.load_report(institution, report, file, report_schema)
+    database = database_service or DatabaseService()
+    controller = LoaderController(database)
+    transaction = (
+        nullcontext() if database_service is not None
+        else database.transaction()
+    )
+    try:
+        with transaction:
+            for file in sorted(input_data_path.glob('*.csv')):
+                month = file.stem
+                if not PERIOD.fullmatch(month):
+                    raise ValueError(
+                        f'{file}: expected a YYYY-MM.csv filename.'
+                    )
+                if month > Cfg.HISTORICAL_END:
+                    logger.warning(
+                        f'Skipping {file}: historical window ends at '
+                        f'{Cfg.HISTORICAL_END}.'
+                    )
+                    continue
+                controller.load_report(
+                    institution, report, file, report_schema,
+                    period=date.fromisoformat(f'{month}-01'),
+                )
+    finally:
+        if database_service is None:
+            database.close()
