@@ -16,7 +16,7 @@ def test_financial_conglomerates_assets_schema_structure():
 
     expected_structure = {
         'instituicao': TransformationType.TEXT,
-        'codigo': TransformationType.NUMERIC,
+        'codigo': TransformationType.INTEGER,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'segmento_resolucao': TransformationType.CATEGORICAL,
         'tipo_de_consolidacao': TransformationType.CATEGORICAL,
@@ -80,7 +80,11 @@ def test_financial_conglomerates_assets_transform_integration(
         expected_type = schema.get_type(column)
         if expected_type in (TransformationType.TEXT, TransformationType.CATEGORICAL):
             assert pd.api.types.is_object_dtype(result[column]) or pd.api.types.is_string_dtype(result[column])
-        elif expected_type in (TransformationType.NUMERIC, TransformationType.PERCENTAGE):
+        elif expected_type in (
+            TransformationType.INTEGER,
+            TransformationType.NUMERIC,
+            TransformationType.PERCENTAGE,
+        ):
             assert pd.api.types.is_numeric_dtype(result[column])
         elif expected_type == TransformationType.DATE:
             assert pd.api.types.is_datetime64_any_dtype(result[column])
