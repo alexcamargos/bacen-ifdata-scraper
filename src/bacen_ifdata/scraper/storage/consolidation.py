@@ -25,7 +25,7 @@ from bacen_ifdata.scraper.storage.collection import (
 from bacen_ifdata.scraper.storage.processing import move_artifact
 
 
-def _read_layout(
+def read_report_layout(
     source: TextIO,
 ) -> tuple[list[str], int, Iterator[list[str]]]:
     """Resolve grouped headers and return the remaining native data rows.
@@ -106,7 +106,7 @@ def consolidate_reports(
     for period, path in files:
         validate_report_csv(path, f'{period[5:]}/{period[:4]}')
         with path.open(encoding='utf-8-sig', newline='') as source:
-            labels, _, _ = _read_layout(source)
+            labels, _, _ = read_report_layout(source)
         occurrences: Counter[str] = Counter()
         columns = []
         for label in labels:
@@ -140,7 +140,7 @@ def consolidate_reports(
                 columns = layouts[period]
                 origin = path.relative_to(raw_root).as_posix()
                 with path.open(encoding='utf-8-sig', newline='') as source:
-                    _, code_index, rows = _read_layout(source)
+                    _, code_index, rows = read_report_layout(source)
                     for row in rows:
                         if len(row) <= code_index or not (
                             INSTITUTION_CODE.fullmatch(row[code_index].strip())
