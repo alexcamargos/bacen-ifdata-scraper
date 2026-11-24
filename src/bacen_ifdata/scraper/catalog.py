@@ -39,6 +39,7 @@ class HistoricalReport:
         report_id: Report ID in the portal.
         data_files: Names of all source data files for the period.
         source_url: Current portal URL, or None for the historical portal.
+        pdf_file: Portuguese column dictionary path in the current portal.
     Returns:
         The report selection.
     Raises:
@@ -52,6 +53,7 @@ class HistoricalReport:
     report_id: int
     data_files: tuple[str, ...]
     source_url: str | None = None
+    pdf_file: str | None = None
 
 
 def _read_catalog(timeout: int, url: str | None = None) -> list[dict]:
@@ -170,9 +172,13 @@ def historical_reports(
                     key = (period, institution, report)
                     if key in selections or not data_files:
                         raise ValueError(f'invalid source selection for {key}')
+                    pdf = (
+                        file['f'].replace('.json', '_0.pdf')
+                        if current else None
+                    )
                     selections[key] = HistoricalReport(
                         period, institution, report, scope_id,
-                        definition['id'], data_files, source_url,
+                        definition['id'], data_files, source_url, pdf,
                     )
     except (AttributeError, KeyError, TypeError, ValueError) as error:
         raise IfDataScraperException(

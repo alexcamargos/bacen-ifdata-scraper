@@ -36,6 +36,7 @@ from loguru import logger
 from bacen_ifdata.application import Application
 from bacen_ifdata.interfaces import PipelineManagerProtocol
 from bacen_ifdata.measure_coverage import audit_measure_coverage
+from bacen_ifdata.scraper.dictionaries import download_dictionaries
 from bacen_ifdata.scraper.storage.collection import PERIOD
 from bacen_ifdata.scraper.storage.local_versioning import version_local_reports
 from bacen_ifdata.utilities.configurations import Config
@@ -96,6 +97,10 @@ def get_arguments() -> argparse.Namespace:
         help='Version locally stored flat CSVs without downloading them.',
     )
     parser.add_argument(
+        '--download-dictionaries', action='store_true',
+        help='Download the official column dictionaries for current reports.',
+    )
+    parser.add_argument(
         '--update', action='store_true',
         help='Load changed reports and publish a tested warehouse release.',
     )
@@ -117,9 +122,11 @@ def get_arguments() -> argparse.Namespace:
         parser.error('--refresh requires --data-base and excludes --repair-raw')
     if args.repair_raw or args.refresh:
         args.scraper = True
-    if args.data_base and not (args.scraper or args.version_local_csv):
+    if args.data_base and not (
+        args.scraper or args.version_local_csv or args.download_dictionaries
+    ):
         parser.error(
-            '--data-base requires --scraper or --version-local-csv',
+            '--data-base requires a collection or local versioning action',
         )
     if args.update and any((
         args.cleaner, args.transformer, args.loader, args.analytics,
@@ -130,7 +137,7 @@ def get_arguments() -> argparse.Namespace:
     if args.audit_coverage and any((
         args.scraper, args.cleaner, args.transformer, args.loader,
         args.analytics, args.update, args.consolidate_csv,
-        args.version_local_csv,
+        args.version_local_csv, args.download_dictionaries,
     )):
         parser.error('--audit-coverage must run as a separate read-only action')
     return args
@@ -173,6 +180,11 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
         return
 
     action_executed = False
+    if getattr(args, 'download_dictionaries', False):
+        download_dictionaries(
+            **kwargs, period=getattr(args, 'data_base', None),
+        )
+        action_executed = True
     if getattr(args, 'version_local_csv', False):
         version_local_reports(
             Config.DOWNLOAD_DIRECTORY, Config.SCRATCH_DIRECTORY,
