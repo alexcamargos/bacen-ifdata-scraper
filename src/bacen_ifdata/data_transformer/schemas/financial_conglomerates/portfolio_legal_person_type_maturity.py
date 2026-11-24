@@ -48,11 +48,13 @@ class FinancialConglomeratePortfolioLegalPersonTypeMaturitySchema(BaseSchema):
             'description': 'Nome da instituição.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -162,7 +164,11 @@ class FinancialConglomeratePortfolioLegalPersonTypeMaturitySchema(BaseSchema):
             'raw_csv_header': 'UF',
         },
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date', 'raw_csv_header': 'Data'},
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date', 'raw_csv_header': 'Data',
+            'required': True,
+        },
         # TOTAL DA CARTEIRA
         'total_carteira_pessoa_juridica': {
             'description': (
