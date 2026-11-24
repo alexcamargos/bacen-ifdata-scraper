@@ -29,6 +29,7 @@ License: MIT
 """
 
 from enum import StrEnum
+from pathlib import Path
 
 from loguru import logger
 
@@ -93,7 +94,7 @@ def main(
     for attempt in (1, 2):
         downloaded = session.download_reports(report_date, institution, report)
         try:
-            validate_report_csv(downloaded, report_date)
+            publish_export(downloaded, directory / period, existing)
         except IfDataScraperException as error:
             logger.warning(
                 f'Attempt {attempt} for {institution.name}/{report.name}/'
@@ -102,14 +103,40 @@ def main(
             if attempt == 2:
                 raise
         else:
-            if (
-                existing
-                and report_checksum(existing) == report_checksum(downloaded)
-            ):
-                logger.info(f'Original content is unchanged: {existing}')
-                return
-            published = publish_report(
-                downloaded, directory / period, Cfg.URL, Cfg.SCRATCH_DIRECTORY,
-            )
-            logger.info(f'Validated original saved to {published}')
             return
+
+
+def publish_export(
+    downloaded: Path, destination: Path, existing: Path | None,
+    *,
+    source_selection: dict[str, int] | None = None,
+) -> tuple[Path, bool]:
+    """Validate, compare and publish a staged historical export.
+
+    Args:
+        downloaded: Staged initial CSV bytes.
+        destination: Raw directory for the requested YYYY-MM period.
+        existing: Previously published CSV for this key, if any.
+        source_selection: IDs from the source catalog, when available.
+    Returns:
+        The active CSV path and whether a new version was published.
+    Raises:
+        IfDataScraperException: The staged CSV failed validation.
+        OSError: The CSV could not be hashed or committed.
+    """
+    year, month = destination.name.split('-')
+    validate_report_csv(downloaded, f'{month}/{year}')
+    if existing:
+        try:
+            if report_checksum(existing) == report_checksum(downloaded):
+                logger.info(f'Original content is unchanged: {existing}')
+                return existing, False
+        except FileNotFoundError as error:
+            logger.warning(f'Could not compare the original: {error}')
+
+    published = publish_report(
+        downloaded, destination, Cfg.URL, Cfg.SCRATCH_DIRECTORY,
+        source_selection=source_selection,
+    )
+    logger.info(f'Validated original saved to {published}')
+    return published, True
