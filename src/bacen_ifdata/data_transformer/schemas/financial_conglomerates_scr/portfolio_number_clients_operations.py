@@ -45,11 +45,13 @@ class FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema(BaseSchema)
             'description': 'Nome da instituição.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -170,6 +172,7 @@ class FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema(BaseSchema)
             'description': 'Data-base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'quantidade_de_clientes_com_operacoes_ativas': {
             'description': (
@@ -177,7 +180,7 @@ class FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema(BaseSchema)
                 'ou seja, aqueles possuidores de dívidas acima do limite de individualização do SCR. '
                 'A porção agregada das informações constantes do documento 3040 não está refletida nesse número.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
             'format': 'integer',
             'raw_csv_header': 'Quantidade de clientes com operações ativas',
         },
@@ -187,7 +190,7 @@ class FinancialConglomerateSCRPortfolioNumberClientsOperationsSchema(BaseSchema)
                 'que são reportados de forma desmembrada e aparecem como mais de uma operação no SCR como, '
                 'por exemplo, cartão de crédito à vista, cartão de crédito parcelado e cartão de crédito rotativo.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
             'format': 'integer',
             'raw_csv_header': 'Quantidade de operações ativas',
         },
