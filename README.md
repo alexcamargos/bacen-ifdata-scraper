@@ -30,6 +30,7 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
   - [Instalação](#instalação)
   - [Uso do Pipeline](#uso-do-pipeline)
     - [Extração (Scraping)](#extração-scraping)
+    - [Consolidação dos CSVs](#consolidação-dos-csvs)
     - [Limpeza (Cleaning)](#limpeza-cleaning)
     - [Transformação (Transforming)](#transformação-transforming)
     - [Carga (Loading)](#carga-loading)
@@ -169,13 +170,45 @@ O `ifdata.py` é a interface de linha de comando para controlar o pipeline ETL.
 
 ### Extração (Scraping)
 
-Para baixar os relatórios do portal IF.data, use a flag `-s` ou `--scraper`. O script irá navegar pelo portal, selecionar as instituições e relatórios, e baixar os arquivos CSV.
+Use `--scraper` para coletar as datas-base publicadas nos dois catálogos
+do IF.data, de 2000 a 2024 e a partir de 2025. O coletor reutiliza os
+arquivos locais válidos. Cada nova versão é salva com SHA-256 e metadados
+de origem em `data/raw/<instituição>/<relatório>/<AAAA-MM>/`.
 
 ```bash
-uv run ifdata.py -s
+uv run python ifdata.py --scraper
+uv run python ifdata.py --scraper --data-base 2025-03
 ```
 
-O script exibirá em tempo real quais arquivos estão sendo baixados. Ao final, um relatório detalhará o número total de arquivos baixados e o tempo de execução.
+Use `--refresh` junto de `--data-base` para verificar se o BC republicou um
+trimestre. Os filtros `--institution` e `--report` funcionam nos dois
+catálogos. O relatório prudencial de carteiras de instrumentos financeiros
+pode ser selecionado com `--report PORTFOLIO_FINANCIAL_INSTRUMENTS`.
+[IF.data a partir de 2025](https://www3.bcb.gov.br/ifdata/).
+
+### Consolidação dos CSVs
+
+```bash
+uv run python ifdata.py --scraper --consolidate-csv
+uv run python ifdata.py --consolidate-csv --institution PRUDENTIAL_CONGLOMERATES --report SUMMARY
+```
+
+A consolidação usa todos os trimestres disponíveis localmente para cada
+instituição e relatório. Quando combinada com `--data-base`, a data
+restringe o download. A saída fica em
+`data/interim/consolidated/ifdata/<instituição>/<relatório>/series.csv`.
+As colunas `data_base` e `arquivo_origem` permitem rastrear cada linha até
+o CSV bruto.
+Em outro checkout ou worktree, aponte `IFDATA_DATA_DIRECTORY` para
+a pasta `data` existente para reutilizar o histórico.
+
+O consolidado reúne as linhas de instituições e preserva os valores
+publicados como texto. As colunas variam conforme o leiaute de origem.
+Campos ausentes no trimestre ficam vazios e os totais permanecem nos
+originais. A equivalência contábil entre períodos exige uma etapa
+posterior, em especial para provisões de crédito. A transformação
+analítica e a carga em Silver e Gold continuam limitadas a 2024.
+[Resolução CMN nº 4.966](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=4966&tipo=RESOLU%C3%87%C3%83O+CMN).
 
 ### Limpeza (Cleaning)
 
