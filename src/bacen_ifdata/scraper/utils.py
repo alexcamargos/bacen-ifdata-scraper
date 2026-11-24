@@ -28,6 +28,8 @@ License: MIT
 """
 
 from enum import StrEnum
+from os import getenv
+from pathlib import Path
 
 from loguru import logger
 from selenium import webdriver
@@ -88,20 +90,28 @@ def ensure_clickable(driver: WebDriver, wait_time: int, by_method: By, locator: 
         raise
 
 
-def initialize_webdriver() -> WebDriver:
-    """
-    Initializes a WebDriver session with Firefox.
+def initialize_webdriver(download_directory: Path) -> WebDriver:
+    """Initialize a Firefox profile with a dedicated download directory.
+
+    Args:
+        download_directory: Location for this profile's downloads.
 
     Returns:
-        WebDriver: The WebDriver instance being used to interact with the web page.
+        The Firefox WebDriver.
+
+    Raises:
+        WebDriverException: If Firefox cannot be started.
     """
 
     # Configures the options for the WebDriver.
     options = Options()
+    firefox_binary = getenv('IFDATA_FIREFOX_BINARY')
+    if firefox_binary:
+        options.binary_location = firefox_binary
     options.set_preference("browser.download.folderList", 2)
     options.set_preference("browser.download.manager.showWhenStarting", False)
     # Set the directory where the downloaded files will be stored.
-    options.set_preference("browser.download.dir", str(Cfg.DOWNLOAD_DIRECTORY))
+    options.set_preference("browser.download.dir", str(download_directory))
     options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
     # Initializes the WebDriver for Firefox.

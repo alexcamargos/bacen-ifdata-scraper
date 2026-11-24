@@ -27,8 +27,6 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from time import sleep
-
 from loguru import logger
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -147,6 +145,12 @@ class Browser:
 
         Args:
             wait_time (int): The maximum time to wait for the button to become clickable.
+
+        Returns:
+            None.
+
+        Raises:
+            TimeoutException: The selected report did not finish loading.
         """
 
         # Wait for the dataTable element to be visible.
@@ -156,10 +160,9 @@ class Browser:
             logger.exception(f'Timeout: O elemento dataTable não se tornou visível após {wait_time} segundos.')
             raise
 
-        # BUG: This workaround ensures that the Blob object is fully initialized
-        # before the button is clicked. For a detailed description of the
-        # underlying issue, please refer to the BUG comment in `scraping.py`.
-        sleep(3)
-
-        # Click the "Exportar CSV" button.
+        WebDriverWait(self._driver, wait_time).until(
+            lambda driver: driver.execute_script(
+                'return typeof jQuery !== "undefined" && jQuery.active === 0;'
+            )
+        )
         self._ensure_clickable(wait_time, By.ID, 'aExportCsv')
