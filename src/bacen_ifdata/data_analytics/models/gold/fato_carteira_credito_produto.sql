@@ -107,7 +107,8 @@ combined AS (
         tipo_instituicao,
         id_produto,
         id_faixa,
-        valor
+        valor,
+        'PF' AS tipo_pessoa
     FROM pf_mapped
     UNION ALL
     SELECT
@@ -116,7 +117,8 @@ combined AS (
         tipo_instituicao,
         id_produto,
         id_faixa,
-        valor
+        valor,
+        'PJ' AS tipo_pessoa
     FROM pj_mapped
 )
 
@@ -125,6 +127,7 @@ SELECT
     strftime(try_cast(data_base as date), '%Y%m%d')::int as id_data,
     id_produto,
     id_faixa as id_faixa_vencimento,
-    valor
+    valor,
+    tipo_pessoa
 FROM combined
 WHERE valor IS NOT NULL

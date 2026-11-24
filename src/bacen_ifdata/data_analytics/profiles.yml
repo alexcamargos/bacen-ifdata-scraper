@@ -10,3 +10,4 @@ bacen_ifdata:
       attach:
         - path: "{{ env_var('SILVER_DB_PATH') }}"
           alias: silver
+          read_only: true
