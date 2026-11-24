@@ -5,6 +5,7 @@ sources:
     database: silver
     schema: main
     tables:
+      - name: ifdata_2025_campos
       # Financial Conglomerates
       - name: financial_conglomerates_summary
       - name: financial_conglomerates_assets
