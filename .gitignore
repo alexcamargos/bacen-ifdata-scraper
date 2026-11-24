@@ -131,3 +131,4 @@ logs/
 # Add any additional files and directories you want to ignore in your project.
 
 data/
+scratch/
