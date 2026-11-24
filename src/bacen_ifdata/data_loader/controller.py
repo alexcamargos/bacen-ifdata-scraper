@@ -1,5 +1,6 @@
 """Controller for loading data from reports into the database."""
 
+from datetime import date
 from enum import StrEnum
 from pathlib import Path
 
@@ -29,7 +30,15 @@ class LoaderController:
 
         self._database_service = database_service or DatabaseService()
 
-    def load_report(self, institution: Institutions, report: StrEnum, input_data: Path, schema: BaseSchema) -> None:
+    def load_report(
+        self,
+        institution: Institutions,
+        report: StrEnum,
+        input_data: Path,
+        schema: BaseSchema,
+        *,
+        period: date | None = None,
+    ) -> None:
         """Load data from the source CSV file into the database.
 
         Args:
@@ -37,6 +46,16 @@ class LoaderController:
             report (StrEnum): The report type.
             input_data (Path): The path to the CSV file to be loaded.
             schema (BaseSchema): The schema to be used for the table.
+            period: Reference month to validate and replace inside the
+                supplied database service's transaction, when given.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: The input violates the report schema or period.
+            OSError: The input cannot be read.
+            db.Error: DuckDB cannot create or load the table.
         """
 
         # Determine table name
@@ -50,7 +69,14 @@ class LoaderController:
             self._database_service.create_table(table_name, schema)
 
             # Insert the data
-            self._database_service.insert_data(table_name, input_data, schema)
+            if period is None:
+                self._database_service.insert_data(
+                    table_name, input_data, schema
+                )
+            else:
+                self._database_service.replace_period(
+                    table_name, input_data, schema, period, source=input_data,
+                )
 
             logger.info(f'Successfully loaded {institution.name} - {report.name}.')
 
