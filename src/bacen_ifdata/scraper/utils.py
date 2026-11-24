@@ -27,9 +27,9 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
-from enum import StrEnum
 from os import getenv
 from pathlib import Path
+from shutil import which
 
 from loguru import logger
 from selenium import webdriver
@@ -41,13 +41,10 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
-from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import REPORTS
-from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 def ensure_clickable(driver: WebDriver, wait_time: int, by_method: By, locator: str) -> None:
@@ -105,6 +102,7 @@ def initialize_webdriver(download_directory: Path) -> WebDriver:
 
     # Configures the options for the WebDriver.
     options = Options()
+    options.page_load_strategy = 'eager'
     firefox_binary = getenv('IFDATA_FIREFOX_BINARY')
     if firefox_binary:
         options.binary_location = firefox_binary
@@ -114,82 +112,9 @@ def initialize_webdriver(download_directory: Path) -> WebDriver:
     options.set_preference("browser.download.dir", str(download_directory))
     options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
-    # Initializes the WebDriver for Firefox.
-    driver = webdriver.Firefox(options=options)
-
-    return driver
-
-
-def validate_report_selection(institution: Institutions, report: StrEnum, data_base: list[str]) -> list[str]:
-    """Validates the report selection."""
-
-    if institution == Institutions.PRUDENTIAL_CONGLOMERATES and report in (
-        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SUMMARY,
-        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].ASSETS,
-        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].LIABILITIES,
-        REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].INCOME_STATEMENT,
-    ):
-        cutoff_date = '03/2014'
-    elif (
-        institution == Institutions.PRUDENTIAL_CONGLOMERATES
-        and report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].CAPITAL_INFORMATION
-    ):
-        cutoff_date = '03/2015'
-    elif (
-        institution == Institutions.PRUDENTIAL_CONGLOMERATES
-        and report == REPORTS[Institutions.PRUDENTIAL_CONGLOMERATES].SEGMENTATION
-    ):
-        cutoff_date = '03/2017'
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES and report in (
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDIVIDUALS_TYPE_MATURITY,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_NUMBER_CLIENTS_OPERATIONS,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_RISK_LEVEL,
-        REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_INDEXER,
-    ):
-        cutoff_date = '06/2014'
-    elif (
-        institution == Institutions.FINANCIAL_CONGLOMERATES
-        and report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].PORTFOLIO_GEOGRAPHIC_REGION
-    ):
-        cutoff_date = '09/2014'
-    elif (
-        institution == Institutions.FINANCIAL_CONGLOMERATES
-        and report == REPORTS[Institutions.FINANCIAL_CONGLOMERATES].CAPITAL_INFORMATION
-    ):
-        cutoff_date_start = '12/2000'
-        data_base_index_start = data_base.index(cutoff_date_start)
-
-        cutoff_date_end = '12/2014'
-        data_base_index_end = data_base.index(cutoff_date_end)
-
-        return data_base[data_base_index_end : data_base_index_start + 1]
-    elif institution == Institutions.FOREIGN_EXCHANGE:
-        cutoff_date_start = '12/2014'
-
-        data_base_index_start = data_base.index(cutoff_date_start)
-
-        cutoff_date_end = '06/2023'
-        data_base_index_end = data_base.index(cutoff_date_end)
-
-        return data_base[data_base_index_end:data_base_index_start]
-    elif institution == Institutions.FINANCIAL_CONGLOMERATES_SCR:
-        cutoff_date_start = '06/2012'
-        data_base_index_start = data_base.index(cutoff_date_start)
-
-        cutoff_date_end = '03/2014'
-        data_base_index_end = data_base.index(cutoff_date_end)
-
-        return data_base[data_base_index_end:data_base_index_start]
-    else:
-        # No cutoff for other institutions and reports.
-        return data_base
-
-    try:
-        data_base_index = data_base.index(cutoff_date)
-        return data_base[: data_base_index + 1]
-    except ValueError:
-        # cutoff_date not in data_base, return as is
-        return data_base
+    # Use Selenium Manager when Firefox or geckodriver needs discovery.
+    executable = which('geckodriver')
+    service = None
+    if firefox_binary and executable:
+        service = Service(executable_path=executable)
+    return webdriver.Firefox(options=options, service=service)
