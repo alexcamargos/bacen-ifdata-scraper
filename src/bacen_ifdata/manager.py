@@ -37,15 +37,12 @@ from loguru import logger
 
 from bacen_ifdata import Pipeline
 from bacen_ifdata.data_loader.storage import DatabaseService
-from bacen_ifdata.scraper.exceptions import IfDataScraperException
+from bacen_ifdata.scraper.historical_collection import (
+    run_historical_collection,
+)
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
-from bacen_ifdata.scraper.storage.collection import (
-    report_inputs,
-    validate_report_csv,
-)
 from bacen_ifdata.scraper.storage.processing import move_artifact
-from bacen_ifdata.scraper.utils import validate_report_selection
 from bacen_ifdata.updates import update_warehouse
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
@@ -147,64 +144,13 @@ class PipelineManager:
         if not targets:
             raise ValueError(f'Unknown report for the selection: {report}.')
 
-        requested = f'{data_base[5:]}/{data_base[:4]}' if data_base else None
-        repairs: dict[tuple[Institutions, StrEnum], set[str]] = {}
-        if repair_raw:
-            for inst, rep in targets:
-                directory = (
-                    Cfg.DOWNLOAD_DIRECTORY
-                    / inst.name.lower()
-                    / rep.name.lower()
-                )
-                for period, path in report_inputs(directory).items():
-                    if data_base and period != data_base:
-                        continue
-                    date = f'{period[5:]}/{period[:4]}'
-                    try:
-                        validate_report_csv(path, date)
-                    except IfDataScraperException as error:
-                        logger.warning(f'Recollection required: {error}')
-                        repairs.setdefault((inst, rep), set()).add(date)
-            if not repairs:
-                logger.info('No invalid originals found in the selection.')
-                return
-            targets = list(repairs)
-
-        session = self.pipeline.session
-        if session is None:
-            raise ValueError('Session is not initialized.')
-        dates = session.get_data_bases()
-
-        attempted = 0
-        pending: list[str] = []
-        for inst, rep in targets:
-            available = validate_report_selection(inst, rep, dates)
-            selected = repairs.get((inst, rep))
-            if repair_raw:
-                unavailable = repairs[inst, rep].difference(available)
-                pending.extend(
-                    f'{inst.name}/{rep.name}/{date} unavailable in the portal'
-                    for date in sorted(unavailable)
-                )
-            elif requested:
-                selected = {requested}
-
-            for date in available:
-                if selected is not None and date not in selected:
-                    continue
-                attempted += 1
-                logger.info(f'Collecting {inst.name}/{rep.name}/{date}.')
-                try:
-                    self.pipeline.scraper(date, inst, rep, refresh=refresh)
-                except IfDataScraperException as error:
-                    pending.append(f'{inst.name}/{rep.name}/{date}: {error}')
-
-        if pending:
-            raise IfDataScraperException(
-                f'{len(pending)} pending exports:\n' + '\n'.join(pending)
-            )
-        if requested and not attempted:
-            raise ValueError(f'No selected report available for {data_base}.')
+        run_historical_collection(
+            targets,
+            lambda: self.pipeline.session,
+            period=data_base,
+            refresh=refresh,
+            repair=repair_raw,
+        )
 
     def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the cleaner."""
@@ -222,23 +168,40 @@ class PipelineManager:
         for process_institution, process_report in targets:
             self.pipeline.transformer(process_institution, process_report)
 
-    def run_loader(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the loader."""
+    def run_loader(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Reload the selected reports atomically in the manual warehouse.
 
+        Args:
+            institution: Optional institutional scope.
+            report: Optional report name.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: A transformed CSV has an invalid name, key or period.
+            OSError: A transformed CSV cannot be read.
+            duckdb.Error: DuckDB cannot complete the reload.
+        """
         targets = self._get_execution_targets(institution, report)
+        filtered = bool(institution or report)
+        with self._database_service.transaction():
+            if not filtered:
+                self._reset_database()
 
-        # If no filters are provided, we can safely reset the whole database
-        if not institution and not report:
-            self._reset_database()
-
-        # Run the loader.
-        for loaded_institution, loaded_report in targets:
-            # If a filter was applied, we only drop the specific tables we are reloading.
-            if institution or report:
-                table_name = f"{loaded_institution.name.lower()}_{loaded_report.name.lower()}"
-                self._database_service.drop_table(table_name)
-
-            self.pipeline.loader(loaded_institution, loaded_report)
+            for loaded_institution, loaded_report in targets:
+                if filtered:
+                    table_name = (
+                        f'{loaded_institution.name.lower()}_'
+                        f'{loaded_report.name.lower()}'
+                    )
+                    self._database_service.drop_table(table_name)
+                self.pipeline.loader(
+                    loaded_institution, loaded_report,
+                    database_service=self._database_service,
+                )
 
     def run_analytics(self) -> None:
         """Build and test Gold before replacing the published warehouse.

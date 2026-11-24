@@ -31,6 +31,7 @@ License: MIT
 from collections.abc import Callable
 from enum import StrEnum
 
+from bacen_ifdata.data_loader.storage import DatabaseService
 from bacen_ifdata.data_transformer.interfaces.controller import TransformerControllerInterface
 from bacen_ifdata.interfaces import SessionProtocol
 from bacen_ifdata.main.cleaner import main as main_cleaner
@@ -133,12 +134,30 @@ class Pipeline:
 
         main_transformer(self.transformer_controller, transformer_institution, transformer_report)
 
-    def loader(self, loaded_institution: Institutions, loaded_report: StrEnum) -> None:
-        """Main process for loading the data.
+    def loader(
+        self,
+        loaded_institution: Institutions,
+        loaded_report: StrEnum,
+        *,
+        database_service: DatabaseService | None = None,
+    ) -> None:
+        """Load one report into the manual Silver warehouse.
 
         Args:
             loaded_institution (Institutions): The institution to be loaded.
             loaded_report (StrEnum): The report to be loaded.
+            database_service: Database participating in the batch transaction.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: A transformed file violates its report period.
+            OSError: A transformed file cannot be read.
+            duckdb.Error: DuckDB cannot load a report.
         """
 
-        main_loader(loaded_institution, loaded_report)
+        main_loader(
+            loaded_institution, loaded_report,
+            database_service=database_service,
+        )
