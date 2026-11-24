@@ -17,7 +17,7 @@ def test_financial_conglomerates_portfolio_number_clients_operations_schema_stru
 
     expected_structure = {
         'instituicao': TransformationType.TEXT,
-        'codigo': TransformationType.NUMERIC,
+        'codigo': TransformationType.INTEGER,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'tipo_de_consolidacao': TransformationType.CATEGORICAL,
         'tipo_de_controle': TransformationType.CATEGORICAL,
@@ -27,8 +27,10 @@ def test_financial_conglomerates_portfolio_number_clients_operations_schema_stru
         'uf': TransformationType.CATEGORICAL,
         'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
-        'quantidade_de_clientes_com_operacoes_ativas': TransformationType.NUMERIC,
-        'quantidade_de_operacoes_ativas': TransformationType.NUMERIC,
+        'quantidade_de_clientes_com_operacoes_ativas': (
+            TransformationType.INTEGER
+        ),
+        'quantidade_de_operacoes_ativas': TransformationType.INTEGER,
     }
 
     assert set(schema.column_names) == set(expected_structure.keys())
@@ -68,7 +70,11 @@ def test_financial_conglomerates_portfolio_number_clients_operations_transform_i
         expected_type = schema.get_type(column)
         if expected_type in (TransformationType.TEXT, TransformationType.CATEGORICAL):
             assert pd.api.types.is_object_dtype(result[column]) or pd.api.types.is_string_dtype(result[column])
-        elif expected_type in (TransformationType.NUMERIC, TransformationType.PERCENTAGE):
+        elif expected_type in (
+            TransformationType.INTEGER,
+            TransformationType.NUMERIC,
+            TransformationType.PERCENTAGE,
+        ):
             assert pd.api.types.is_numeric_dtype(result[column])
         elif expected_type == TransformationType.DATE:
             assert pd.api.types.is_datetime64_any_dtype(result[column])
