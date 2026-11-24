@@ -27,6 +27,8 @@ dependency inversion and facilitating testing with mocks.
 from pathlib import Path
 from typing import Protocol
 
+from bacen_ifdata.scraper.catalog import HistoricalReport
+
 
 # pylint: disable=too-few-public-methods
 class SessionProtocol(Protocol):
@@ -64,4 +66,18 @@ class SessionProtocol(Protocol):
 
         Raises:
             TimeoutError: The browser did not finish downloading the CSV.
+        """
+
+    def export_historical_report(
+        self, target: HistoricalReport, *, fresh: bool = False,
+    ) -> bytes:
+        """Export a complete CSV from the historical report catalog.
+
+        Args:
+            target: Catalog selection to export.
+            fresh: Reload the source before retrying the export.
+        Returns:
+            The original CSV bytes.
+        Raises:
+            IfDataScraperException: The portal could not export the selection.
         """

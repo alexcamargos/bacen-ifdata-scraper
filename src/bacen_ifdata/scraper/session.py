@@ -33,7 +33,11 @@ from time import time
 from typing import TypedDict
 
 from loguru import logger
+from selenium.common.exceptions import WebDriverException
 
+from bacen_ifdata.scraper.catalog import HistoricalReport
+from bacen_ifdata.scraper.exceptions import IfDataScraperException
+from bacen_ifdata.scraper.institutions import InstitutionType
 from bacen_ifdata.scraper.interfaces import BrowserProtocol
 from bacen_ifdata.scraper.storage.processing import move_completed_download
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -96,6 +100,8 @@ class Session:
         self._browser = browser
         self._url = url
         self._download_directory = download_directory
+        self._historical_scope: tuple[str, InstitutionType] | None = None
+        self._reload_historical_page = False
 
         self.session_data: SessionData = {
             'url': self._url,
@@ -120,8 +126,17 @@ class Session:
         self._browser.select_dropdown_option(option, Cfg.TIMEOUT)
 
     def open(self) -> None:
-        """Opens the URL in a web browser."""
+        """Open the source URL in the browser.
 
+        Args:
+            None.
+        Returns:
+            None.
+        Raises:
+            WebDriverException: The browser could not open the source.
+        """
+
+        self._historical_scope = None
         self._browser.initialize(self._url)
 
     def cleanup(self) -> None:
@@ -171,6 +186,7 @@ class Session:
             WebDriverException: If the report cannot be selected or exported.
         """
 
+        self._historical_scope = None
         # Selecting the desired option in the "ulDataBase" dropdown menu.
         self._ensure_and_select_dropdown_option('btnDataBase', data_base)
 
@@ -190,3 +206,35 @@ class Session:
         )
         self.session_data['reports_downloaded'] += 1
         return receipt
+
+    def export_historical_report(
+        self, target: HistoricalReport, *, fresh: bool = False,
+    ) -> bytes:
+        """Capture a report and keep its source data for adjacent exports.
+
+        Args:
+            target: Catalog selection to export.
+            fresh: Reload the source before retrying the export.
+        Returns:
+            The original CSV bytes.
+        Raises:
+            IfDataScraperException: The browser or portal failed to export it.
+        """
+        scope = (target.period, target.institution)
+        try:
+            if fresh or self._reload_historical_page:
+                self.open()
+            contents = self._browser.export_historical_report(
+                target, Cfg.TIMEOUT, reuse=self._historical_scope == scope,
+            )
+        except (IfDataScraperException, WebDriverException) as error:
+            self._historical_scope = None
+            self._reload_historical_page = True
+            raise IfDataScraperException(
+                f'Could not export portal report {target.report_id} for '
+                f'{target.period} (scope {target.institution_id}): {error}'
+            ) from error
+        self._historical_scope = scope
+        self._reload_historical_page = False
+        self.session_data['reports_downloaded'] += 1
+        return contents
