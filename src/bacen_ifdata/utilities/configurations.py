@@ -28,6 +28,7 @@ License: MIT
 """
 
 from dataclasses import dataclass
+from os import getenv
 from pathlib import Path
 
 
@@ -41,15 +42,30 @@ class Config:
     # Maximum waiting time for elements to load.
     TIMEOUT: int = 120
     BASE_DIRECTORY: Path = Path.cwd()
-    DOWNLOAD_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'raw'
+    DATA_DIRECTORY: Path = Path(
+        getenv('IFDATA_DATA_DIRECTORY') or BASE_DIRECTORY / 'data'
+    ).resolve()
+    SCRATCH_DIRECTORY: Path = BASE_DIRECTORY / 'scratch'
+    DOWNLOAD_DIRECTORY: Path = DATA_DIRECTORY / 'raw'
     DOWNLOAD_FILE_NAME: str = 'dados.csv'
-    PROCESSED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'processed'
-    TRANSFORMED_FILES_DIRECTORY: Path = BASE_DIRECTORY / 'data' / 'transformed'
+    _ISOLATED_DATA = DATA_DIRECTORY != BASE_DIRECTORY / 'data'
+    PROCESSED_FILES_DIRECTORY: Path = DATA_DIRECTORY / (
+        'interim/cleaned' if _ISOLATED_DATA else 'processed'
+    )
+    TRANSFORMED_FILES_DIRECTORY: Path = DATA_DIRECTORY / (
+        'interim/typed' if _ISOLATED_DATA else 'transformed'
+    )
     DATA_ANALYTICS_DIRECTORY: Path = BASE_DIRECTORY / 'src' / 'bacen_ifdata' / 'data_analytics'
 
     # Database Star Schema Architecture Paths.
-    SILVER_DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'silver_warehouse.duckdb'
-    GOLD_DATABASE_FILE: Path = BASE_DIRECTORY / 'data' / 'gold_warehouse.duckdb'
+    SILVER_DATABASE_FILE: Path = DATA_DIRECTORY / (
+        'interim/silver_warehouse.duckdb'
+        if _ISOLATED_DATA else 'silver_warehouse.duckdb'
+    )
+    GOLD_DATABASE_FILE: Path = DATA_DIRECTORY / (
+        'processed/gold_warehouse.duckdb'
+        if _ISOLATED_DATA else 'gold_warehouse.duckdb'
+    )
 
 
 __all__ = ['Config']
