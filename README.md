@@ -30,6 +30,7 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
   - [Instalação](#instalação)
   - [Uso do Pipeline](#uso-do-pipeline)
     - [Extração (Scraping)](#extração-scraping)
+    - [Versionamento dos CSVs locais](#versionamento-dos-csvs-locais)
     - [Consolidação dos CSVs](#consolidação-dos-csvs)
     - [Limpeza (Cleaning)](#limpeza-cleaning)
     - [Transformação (Transforming)](#transformação-transforming)
@@ -185,6 +186,20 @@ trimestre. Os filtros `--institution` e `--report` funcionam nos dois
 catálogos. O relatório prudencial de carteiras de instrumentos financeiros
 pode ser selecionado com `--report PORTFOLIO_FINANCIAL_INSTRUMENTS`.
 [IF.data a partir de 2025](https://www3.bcb.gov.br/ifdata/).
+
+### Versionamento dos CSVs locais
+
+```bash
+uv run python ifdata.py --version-local-csv
+```
+
+O comando valida os arquivos `AAAA-MM.csv` e registra cópias idênticas
+na estrutura versionada. O manifesto guarda o caminho do arquivo local,
+o SHA-256 e a data da importação. O comando reutiliza versões com o mesmo
+hash e arquiva conteúdos diferentes quando já há uma versão ativa.
+Os arquivos planos permanecem disponíveis. Use `--data-base`,
+`--institution` ou `--report` para limitar a migração.
+O comando registra no log os arquivos cuja data interna diverge do nome.
 
 ### Consolidação dos CSVs
 
