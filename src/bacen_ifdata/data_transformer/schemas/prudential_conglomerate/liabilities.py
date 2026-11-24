@@ -44,11 +44,13 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -134,6 +136,7 @@ class PrudentialConglomerateLiabilitiesSchema(BaseSchema):
             'description': 'Data-Base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'depositos_vista': {
             'description': 'Depósitos à vista.',
