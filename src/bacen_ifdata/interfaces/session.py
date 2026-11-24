@@ -24,6 +24,7 @@ This module defines the interface for session management, enabling
 dependency inversion and facilitating testing with mocks.
 """
 
+from pathlib import Path
 from typing import Protocol
 
 
@@ -48,11 +49,19 @@ class SessionProtocol(Protocol):
             A list of available data bases.
         """
 
-    def download_reports(self, data_base: str, institution_type: str, report_type: str) -> None:
+    def download_reports(
+        self, data_base: str, institution_type: str, report_type: str,
+    ) -> Path:
         """Downloads reports from the IF.data tool.
 
         Args:
             data_base: The base date for the reports to be downloaded.
             institution_type: The institution type for the reports to be downloaded.
             report_type: The report type to be downloaded.
+
+        Returns:
+            Path to the completed original CSV.
+
+        Raises:
+            TimeoutError: The browser did not finish downloading the CSV.
         """

@@ -27,12 +27,15 @@ Author: Alexsander Lopes Camargos
 License: MIT
 """
 
+from pathlib import Path
+from tempfile import mkdtemp
 from time import time
 from typing import TypedDict
 
 from loguru import logger
 
 from bacen_ifdata.scraper.interfaces import BrowserProtocol
+from bacen_ifdata.scraper.storage.processing import move_completed_download
 from bacen_ifdata.utilities.configurations import Config as Cfg
 from bacen_ifdata.utilities.humanize import seconds_to_human_readable
 
@@ -73,16 +76,26 @@ class Session:
         download_reports(data_base, institution_type, report_type): Downloads reports from the IF.data tool.
     """
 
-    def __init__(self, browser: BrowserProtocol, url: str) -> None:
+    def __init__(
+        self, browser: BrowserProtocol, url: str, download_directory: Path,
+    ) -> None:
         """Initializes a new instance of the Session class.
 
         Args:
             browser (BrowserProtocol): The browser instance for web interactions.
             url (str): The URL to open in the web session.
+            download_directory: Dedicated Firefox download directory.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
         """
 
         self._browser = browser
         self._url = url
+        self._download_directory = download_directory
 
         self.session_data: SessionData = {
             'url': self._url,
@@ -136,7 +149,9 @@ class Session:
 
         return self._browser.get_dropdown_options('ulDataBase')
 
-    def download_reports(self, data_base: str, institution_type: str, report_type: str) -> None:
+    def download_reports(
+        self, data_base: str, institution_type: str, report_type: str,
+    ) -> Path:
         """Downloads reports from the IF.data tool.
 
         IMPORTANT: The system generates reports dynamically, so we need to
@@ -146,6 +161,14 @@ class Session:
             data_base (str): The base date for the reports to be downloaded.
             institution_type (str): The institution type for the reports to be downloaded.
             report_type (str): The report type to be downloaded.
+
+        Returns:
+            Path to the completed CSV, isolated from the next export.
+
+        Raises:
+            TimeoutError: If Firefox does not finish the current download.
+            OSError: If the completed download cannot be moved.
+            WebDriverException: If the report cannot be selected or exported.
         """
 
         # Selecting the desired option in the "ulDataBase" dropdown menu.
@@ -160,5 +183,10 @@ class Session:
         # Ensure the report content is loaded before proceeding with the download of the CSV file.
         self._browser.download_report(Cfg.TIMEOUT)
 
-        # Update the counter for downloaded reports.
+        filename = Cfg.DOWNLOAD_FILE_NAME
+        receipt = Path(mkdtemp(dir=self._download_directory)) / filename
+        move_completed_download(
+            self._download_directory / filename, receipt, Cfg.TIMEOUT,
+        )
         self.session_data['reports_downloaded'] += 1
+        return receipt
