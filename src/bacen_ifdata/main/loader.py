@@ -36,6 +36,7 @@ from enum import StrEnum
 from loguru import logger
 
 from bacen_ifdata.data_loader.controller import LoaderController
+from bacen_ifdata.data_loader.current import replace_current_period
 from bacen_ifdata.data_loader.storage import DatabaseService
 from bacen_ifdata.data_transformer.schemas.mapper import SCHEMA_BY_INSTITUTION_AND_REPORT
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
@@ -50,7 +51,7 @@ def main(
     *,
     database_service: DatabaseService | None = None,
 ) -> None:
-    """Load one report's historical files with period validation.
+    """Load one report's typed historical and current files.
 
     Args:
         institution (Institutions): The institution for which the reports will be loaded.
@@ -66,17 +67,10 @@ def main(
         duckdb.Error: DuckDB cannot load the report.
     """
 
-    # Check if we have schemas for this institution.
-    if institution not in SCHEMA_BY_INSTITUTION_AND_REPORT:
-        logger.warning(f'No schema mapping found for institution: {institution.name}. Skipping loading.')
-        return
-
-    # Get the schema for the report.
-    schema_by_report = SCHEMA_BY_INSTITUTION_AND_REPORT[institution]
-    report_schema = schema_by_report.get(report)
-    if report_schema is None:
-        logger.warning(f'No schema found for report: {report.name} in {institution.name}. Skipping.')
-        return
+    scope, name = institution.name.lower(), report.name.lower()
+    report_schema = SCHEMA_BY_INSTITUTION_AND_REPORT.get(institution, {}).get(
+        report,
+    )
 
     # Build the path to the input data directory.
     input_data_path = build_directory_path(
@@ -90,6 +84,22 @@ def main(
     )
     try:
         with transaction:
+            current_input = (
+                Cfg.CURRENT_INTERIM_DIRECTORY / 'typed' / scope / name
+            )
+            for file in sorted(current_input.glob('*.parquet')):
+                month = file.stem
+                if not PERIOD.fullmatch(month) or month <= Cfg.HISTORICAL_END:
+                    raise ValueError(
+                        f'Unexpected current report filename: {file}'
+                    )
+                replace_current_period(
+                    database.connection, file, scope, name,
+                    date.fromisoformat(f'{month}-01'),
+                )
+            if report_schema is None:
+                return
+
             for file in sorted(input_data_path.glob('*.csv')):
                 month = file.stem
                 if not PERIOD.fullmatch(month):

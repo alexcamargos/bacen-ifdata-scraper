@@ -83,6 +83,9 @@ class Config:
     ).resolve()
     SCRATCH_DIRECTORY: Path = BASE_DIRECTORY / 'scratch'
     DOWNLOAD_DIRECTORY: Path = DATA_DIRECTORY / 'raw'
+    CURRENT_INTERIM_DIRECTORY: Path = (
+        DATA_DIRECTORY / 'interim' / 'ifdata_2025'
+    )
     DOWNLOAD_FILE_NAME: str = 'dados.csv'
     _ISOLATED_DATA = DATA_DIRECTORY != BASE_DIRECTORY / 'data'
     PROCESSED_FILES_DIRECTORY: Path = DATA_DIRECTORY / (

@@ -198,19 +198,43 @@ class PipelineManager:
         if not found:
             raise ValueError('No local IF.data originals match the selection.')
 
-    def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the cleaner."""
+    def run_cleaner(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Normalize originals in the requested institutional scopes.
 
-        # Run the cleaner.
-        targets = self._get_execution_targets(institution, report)
+        Args:
+            institution: Optional scope filter.
+            report: Optional report filter.
+        Returns:
+            None.
+        Raises:
+            IfDataScraperException: An original failed validation.
+            OSError: A local staging file could not be written.
+        """
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         for process_institution, process_report in targets:
             self.pipeline.cleaner(process_institution, process_report)
 
-    def run_transformer(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the transformer."""
+    def run_transformer(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Type normalized periods in the requested institutional scopes.
 
-        # Run the transformer for all institutions.
-        targets = self._get_execution_targets(institution, report)
+        Args:
+            institution: Optional scope filter.
+            report: Optional report filter.
+        Returns:
+            None.
+        Raises:
+            ValueError: An input period is invalid.
+            OSError: A local staging file could not be written.
+        """
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         for process_institution, process_report in targets:
             self.pipeline.transformer(process_institution, process_report)
 
@@ -231,7 +255,9 @@ class PipelineManager:
             OSError: A transformed CSV cannot be read.
             duckdb.Error: DuckDB cannot complete the reload.
         """
-        targets = self._get_execution_targets(institution, report)
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         filtered = bool(institution or report)
         with self._database_service.transaction():
             if not filtered:
