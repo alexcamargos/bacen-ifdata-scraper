@@ -348,8 +348,31 @@ models:
   - name: roa
     description: Return on Assets (Lucro / Ativo Total).
 - name: fato_carteira_credito_produto
-  description: Fato detalhando a carteira de crédito por produto e modalidade.
+  description: Carteira de crédito por instituição, data-base, produto,
+    faixa de vencimento e tipo de pessoa.
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      arguments:
+        combination_of_columns:
+        - id_instituicao
+        - id_data
+        - id_produto
+        - id_faixa_vencimento
+        - tipo_pessoa
   columns:
+  - name: tipo_pessoa
+    description: Tipo de pessoa identificado pelo relatório de origem na Silver.
+    tests:
+    - not_null
+    - accepted_values:
+        arguments:
+          values: ['PF', 'PJ']
+  - name: id_produto
+    tests:
+    - not_null
+  - name: id_faixa_vencimento
+    tests:
+    - not_null
   - name: id_instituicao
     tests:
     - not_null
