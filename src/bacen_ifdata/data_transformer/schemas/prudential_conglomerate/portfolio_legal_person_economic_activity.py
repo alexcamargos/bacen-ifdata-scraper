@@ -44,10 +44,12 @@ class PrudentialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchem
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -148,7 +150,11 @@ class PrudentialConglomeratePortfolioLegalPersonEconomicActivitySchema(BaseSchem
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date',
+            'required': True,
+        },
         # TOTAL DA CARTEIRA
         'total_carteira_pessoa_juridica': {
             'description': (
