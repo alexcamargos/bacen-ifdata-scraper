@@ -44,11 +44,13 @@ class PrudentialConglomerateIncomeStatementSchema(BaseSchema):
             'description': 'Nome da instituição ou conglomerado no cadastro do Banco Central.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Código da instituição ou conglomerado no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -134,6 +136,7 @@ class PrudentialConglomerateIncomeStatementSchema(BaseSchema):
             'description': 'Data-base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'rendas_operacoes_de_credito': {
             'description': 'Rendas de Operações de Crédito.',
@@ -206,7 +209,11 @@ class PrudentialConglomerateIncomeStatementSchema(BaseSchema):
         'resultado_intermediacao_financeira': {
             'description': 'Resultado de Intermediação Financeira.',
             'type': 'numeric',
-            'raw_csv_header': 'Resultado de Intermediação Financeira (c) = (a) + (b)',
+            'raw_csv_header': [
+                'Resultado de Intermediação Financeira - '
+                'Resultado de Intermediação Financeira (c) = (a) + (b)',
+                'Resultado de Intermediação Financeira (c) = (a) + (b)',
+            ],
         },
         'rendas_prestacao_servicos': {
             'description': 'Rendas de Prestação de Serviços.',
