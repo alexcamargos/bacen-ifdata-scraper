@@ -44,11 +44,13 @@ class FinancialConglomerateIncomeStatementSchema(BaseSchema):
             'description': 'Nome da instituição ou do conglomerado no cadastro do Banco Central.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Código do conglomerado ou CNPJ no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -132,6 +134,7 @@ class FinancialConglomerateIncomeStatementSchema(BaseSchema):
             'description': 'Data-base do Relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'rendas_operacoes_de_credito': {
             'description': 'Rendas de Operações de Crédito.',
