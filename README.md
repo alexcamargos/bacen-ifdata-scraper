@@ -32,6 +32,7 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
     - [Extração (Scraping)](#extração-scraping)
     - [Versionamento dos CSVs locais](#versionamento-dos-csvs-locais)
     - [Consolidação dos CSVs](#consolidação-dos-csvs)
+    - [Consulta dos dados de 2025 em diante](#consulta-dos-dados-de-2025-em-diante)
     - [Limpeza (Cleaning)](#limpeza-cleaning)
     - [Transformação (Transforming)](#transformação-transforming)
     - [Carga (Loading)](#carga-loading)
@@ -220,10 +221,49 @@ a pasta `data` existente para reutilizar o histórico.
 O consolidado reúne as linhas de instituições e preserva os valores
 publicados como texto. As colunas variam conforme o leiaute de origem.
 Campos ausentes no trimestre ficam vazios e os totais permanecem nos
-originais. A equivalência contábil entre períodos exige uma etapa
-posterior, em especial para provisões de crédito. A transformação
-analítica e a carga em Silver e Gold continuam limitadas a 2024.
+originais.
+
+### Consulta dos dados de 2025 em diante
+
+```bash
+uv run dbt deps --project-dir src/bacen_ifdata/data_analytics
+uv run python ifdata.py --update
+uv run python ifdata.py --download-dictionaries
+```
+
+O comando `--update` carrega os originais locais e publica uma release
+Silver e Gold após o `dbt build`. Os comandos manuais de limpeza,
+transformação e carga também aceitam o leiaute atual. Seus arquivos de
+trabalho ficam em `data/interim/ifdata_2025/`.
+
+A tabela Gold `fato_ifdata_2025_campos` contém os campos publicados nos
+relatórios atuais. Cada linha identifica o escopo, o relatório, a
+data-base, a posição do registro entre as instituições e a posição da
+coluna. `valor_original` preserva o texto publicado, inclusive
+marcadores como `NI`. Células vazias ficam como `NULL`. Quando o
+campo contém um número reconhecível, `valor_numerico` oferece uma
+representação decimal na escala publicada. Um percentual aparece em
+pontos percentuais e é identificado em `formato_valor`.
+
+A view `view_resumo_prudencial_serie` reúne Ativo Total e Patrimônio
+Líquido do Resumo Prudencial na unidade publicada de R$ mil. A coluna
+`regime_contabil` identifica o Cosif de cada observação. As definições
+de provisão e as classificações de risco permanecem vinculadas ao
+relatório e ao leiaute em que foram publicadas. As tabelas de fatos
+históricas conservam os contratos anteriores.
 [Resolução CMN nº 4.966](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=4966&tipo=RESOLU%C3%87%C3%83O+CMN).
+
+```sql
+select data_base, codigo, regime_contabil, ativo_total, patrimonio_liquido
+from view_resumo_prudencial_serie
+where data_base between date '2024-12-01' and date '2025-03-01'
+order by codigo, data_base;
+```
+
+Os dicionários de colunas ficam em
+[`docs/dicionario_dados/2025_em_diante/`](docs/dicionario_dados/2025_em_diante/),
+por data-base, escopo e relatório. O manifesto registra a URL e o
+SHA-256 de cada documento.
 
 ### Limpeza (Cleaning)
 

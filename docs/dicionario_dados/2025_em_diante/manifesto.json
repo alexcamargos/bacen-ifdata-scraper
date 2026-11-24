@@ -1,0 +1,1190 @@
+{
+  "2025-03/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-03/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_107_0.pdf"
+  },
+  "2025-03/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-03/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_118_0.pdf",
+    "report_id": 118,
+    "sha256": "4eb53f3ae0df00bc215f697fc6933a1856069a4c1129d8337ef8024f9deb2563",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_118_0.pdf"
+  },
+  "2025-03/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-03/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_110_0.pdf",
+    "report_id": 110,
+    "sha256": "23dc44207df7afc6365b7d02b353870b64c79766ccaa4c61988e21cf71c859ec",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_110_0.pdf"
+  },
+  "2025-03/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-03/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_119_0.pdf",
+    "report_id": 119,
+    "sha256": "39926ed9c8e774f23b33961febc73955c5f449c0c3b59da0006564d19cb8654e",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_119_0.pdf"
+  },
+  "2025-03/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-03/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_106_0.pdf"
+  },
+  "2025-03/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-03/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1e47595909ef491239363ec6ffa505c54ba8be340fcadb16b6dbbfdf55d36c74",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_117_0.pdf"
+  },
+  "2025-03/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-03/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_109_0.pdf",
+    "report_id": 109,
+    "sha256": "fb7579b5653edcbd7da5655017dbb3baff6b04347835e8a47970916c79fa5585",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_109_0.pdf"
+  },
+  "2025-03/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-03/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_120_0.pdf",
+    "report_id": 120,
+    "sha256": "334e20e9f84ad3f48a45e0b4862e5ff073032a07f240f1a42f6daa14e1aee7ea",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_120_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_105_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_115_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_116_0.pdf",
+    "report_id": 116,
+    "sha256": "520d827987ef95c3176b6dc477ba55fb7babf84ba6bf1e845226643fe7701395",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_116_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_108_0.pdf",
+    "report_id": 108,
+    "sha256": "02fe9f6fd8dff779b3377975707036032f6927f71f2b8cde7d04c255d3af3577",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_108_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_130_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_126_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_125_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_123_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_127_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_129_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_128_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_124_0.pdf"
+  },
+  "2025-03/prudential_conglomerates/segmentation.json": {
+    "format": "json",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/segmentation.json",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_122_0.pdf",
+    "report_id": 122,
+    "sha256": "4c4e1acb87cd122311d6d54731426d7bc5f08af39a69183f528a7eebf4461f34",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/arquivos?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_122.json"
+  },
+  "2025-03/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-03/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_121_0.pdf",
+    "report_id": 121,
+    "sha256": "df756d7aba7591b91372fc0fb8bc859e790cdb4e2e8008046e8a53729cc88e4f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_121_0.pdf"
+  },
+  "2025-06/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-06/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_107_0.pdf"
+  },
+  "2025-06/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-06/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_118_0.pdf",
+    "report_id": 118,
+    "sha256": "4eb53f3ae0df00bc215f697fc6933a1856069a4c1129d8337ef8024f9deb2563",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_118_0.pdf"
+  },
+  "2025-06/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-06/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_110_0.pdf",
+    "report_id": 110,
+    "sha256": "23dc44207df7afc6365b7d02b353870b64c79766ccaa4c61988e21cf71c859ec",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_110_0.pdf"
+  },
+  "2025-06/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-06/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_119_0.pdf",
+    "report_id": 119,
+    "sha256": "39926ed9c8e774f23b33961febc73955c5f449c0c3b59da0006564d19cb8654e",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_119_0.pdf"
+  },
+  "2025-06/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-06/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_106_0.pdf"
+  },
+  "2025-06/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-06/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1e47595909ef491239363ec6ffa505c54ba8be340fcadb16b6dbbfdf55d36c74",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_117_0.pdf"
+  },
+  "2025-06/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-06/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_109_0.pdf",
+    "report_id": 109,
+    "sha256": "fb7579b5653edcbd7da5655017dbb3baff6b04347835e8a47970916c79fa5585",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_109_0.pdf"
+  },
+  "2025-06/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-06/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_120_0.pdf",
+    "report_id": 120,
+    "sha256": "334e20e9f84ad3f48a45e0b4862e5ff073032a07f240f1a42f6daa14e1aee7ea",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_120_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_105_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_115_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_116_0.pdf",
+    "report_id": 116,
+    "sha256": "520d827987ef95c3176b6dc477ba55fb7babf84ba6bf1e845226643fe7701395",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_116_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_108_0.pdf",
+    "report_id": 108,
+    "sha256": "02fe9f6fd8dff779b3377975707036032f6927f71f2b8cde7d04c255d3af3577",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_108_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_130_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_126_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_125_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_123_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_127_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_129_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_128_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_124_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/segmentation.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/segmentation.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_131_0.pdf",
+    "report_id": 131,
+    "sha256": "f367136c895ba943b27cc33643e5839c169fa20967d7e881e3b6a93de09c9070",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_131_0.pdf"
+  },
+  "2025-06/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-06/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_121_0.pdf",
+    "report_id": 121,
+    "sha256": "df756d7aba7591b91372fc0fb8bc859e790cdb4e2e8008046e8a53729cc88e4f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202506%2Ftrel202506_121_0.pdf"
+  },
+  "2025-09/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-09/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_107_0.pdf"
+  },
+  "2025-09/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-09/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_118_0.pdf",
+    "report_id": 118,
+    "sha256": "4eb53f3ae0df00bc215f697fc6933a1856069a4c1129d8337ef8024f9deb2563",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_118_0.pdf"
+  },
+  "2025-09/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-09/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_110_0.pdf",
+    "report_id": 110,
+    "sha256": "23dc44207df7afc6365b7d02b353870b64c79766ccaa4c61988e21cf71c859ec",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_110_0.pdf"
+  },
+  "2025-09/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-09/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_119_0.pdf",
+    "report_id": 119,
+    "sha256": "39926ed9c8e774f23b33961febc73955c5f449c0c3b59da0006564d19cb8654e",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_119_0.pdf"
+  },
+  "2025-09/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-09/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_106_0.pdf"
+  },
+  "2025-09/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-09/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1e47595909ef491239363ec6ffa505c54ba8be340fcadb16b6dbbfdf55d36c74",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_117_0.pdf"
+  },
+  "2025-09/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-09/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_109_0.pdf",
+    "report_id": 109,
+    "sha256": "fb7579b5653edcbd7da5655017dbb3baff6b04347835e8a47970916c79fa5585",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_109_0.pdf"
+  },
+  "2025-09/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-09/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_120_0.pdf",
+    "report_id": 120,
+    "sha256": "334e20e9f84ad3f48a45e0b4862e5ff073032a07f240f1a42f6daa14e1aee7ea",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_120_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_105_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_115_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_116_0.pdf",
+    "report_id": 116,
+    "sha256": "520d827987ef95c3176b6dc477ba55fb7babf84ba6bf1e845226643fe7701395",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_116_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_108_0.pdf",
+    "report_id": 108,
+    "sha256": "02fe9f6fd8dff779b3377975707036032f6927f71f2b8cde7d04c255d3af3577",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_108_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_130_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_126_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_125_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_123_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_127_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_129_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_128_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_124_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/segmentation.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/segmentation.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_131_0.pdf",
+    "report_id": 131,
+    "sha256": "f367136c895ba943b27cc33643e5839c169fa20967d7e881e3b6a93de09c9070",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_131_0.pdf"
+  },
+  "2025-09/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-09/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_121_0.pdf",
+    "report_id": 121,
+    "sha256": "df756d7aba7591b91372fc0fb8bc859e790cdb4e2e8008046e8a53729cc88e4f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202509%2Ftrel202509_121_0.pdf"
+  },
+  "2025-12/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-12/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_107_0.pdf"
+  },
+  "2025-12/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-12/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_118_0.pdf",
+    "report_id": 118,
+    "sha256": "4eb53f3ae0df00bc215f697fc6933a1856069a4c1129d8337ef8024f9deb2563",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_118_0.pdf"
+  },
+  "2025-12/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-12/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_110_0.pdf",
+    "report_id": 110,
+    "sha256": "23dc44207df7afc6365b7d02b353870b64c79766ccaa4c61988e21cf71c859ec",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_110_0.pdf"
+  },
+  "2025-12/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2025-12/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_119_0.pdf",
+    "report_id": 119,
+    "sha256": "39926ed9c8e774f23b33961febc73955c5f449c0c3b59da0006564d19cb8654e",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_119_0.pdf"
+  },
+  "2025-12/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-12/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_106_0.pdf"
+  },
+  "2025-12/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-12/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1e47595909ef491239363ec6ffa505c54ba8be340fcadb16b6dbbfdf55d36c74",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_117_0.pdf"
+  },
+  "2025-12/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-12/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_109_0.pdf",
+    "report_id": 109,
+    "sha256": "fb7579b5653edcbd7da5655017dbb3baff6b04347835e8a47970916c79fa5585",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_109_0.pdf"
+  },
+  "2025-12/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2025-12/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_120_0.pdf",
+    "report_id": 120,
+    "sha256": "334e20e9f84ad3f48a45e0b4862e5ff073032a07f240f1a42f6daa14e1aee7ea",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_120_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_105_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_115_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_116_0.pdf",
+    "report_id": 116,
+    "sha256": "520d827987ef95c3176b6dc477ba55fb7babf84ba6bf1e845226643fe7701395",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_116_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_108_0.pdf",
+    "report_id": 108,
+    "sha256": "02fe9f6fd8dff779b3377975707036032f6927f71f2b8cde7d04c255d3af3577",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_108_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_130_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_126_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_125_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_123_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_127_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_129_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_128_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_124_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/segmentation.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/segmentation.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_131_0.pdf",
+    "report_id": 131,
+    "sha256": "f367136c895ba943b27cc33643e5839c169fa20967d7e881e3b6a93de09c9070",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_131_0.pdf"
+  },
+  "2025-12/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2025-12/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_121_0.pdf",
+    "report_id": 121,
+    "sha256": "df756d7aba7591b91372fc0fb8bc859e790cdb4e2e8008046e8a53729cc88e4f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202512%2Ftrel202512_121_0.pdf"
+  },
+  "2026-03/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-03/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_107_0.pdf"
+  },
+  "2026-03/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-03/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_118_0.pdf",
+    "report_id": 118,
+    "sha256": "4eb53f3ae0df00bc215f697fc6933a1856069a4c1129d8337ef8024f9deb2563",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_118_0.pdf"
+  },
+  "2026-03/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-03/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_110_0.pdf",
+    "report_id": 110,
+    "sha256": "23dc44207df7afc6365b7d02b353870b64c79766ccaa4c61988e21cf71c859ec",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_110_0.pdf"
+  },
+  "2026-03/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-03/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_119_0.pdf",
+    "report_id": 119,
+    "sha256": "39926ed9c8e774f23b33961febc73955c5f449c0c3b59da0006564d19cb8654e",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_119_0.pdf"
+  },
+  "2026-03/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-03/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_106_0.pdf"
+  },
+  "2026-03/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-03/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1e47595909ef491239363ec6ffa505c54ba8be340fcadb16b6dbbfdf55d36c74",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_117_0.pdf"
+  },
+  "2026-03/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-03/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_109_0.pdf",
+    "report_id": 109,
+    "sha256": "fb7579b5653edcbd7da5655017dbb3baff6b04347835e8a47970916c79fa5585",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_109_0.pdf"
+  },
+  "2026-03/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-03/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_120_0.pdf",
+    "report_id": 120,
+    "sha256": "334e20e9f84ad3f48a45e0b4862e5ff073032a07f240f1a42f6daa14e1aee7ea",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_120_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_105_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_115_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_116_0.pdf",
+    "report_id": 116,
+    "sha256": "520d827987ef95c3176b6dc477ba55fb7babf84ba6bf1e845226643fe7701395",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_116_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_108_0.pdf",
+    "report_id": 108,
+    "sha256": "02fe9f6fd8dff779b3377975707036032f6927f71f2b8cde7d04c255d3af3577",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_108_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_130_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_126_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_125_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_123_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_127_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_129_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_128_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_124_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/segmentation.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/segmentation.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_131_0.pdf",
+    "report_id": 131,
+    "sha256": "f367136c895ba943b27cc33643e5839c169fa20967d7e881e3b6a93de09c9070",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_131_0.pdf"
+  },
+  "2026-03/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-03/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_121_0.pdf",
+    "report_id": 121,
+    "sha256": "df756d7aba7591b91372fc0fb8bc859e790cdb4e2e8008046e8a53729cc88e4f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202603%2Ftrel202603_121_0.pdf"
+  },
+  "2026-06/financial_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-06/financial_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_107_0.pdf",
+    "report_id": 107,
+    "sha256": "32dc76a8190cb7be63f22fe14511bcd1325c58aa9e36b8d003040fbd6845f416",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_107_0.pdf"
+  },
+  "2026-06/financial_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-06/financial_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_118_0.pdf",
+    "report_id": 118,
+    "sha256": "1f8355d9aaf32ff686d0a093171e0697ffc6ffe61d911cc82891f007b80ea460",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_118_0.pdf"
+  },
+  "2026-06/financial_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-06/financial_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_110_0.pdf",
+    "report_id": 110,
+    "sha256": "d8d49bb0095ac0abedf7453565b2f1439eb7dd14cb1e503adf57391da42a7f6b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_110_0.pdf"
+  },
+  "2026-06/financial_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1005,
+    "path": "2026-06/financial_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_119_0.pdf",
+    "report_id": 119,
+    "sha256": "5ac2f28ab082c33a2f4717bbe0e2f7f27ffe6d9105eeeec9637d3629a2f69703",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_119_0.pdf"
+  },
+  "2026-06/individual_institutions/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-06/individual_institutions/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_106_0.pdf",
+    "report_id": 106,
+    "sha256": "e9f692b6b14d6df79c1b79e27ae70ba9e5046ba8477d07b543fbfce0117f9a4b",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_106_0.pdf"
+  },
+  "2026-06/individual_institutions/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-06/individual_institutions/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_117_0.pdf",
+    "report_id": 117,
+    "sha256": "1904365469e38bb4f7052a32980612eb62e3d05cb32aa4cbedb938fcf6cd8b97",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_117_0.pdf"
+  },
+  "2026-06/individual_institutions/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-06/individual_institutions/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_109_0.pdf",
+    "report_id": 109,
+    "sha256": "4cc3d9f961aa50895128b0e442d0e85fc3df758e4f67cf0bb838e912b1d236db",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_109_0.pdf"
+  },
+  "2026-06/individual_institutions/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1006,
+    "path": "2026-06/individual_institutions/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_120_0.pdf",
+    "report_id": 120,
+    "sha256": "5aaaf1c6749c00a8a4524e776c02630bffd8500106d9ca88d5d73ce4afff0bf4",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_120_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/assets.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/assets.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_105_0.pdf",
+    "report_id": 105,
+    "sha256": "a10f69c52653458c6d1f591831c81be4f3c9a73c84f89b0fa2a9c4b4a5fbab27",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_105_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/capital_information.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/capital_information.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_115_0.pdf",
+    "report_id": 115,
+    "sha256": "f2712ceb8c83622dbcacc2d28a997f88f4d6e3d17cdbef7d224e68415c72fbb6",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_115_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/income_statement.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/income_statement.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_116_0.pdf",
+    "report_id": 116,
+    "sha256": "2f96cad0dc934be24d09bc9f8313f29d94e27d360e06fb6eee0bc471104c4aed",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_116_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/liabilities.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/liabilities.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_108_0.pdf",
+    "report_id": 108,
+    "sha256": "b6ef8f500784ec23765f0a5ed5b304ad63399ad497202f403acd8d68034bb54f",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_108_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_financial_instruments.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_financial_instruments.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_130_0.pdf",
+    "report_id": 130,
+    "sha256": "290881c7194b7dcbc3ca6cec32528a7ba28e1d1e17de0e55617f6261e8e15af8",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_130_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_geographic_region.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_geographic_region.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_126_0.pdf",
+    "report_id": 126,
+    "sha256": "5a2169ebd266e7677a14d26ba2cce8d6369ab2f71ae342f903377e3c81c88849",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_126_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_indexer.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_indexer.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_125_0.pdf",
+    "report_id": 125,
+    "sha256": "142ad26b34f2e7523f0de059095708f4e221f2347dd461829e6675f2dcb66dcb",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_125_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_individuals_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_individuals_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_123_0.pdf",
+    "report_id": 123,
+    "sha256": "019804b78165ab82b1a47947d836b6fe20c687c9cfbd33c7c0bf09eab637f15c",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_123_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_legal_person_business_size.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_legal_person_business_size.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_127_0.pdf",
+    "report_id": 127,
+    "sha256": "1c66256368bd9669ce8240da3fedbd4980c1f30d449aa213777bffeac61b4673",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_127_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_legal_person_economic_activity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_129_0.pdf",
+    "report_id": 129,
+    "sha256": "5544e08f6582dde65a6eb8becc7e0dea5ccd51de7ddc438601d18ff41e676251",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_129_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_legal_person_type_maturity.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_128_0.pdf",
+    "report_id": 128,
+    "sha256": "5659972da5c37d2d0cffba5efde9da1fd236e1f04c89ace8c1ec6bc84f4f03be",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_128_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/portfolio_number_clients_operations.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/portfolio_number_clients_operations.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_124_0.pdf",
+    "report_id": 124,
+    "sha256": "44f4f816bc86bc6ced965ee2d5bba1eb784815dae319b668a6d634d094f6da26",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_124_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/segmentation.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/segmentation.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_131_0.pdf",
+    "report_id": 131,
+    "sha256": "f367136c895ba943b27cc33643e5839c169fa20967d7e881e3b6a93de09c9070",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_131_0.pdf"
+  },
+  "2026-06/prudential_conglomerates/summary.pdf": {
+    "format": "pdf",
+    "institution_id": 1009,
+    "path": "2026-06/prudential_conglomerates/summary.pdf",
+    "pdf_url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_121_0.pdf",
+    "report_id": 121,
+    "sha256": "96ee88924256153244d9fc0fff2b1f10acddc57be7593e3fabafa632ed464d16",
+    "url": "https://www3.bcb.gov.br/ifdata/rest/pdf?nomeArquivo=ifdata_2025_2030%2F%2F202606%2Ftrel202606_121_0.pdf"
+  }
+}
