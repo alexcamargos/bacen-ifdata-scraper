@@ -34,6 +34,8 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from bacen_ifdata.scraper.catalog import HistoricalReport
+from bacen_ifdata.scraper.historical_export import export_historical_csv
 from bacen_ifdata.scraper.utils import ensure_clickable
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
@@ -166,3 +168,22 @@ class Browser:
             )
         )
         self._ensure_clickable(wait_time, By.ID, 'aExportCsv')
+
+    def export_historical_report(
+        self, target: HistoricalReport, wait_time: int, *, reuse: bool,
+    ) -> bytes:
+        """Run the historical portal's native CSV export.
+
+        Args:
+            target: Catalog selection to export.
+            wait_time: Source load timeout in seconds.
+            reuse: Reuse data already loaded for the same period and scope.
+        Returns:
+            The original CSV bytes.
+        Raises:
+            IfDataScraperException: The portal could not export the selection.
+            WebDriverException: The browser failed during export.
+        """
+        return export_historical_csv(
+            self._driver, target, wait_time, reuse=reuse,
+        )

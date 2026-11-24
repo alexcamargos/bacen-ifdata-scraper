@@ -26,6 +26,8 @@ dependency inversion and facilitating testing with mocks.
 
 from typing import Protocol
 
+from bacen_ifdata.scraper.catalog import HistoricalReport
+
 
 # pylint: disable=too-few-public-methods
 class BrowserProtocol(Protocol):
@@ -80,4 +82,20 @@ class BrowserProtocol(Protocol):
 
         Args:
             wait_time: The maximum time to wait for the button to become clickable.
+        """
+
+    def export_historical_report(
+        self, target: HistoricalReport, wait_time: int, *, reuse: bool,
+    ) -> bytes:
+        """Run the historical portal's native CSV export.
+
+        Args:
+            target: Catalog selection to export.
+            wait_time: Source load timeout in seconds.
+            reuse: Reuse data already loaded for the same period and scope.
+        Returns:
+            The original CSV bytes.
+        Raises:
+            IfDataScraperException: The portal could not export the selection.
+            WebDriverException: The browser failed during export.
         """
