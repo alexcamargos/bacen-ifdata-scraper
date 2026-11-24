@@ -42,6 +42,22 @@ class DataFrameTransformerProtocol(Protocol):
     def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
         """Transforms numeric columns in the data frame."""
 
+    def transform_integer_columns(
+        self, data_frame: pd.DataFrame, columns: list[str]
+    ) -> pd.DataFrame:
+        """Transform whole-number columns without rounding.
+
+        Args:
+            data_frame: The report data.
+            columns: Names of the integer columns.
+
+        Returns:
+            The report with typed integer columns.
+
+        Raises:
+            ValueError: A number is fractional or out of range.
+        """
+
     def transform_percentage_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
         """Transforms percentage columns in the data frame."""
 

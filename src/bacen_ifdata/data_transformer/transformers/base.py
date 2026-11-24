@@ -38,32 +38,38 @@ class BaseTransformer:
 
         Returns:
             pd.Series: A pandas Series with float values representing the percentages.
+
+        Raises:
+            None.
         """
 
-        series_cleaned = series.str.replace('%', '', regex=False).str.replace(',', '.', regex=False)
+        series_cleaned = series.str.replace('%', '', regex=False)
+        has_decimal_comma = series_cleaned.str.contains(',', na=False)
+        localized = (
+            series_cleaned.str.replace('.', '', regex=False)
+            .str.replace(',', '.', regex=False)
+        )
+        series_cleaned = series_cleaned.mask(has_decimal_comma, localized)
 
         return pd.to_numeric(series_cleaned, errors='coerce') / 100
 
-    def _normalize_numeric_series(self, series: pd.Series) -> pd.Series:
-        """Cleans and converts a pandas Series to a numeric type, handling errors gracefully.
+    def _normalize_numeric_text(self, series: pd.Series) -> pd.Series:
+        """Normalize the decimal and thousands separators of IF.data values.
 
         Args:
-            series (pd.Series): The pandas Series containing numeric values as strings.
+            series: A series containing values in Brazilian notation.
 
         Returns:
-            pd.Series: A pandas Series with numeric values.
+            Numeric strings normalized for parsing, with nulls preserved.
+
+        Raises:
+            None.
         """
-
-        # Convert to string first to ensure .str accessor works
-        series_as_string = series.astype(str)
-
-        # If the series contains decimal values, normalize them.
-        series_cleaned = series_as_string.str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
-
-        # Convert the cleaned series to numeric, rounding and converting to Int64.
-        numeric_series = pd.to_numeric(series_cleaned, errors='coerce')
-
-        return numeric_series.round().astype('Int64')
+        return (
+            series.astype('string').str.strip()
+            .str.replace('.', '', regex=False)
+            .str.replace(',', '.', regex=False)
+        )
 
     def _remove_exact_duplicates(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Removes exact duplicates (character by character replication).
@@ -183,20 +189,58 @@ class BaseTransformer:
 
         return clean_df
 
-    def transform_numeric_columns(self, data_frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-        """Transforms numeric columns in the DataFrame to a standard numeric format.
+    def transform_numeric_columns(
+        self, data_frame: pd.DataFrame, columns: list[str]
+    ) -> pd.DataFrame:
+        """Parse measures with their original fractional values.
 
         Args:
-            data_frame (pd.DataFrame): The DataFrame to be processed.
-            columns (list[str]): The list of column names to be transformed.
+            data_frame: The report data.
+            columns: Names of the numeric measure columns.
 
         Returns:
-            pd.DataFrame: The processed DataFrame.
+            The report with numeric values and nullable unavailable measures.
+
+        Raises:
+            None.
         """
 
         for column in columns:
             if column in data_frame.columns:
-                data_frame[column] = self._normalize_numeric_series(data_frame[column])
+                normalized = self._normalize_numeric_text(data_frame[column])
+                data_frame[column] = pd.to_numeric(
+                    normalized, errors='coerce'
+                )
+
+        return data_frame
+
+    def transform_integer_columns(
+        self, data_frame: pd.DataFrame, columns: list[str]
+    ) -> pd.DataFrame:
+        """Parse nullable whole numbers without a floating-point conversion.
+
+        Args:
+            data_frame: The report data.
+            columns: Names of integer columns such as identifiers and counts.
+
+        Returns:
+            The report with integer values and nullable unavailable values.
+
+        Raises:
+            ValueError: A number has a fractional part or exceeds Int64 range.
+        """
+        for column in columns:
+            if column not in data_frame.columns:
+                continue
+            normalized = self._normalize_numeric_text(data_frame[column])
+            whole_numbers = normalized.str.replace(r'\.0+$', '', regex=True)
+            if whole_numbers.str.fullmatch(r'[+-]?\d+\.\d+', na=False).any():
+                raise ValueError(f'{column!r} must contain whole numbers.')
+            valid = whole_numbers.str.fullmatch(r'[+-]?\d+', na=False)
+            try:
+                data_frame[column] = whole_numbers.where(valid).astype('Int64')
+            except (ValueError, OverflowError) as error:
+                raise ValueError(f'{column!r} must fit in Int64.') from error
 
         return data_frame
 
