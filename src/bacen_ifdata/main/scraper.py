@@ -29,67 +29,87 @@ License: MIT
 """
 
 from enum import StrEnum
-from time import sleep
 
 from loguru import logger
 
 from bacen_ifdata.interfaces import SessionProtocol
+from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.storage.processing import (
-    build_directory_path,
-    check_file_already_downloaded,
-    ensure_directory,
-    process_downloaded_files,
-    wait_for_download_completion,
+from bacen_ifdata.scraper.storage.collection import (
+    REPORT_DATE,
+    publish_report,
+    report_checksum,
+    report_inputs,
+    validate_report_csv,
 )
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
-def main(session: SessionProtocol, report_date: str, institution: Institutions, report: StrEnum) -> None:
-    """Main function for the scraper.
-
-    This function orchestrates the scraping process for the reports
-    downloaded from the Banco Central do Brasil's IF.data tool.
+def main(
+    session: SessionProtocol,
+    report_date: str,
+    institution: Institutions,
+    report: StrEnum,
+    *,
+    refresh: bool = False,
+) -> None:
+    """Collect a validated original for one IF.data report and date.
 
     Args:
         session (SessionProtocol): The session object for the scraper.
         report_date (str): The base date for the reports to be downloaded.
         institution (Institutions): The institution for which the reports will be downloaded.
-        report (Reports): The report that will be downloaded.
+        report: The report that will be downloaded.
+        refresh: Request a new export even if a valid original exists.
+
+    Returns:
+        None.
+
+    Raises:
+        ValueError: The reference month does not use MM/YYYY format.
+        IfDataScraperException: If both exports fail CSV validation.
+        TimeoutError: If Firefox does not complete an export.
+        OSError: If the validated export cannot be published.
     """
 
-    # Ensure that the download directory exists.
-    ensure_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
-
-    # Create the directory for the institution and report.
-    institution_directory = build_directory_path(Cfg.DOWNLOAD_DIRECTORY, institution.name.lower())
-    ensure_directory(institution_directory)
-    report_directory = build_directory_path(institution_directory, report.name.lower())
-    ensure_directory(report_directory)
-
-    # Build the name of the file that will contain the report, in the form 'year-month.csv'.
+    if not REPORT_DATE.fullmatch(report_date):
+        raise ValueError(f'Invalid reference month: {report_date}.')
     month, year = report_date.split('/')
-    report_file_name = f'{year}-{month}.csv'
-
-    # Build the path to the report file.
-    report_file_path = build_directory_path(
-        Cfg.DOWNLOAD_DIRECTORY, institution.name.lower(), report.name.lower(), report_file_name
+    period = f'{year}-{month}'
+    directory = (
+        Cfg.DOWNLOAD_DIRECTORY / institution.name.lower() / report.name.lower()
     )
-
-    # Check if the file was already downloaded.
-    if check_file_already_downloaded(report_file_path):
-        logger.info(
-            f'Report "{report.name}" from "{institution.name}" referring to "{report_date}" was already downloaded, skipping...'
-        )
-    else:
-        # Download the reports.
-        session.download_reports(report_date, institution, report)
-
-        # Wait for the download to finish before processing the file.
-        if wait_for_download_completion(Cfg.DOWNLOAD_DIRECTORY, Cfg.DOWNLOAD_FILE_NAME):
-            sleep(3)
-            process_downloaded_files(
-                build_directory_path(Cfg.DOWNLOAD_DIRECTORY, Cfg.DOWNLOAD_FILE_NAME), report_file_path
-            )
+    existing = report_inputs(directory).get(period)
+    if existing is not None:
+        try:
+            validate_report_csv(existing, report_date)
+        except IfDataScraperException as error:
+            logger.warning(f'Recollecting invalid original: {error}')
         else:
-            logger.error('Download was not completed in the expected time.')
+            if not refresh:
+                logger.info(f'Validated original already available: {existing}')
+                return
+
+    for attempt in (1, 2):
+        downloaded = session.download_reports(report_date, institution, report)
+        try:
+            validate_report_csv(downloaded, report_date)
+        except IfDataScraperException as error:
+            logger.warning(
+                f'Attempt {attempt} for {institution.name}/{report.name}/'
+                f'{period} rejected: {error}'
+            )
+            if attempt == 2:
+                raise
+        else:
+            if (
+                existing
+                and report_checksum(existing) == report_checksum(downloaded)
+            ):
+                logger.info(f'Original content is unchanged: {existing}')
+                return
+            published = publish_report(
+                downloaded, directory / period, Cfg.URL, Cfg.SCRATCH_DIRECTORY,
+            )
+            logger.info(f'Validated original saved to {published}')
+            return
