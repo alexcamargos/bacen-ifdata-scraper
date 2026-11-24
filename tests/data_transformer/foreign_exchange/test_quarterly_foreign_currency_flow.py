@@ -17,7 +17,7 @@ def test_foreign_exchange_quarterly_foreign_currency_flow_schema_structure():
 
     expected_structure = {
         'instituicao': TransformationType.TEXT,
-        'codigo': TransformationType.NUMERIC,
+        'codigo': TransformationType.INTEGER,
         'consolidado_bancario': TransformationType.CATEGORICAL,
         'tipo_de_consolidacao': TransformationType.CATEGORICAL,
         'tipo_de_controle': TransformationType.CATEGORICAL,
@@ -26,27 +26,45 @@ def test_foreign_exchange_quarterly_foreign_currency_flow_schema_structure():
         'uf': TransformationType.CATEGORICAL,
         'regiao': TransformationType.CATEGORICAL,
         'data_base': TransformationType.DATE,
-        'operacoes_comerciais_compra_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_comerciais_compra_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_comerciais_compra_valor': TransformationType.NUMERIC,
-        'operacoes_comerciais_venda_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_comerciais_venda_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_comerciais_venda_valor': TransformationType.NUMERIC,
-        'operacoes_comerciais_total_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_comerciais_total_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_comerciais_total_valor': TransformationType.NUMERIC,
-        'operacoes_financeiras_compra_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_financeiras_compra_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_financeiras_compra_valor': TransformationType.NUMERIC,
-        'operacoes_financeiras_venda_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_financeiras_venda_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_financeiras_venda_valor': TransformationType.NUMERIC,
-        'operacoes_financeiras_total_numero_operacoes': TransformationType.NUMERIC,
+        'operacoes_financeiras_total_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'operacoes_financeiras_total_valor': TransformationType.NUMERIC,
-        'mercado_primario_total_numero_operacoes': TransformationType.NUMERIC,
+        'mercado_primario_total_numero_operacoes': TransformationType.INTEGER,
         'mercado_primario_total_valor': TransformationType.NUMERIC,
-        'mercado_interbancario_compra_numero_operacoes': TransformationType.NUMERIC,
+        'mercado_interbancario_compra_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'mercado_interbancario_compra_valor': TransformationType.NUMERIC,
-        'mercado_interbancario_venda_numero_operacoes': TransformationType.NUMERIC,
+        'mercado_interbancario_venda_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'mercado_interbancario_venda_valor': TransformationType.NUMERIC,
-        'mercado_interbancario_total_numero_operacoes': TransformationType.NUMERIC,
+        'mercado_interbancario_total_numero_operacoes': (
+            TransformationType.INTEGER
+        ),
         'mercado_interbancario_total_valor': TransformationType.NUMERIC,
-        'total_geral_numero_operacoes': TransformationType.NUMERIC,
+        'total_geral_numero_operacoes': TransformationType.INTEGER,
         'total_geral_valor': TransformationType.NUMERIC,
     }
 
@@ -82,7 +100,11 @@ def test_foreign_exchange_quarterly_foreign_currency_flow_transform_integration(
         expected_type = schema.get_type(column)
         if expected_type in (TransformationType.TEXT, TransformationType.CATEGORICAL):
             assert pd.api.types.is_object_dtype(result[column]) or pd.api.types.is_string_dtype(result[column])
-        elif expected_type in (TransformationType.NUMERIC, TransformationType.PERCENTAGE):
+        elif expected_type in (
+            TransformationType.INTEGER,
+            TransformationType.NUMERIC,
+            TransformationType.PERCENTAGE,
+        ):
             assert pd.api.types.is_numeric_dtype(result[column])
         elif expected_type == TransformationType.DATE:
             assert pd.api.types.is_datetime64_any_dtype(result[column])

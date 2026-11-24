@@ -43,14 +43,17 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
             'type': 'categorical',
+            'raw_csv_header': 'TCB',
             'mapping': {
                 'b1': (
                     'Instituição individual do tipo Banco Comercial, Banco Múltiplo com Carteira Comercial '
@@ -74,6 +77,7 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
         'tipo_de_consolidacao': {
             'description': 'Tipo de Consolidação (I) identifica uma Instituição Independente e (C) identifica um Conglomerado.',
             'type': 'categorical',
+            'raw_csv_header': 'TD',
             'mapping': {
                 'i': 'Instituição Independente',
                 'c': 'Conglomerado',
@@ -82,11 +86,13 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
         'tipo_de_controle': {
             'description': 'Tipo de Controle.',
             'type': 'categorical',
+            'raw_csv_header': 'TC',
             'mapping': {'1': 'Público', '2': 'Privado Nacional', '3': 'Controle Estrangeiro'},
         },
         'segmento_resolucao': {
             'description': 'Segmento conforme Resolução n.º 4.553/2017 (S1, S2, S3, S4, S5).',
             'type': 'categorical',
+            'raw_csv_header': 'SR',
             'mapping': {
                 's1': (
                     'Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas '
@@ -125,98 +131,121 @@ class ForeignExchangeQuarterlyForeignCurrencyFlowSchema(BaseSchema):
         'data_base': {
             'description': 'Data-base do relatório.',
             'type': 'date',
+            'required': True,
         },
         # Operações Comerciais
         'operacoes_comerciais_compra_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de compra comerciais.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Exportações',
         },
         'operacoes_comerciais_compra_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de compra comerciais.',
             'type': 'numeric',
+            'raw_csv_header': 'Exportações - Valor',
         },
         'operacoes_comerciais_venda_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de venda comerciais.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Importações',
         },
         'operacoes_comerciais_venda_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de venda comerciais.',
             'type': 'numeric',
+            'raw_csv_header': 'Importações - Valor',
         },
         'operacoes_comerciais_total_numero_operacoes': {
             'description': 'Somatório do número de registros de operações de câmbio comerciais: exportações e importações.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Total Primário Comercial',
         },
         'operacoes_comerciais_total_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio comerciais: exportações e importações.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Primário Comercial - Valor',
         },
         # Operações Financeiras
         'operacoes_financeiras_compra_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de compra financeiras.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Transferências do Exterior',
         },
         'operacoes_financeiras_compra_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de compra financeiras.',
             'type': 'numeric',
+            'raw_csv_header': 'Transferências do Exterior - Valor',
         },
         'operacoes_financeiras_venda_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de venda financeiras.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Transferências para o Exterior',
         },
         'operacoes_financeiras_venda_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de venda financeiras.',
             'type': 'numeric',
+            'raw_csv_header': 'Transferências para o Exterior - Valor',
         },
         'operacoes_financeiras_total_numero_operacoes': {
             'description': 'Somatório do número de registros de operações de câmbio financeiras: do e para o exterior.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Total Primário Financeiro',
         },
         'operacoes_financeiras_total_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio financeiras: do e para o exterior.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Primário Financeiro - Valor',
         },
         # Mercado Primário
         'mercado_primario_total_numero_operacoes': {
             'description': 'Somatório do número de registros de operações de câmbio do Mercado Primário: comerciais e financeiras.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Total Primário',
         },
         'mercado_primario_total_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio do Mercado Primário: comerciais e financeiras.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Primário - Valor',
         },
         # Mercado Interbancário
         'mercado_interbancario_compra_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de compra do Mercado Interbancário.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Interbancário Compra',
         },
         'mercado_interbancario_compra_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de compra do Mercado Interbancário.',
             'type': 'numeric',
+            'raw_csv_header': 'Interbancário Compra - Valor',
         },
         'mercado_interbancario_venda_numero_operacoes': {
             'description': 'Número de registros de operações de câmbio de venda do Mercado Interbancário.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Interbancário Venda',
         },
         'mercado_interbancario_venda_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio de venda do Mercado Interbancário.',
             'type': 'numeric',
+            'raw_csv_header': 'Interbancário Venda - Valor',
         },
         'mercado_interbancario_total_numero_operacoes': {
             'description': 'Somatório do número de registros de operações de câmbio do Mercado Interbancário.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Total Interbancário',
         },
         'mercado_interbancario_total_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio do Mercado Interbancário.',
             'type': 'numeric',
+            'raw_csv_header': 'Total Interbancário - Valor',
         },
         # Totais Gerais
         'total_geral_numero_operacoes': {
             'description': 'Somatório do número de registros de operações de câmbio dos Mercados Primário e Interbancário.',
-            'type': 'numeric',
+            'type': 'integer',
+            'raw_csv_header': 'Total',
         },
         'total_geral_valor': {
             'description': 'Valor total equivalente em milhares de dólares dos Estados Unidos (USD) das operações de câmbio dos Mercados Primário e Interbancário.',
             'type': 'numeric',
+            'raw_csv_header': 'Total - Valor Total',
         },
     }
