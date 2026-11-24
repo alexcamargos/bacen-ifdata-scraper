@@ -86,20 +86,32 @@ class Pipeline:
 
         return self._session
 
-    def scraper(self, data_base: str, institution: Institutions, report: StrEnum) -> None:
+    def scraper(
+        self, data_base: str, institution: Institutions, report: StrEnum,
+        *, refresh: bool = False,
+    ) -> None:
         """Main function for scraping the data.
 
         Args:
             data_base (str): The data base to be scraped.
             institution (Institutions): The institution to be scraped.
             report (StrEnum): The report to be scraped.
+            refresh: Request a new export even if a valid original exists.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: The session or date is invalid.
         """
 
         if self.session is None:
             raise ValueError('Session is required for scraping. Provide a session_factory.')
 
         # Download the reports.
-        main_scraper(self.session, data_base, institution, report)
+        main_scraper(
+            self.session, data_base, institution, report, refresh=refresh,
+        )
 
     def cleaner(self, process_institution: Institutions, process_report: StrEnum) -> None:
         """Main process for cleaning the data.

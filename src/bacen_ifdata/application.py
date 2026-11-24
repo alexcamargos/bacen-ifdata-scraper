@@ -24,6 +24,8 @@ This module provides the Application class that encapsulates the construction
 of all dependencies required to run the IF.data pipeline.
 """
 
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import TracebackType
 
 from loguru import logger
@@ -64,6 +66,7 @@ class Application:
         """
 
         self._enable_cleanup = enable_cleanup
+        self._downloads: TemporaryDirectory[str] | None = None
         self._session: SessionProtocol | None = None
         self._pipeline_manager: PipelineManagerProtocol | None = None
         self._is_initialized = False
@@ -112,32 +115,42 @@ class Application:
             logger.error(f'An error occurred: {exc_val}')
 
         # Only cleanup session if it was actually initialized.
-        if self._enable_cleanup and self._session is not None:
-            logger.info('Finishing session...')
-            self._session.cleanup()
+        if self._enable_cleanup:
+            try:
+                if self._session is not None:
+                    self._session.cleanup()
+            finally:
+                if self._downloads is not None:
+                    self._downloads.cleanup()
 
         return False  # Don't suppress exceptions
 
     def _initialize_session(self) -> SessionProtocol:
         """Initialize the browser and session on demand.
 
+        Args:
+            None.
+
         Returns:
             The initialized Session instance.
+
+        Raises:
+            OSError: If the download directory cannot be created.
+            WebDriverException: If Firefox or the portal cannot be opened.
         """
 
         logger.info('Initializing browser session...')
 
-        # Create browser components.
-        driver = initialize_webdriver()
-        browser = Browser(driver)
-        session = Session(browser, Config.URL)
-
-        # Open the session.
-        session.open()
+        Config.SCRATCH_DIRECTORY.mkdir(parents=True, exist_ok=True)
+        self._downloads = TemporaryDirectory(dir=Config.SCRATCH_DIRECTORY)
+        download_directory = Path(self._downloads.name)
+        browser = Browser(initialize_webdriver(download_directory))
+        self._session = Session(browser, Config.URL, download_directory)
+        self._session.open()
 
         logger.info('Browser session initialized successfully.')
 
-        return session
+        return self._session
 
     def _get_session(self) -> SessionProtocol:
         """Get or create the session instance (lazy initialization).
