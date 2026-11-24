@@ -33,7 +33,11 @@ O objetivo é transformar os dados brutos e inconsistentes do Bacen em um conjun
     - [Limpeza (Cleaning)](#limpeza-cleaning)
     - [Transformação (Transforming)](#transformação-transforming)
     - [Carga (Loading)](#carga-loading)
+    - [Analytics (Modeling)](#analytics-modeling)
+    - [Atualização Incremental e Auditoria](#atualização-incremental-e-auditoria)
+    - [Consumo Analítico em Python](#consumo-analítico-em-python)
     - [Execução Padrão](#execução-padrão)
+  - [Documentação (Humanos e IA)](#documentação-humanos-e-ia)
   - [Arquitetura do Sistema](#arquitetura-do-sistema)
   - [Desafios e Aprendizados](#desafios-e-aprendizados)
   - [Autor](#autor)
@@ -169,13 +173,43 @@ O `ifdata.py` é a interface de linha de comando para controlar o pipeline ETL.
 
 ### Extração (Scraping)
 
-Para baixar os relatórios do portal IF.data, use a flag `-s` ou `--scraper`. O script irá navegar pelo portal, selecionar as instituições e relatórios, e baixar os arquivos CSV.
+Use `--scraper` para coletar as datas-base publicadas nos dois catálogos
+do IF.data, de 2000 a 2024 e a partir de 2025. O coletor reutiliza os
+arquivos locais válidos. Cada nova versão é salva com SHA-256 e metadados
+de origem em `data/raw/<instituição>/<relatório>/<AAAA-MM>/`.
 
 ```bash
-uv run ifdata.py -s
+uv run python ifdata.py --scraper
+uv run python ifdata.py --scraper --data-base 2025-03
 ```
 
-O script exibirá em tempo real quais arquivos estão sendo baixados. Ao final, um relatório detalhará o número total de arquivos baixados e o tempo de execução.
+Use `--refresh` junto de `--data-base` para verificar se o BC republicou um
+trimestre. Os filtros `--institution` e `--report` funcionam nos dois
+catálogos. O relatório prudencial de carteiras de instrumentos financeiros
+pode ser selecionado com `--report PORTFOLIO_FINANCIAL_INSTRUMENTS`.
+[IF.data a partir de 2025](https://www3.bcb.gov.br/ifdata/).
+
+### Consolidação dos CSVs
+
+```bash
+uv run python ifdata.py --scraper --consolidate-csv
+uv run python ifdata.py --consolidate-csv --institution PRUDENTIAL_CONGLOMERATES --report SUMMARY
+```
+
+A consolidação usa todos os trimestres disponíveis localmente para cada
+instituição e relatório. Quando combinada com `--data-base`, a data
+restringe o download. A saída fica em
+`data/interim/consolidated/ifdata/<instituição>/<relatório>/series.csv`.
+As colunas `data_base` e `arquivo_origem` permitem rastrear cada linha até
+o CSV bruto.
+
+O consolidado reúne as linhas de instituições e preserva os valores
+publicados como texto. As colunas variam conforme o leiaute de origem.
+Campos ausentes no trimestre ficam vazios e os totais permanecem nos
+originais. A equivalência contábil entre períodos exige uma etapa
+posterior, em especial para provisões de crédito. A transformação
+analítica e a carga em Silver e Gold continuam limitadas a 2024.
+[Resolução CMN nº 4.966](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=4966&tipo=RESOLU%C3%87%C3%83O+CMN).
 
 ### Limpeza (Cleaning)
 
@@ -225,6 +259,47 @@ uv run --env-file ../../../.env dbt run -s view_resumo_financeiro_relatorios
 uv run --env-file ../../../.env dbt test -s view_resumo_financeiro_relatorios
 ```
 
+### Atualização Incremental e Auditoria
+
+Para operações incrementais, coleta de uma data-base específica, reparo ou auditoria de cobertura:
+
+```bash
+# Coletar um trimestre específico (até 2024-12)
+uv run ifdata.py -s --data-base 2024-12
+
+# Verificar revisões do Bacen e publicar nova release Gold testada
+uv run ifdata.py --refresh --data-base 2024-12 --update
+
+# Processar arquivos alterados e atualizar data/processed/current.json
+uv run ifdata.py --update
+
+# Auditar cobertura de medidas (somente leitura)
+uv run ifdata.py --audit-coverage
+```
+
+A referência completa de flags, filtros (`-i`, `-r`) e variáveis de ambiente (`IFDATA_DATA_DIRECTORY`) está em [docs/USAGE.md](docs/USAGE.md).
+
+### Consumo Analítico em Python
+
+Para ler o banco Gold publicado mais recente sem acoplar caminhos manuais:
+
+```python
+import duckdb
+from bacen_ifdata.utilities.releases import warehouse_path
+
+with duckdb.connect(str(warehouse_path('gold')), read_only=True) as con:
+    df = con.execute(
+        """
+        SELECT nome_instituicao, segmento, ativo_total, patrimonio_liquido
+        FROM view_resumo_financeiro_relatorios
+        WHERE id_data = 20241201
+          AND tipo_instituicao = 'Conglomerado Prudencial'
+        ORDER BY ativo_total DESC NULLS LAST
+        LIMIT 10
+        """
+    ).pl()
+```
+
 ### Execução Padrão
 
 Se nenhum argumento for fornecido, o pipeline executará as etapas de limpeza e transformação por padrão:
@@ -232,6 +307,17 @@ Se nenhum argumento for fornecido, o pipeline executará as etapas de limpeza e 
 ```bash
 uv run ifdata.py
 ```
+
+## Documentação (Humanos e IA)
+
+| Documento | Público | Conteúdo |
+| :--- | :--- | :--- |
+| [docs/USAGE.md](docs/USAGE.md) | Humanos | Instalação, CLI completa, API Python, variáveis de ambiente e estrutura física de saídas. |
+| [docs/DATA_CATALOG.md](docs/DATA_CATALOG.md) | Humanos e IA | Inventário completo das 13 dimensões, 13 fatos, 4 views e tabelas de domínio (seeds) da camada Gold. |
+| [docs/DOMAIN_RULES.md](docs/DOMAIN_RULES.md) | Humanos e IA | Regras contábeis e regulatórias do IF.data: anti-dupla contagem, unidades, DRE semestral e histórico de nomes. |
+| [docs/COOKBOOK.md](docs/COOKBOOK.md) | Humanos e IA | Consultas SQL (DuckDB) e Python/Polars validadas no warehouse real e lista de anti-patterns. |
+| [llms.txt](llms.txt) | Agentes de IA | Índice compacto de descoberta para LLMs e ferramentas de análise automatizada. |
+| [docs/ai/gold_semantic_model.yaml](docs/ai/gold_semantic_model.yaml) | Agentes de IA | Manifesto semântico estruturado com tabelas, colunas, tipos, relacionamentos, domínios e guardrails. |
 
 ## Arquitetura do Sistema
 
