@@ -1,4 +1,4 @@
-"""Plan and resume historical IF.data CSV collection.
+"""Plan and resume IF.data CSV collection.
 
 Args:
     None.
@@ -10,6 +10,7 @@ Raises:
 
 from collections.abc import Callable
 from enum import StrEnum
+from itertools import chain
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -91,6 +92,7 @@ def _collect(
                     'institution_id': selection.institution_id,
                     'report_id': selection.report_id,
                 },
+                source_url=selection.source_url,
             )
         except IfDataScraperException as error:
             if attempt == 2:
@@ -105,8 +107,9 @@ def run_historical_collection(
     period: str | None,
     refresh: bool,
     repair: bool,
+    include_current: bool = False,
 ) -> None:
-    """Match the historical catalog to active originals and collect gaps.
+    """Match the selected catalogs to active originals and collect gaps.
 
     Args:
         targets: Institutional scopes and report types selected by the CLI.
@@ -114,14 +117,17 @@ def run_historical_collection(
         period: Optional reference month to collect in YYYY-MM format.
         refresh: Export the selected month again to look for revisions.
         repair: Revalidate and recollect only invalid local originals.
+        include_current: Discover reports from 2025 onward as well.
     Returns:
         None.
     Raises:
-        ValueError: The requested historical period or selection is invalid.
+        ValueError: The requested period or selection is invalid.
         IfDataScraperException: The catalog or one or more exports failed.
     """
     historical_end = Config.HISTORICAL_END
-    if period and (not PERIOD.fullmatch(period) or period > historical_end):
+    if period and not PERIOD.fullmatch(period):
+        raise ValueError(f'Invalid IF.data reference month: {period}.')
+    if period and period > historical_end and not include_current:
         raise ValueError(
             f'Historical IF.data collection ends at {historical_end}.'
         )
@@ -135,7 +141,8 @@ def run_historical_collection(
         for month, path in report_inputs(
             root / institution.name.lower() / report.name.lower(),
         ).items()
-        if month <= historical_end and (period is None or period == month)
+        if (include_current or month <= historical_end)
+        and (period is None or period == month)
     }
     target_set = set(targets)
 
@@ -150,9 +157,25 @@ def run_historical_collection(
                 logger.info('No invalid originals found in the selection.')
                 return
 
+        periods = {key[2] for key in repairs} if repair else {period}
+        historical = (
+            historical_reports(Config.TIMEOUT)
+            if any(
+                month is None or month <= historical_end for month in periods
+            )
+            else []
+        )
+        current = (
+            historical_reports(Config.TIMEOUT, current=True)
+            if include_current
+            and any(
+                month is None or month > historical_end for month in periods
+            )
+            else []
+        )
         advertised = {
             (item.institution, item.report, item.period): item
-            for item in historical_reports(Config.TIMEOUT)
+            for item in chain(historical, current)
             if (item.institution, item.report) in target_set
             and (period is None or item.period == period)
             and (not repair or (item.institution, item.report, item.period)
@@ -160,7 +183,7 @@ def run_historical_collection(
         }
         if not repair and not advertised:
             date_filter = period or 'all periods'
-            raise ValueError(f'No historical report matches {date_filter}.')
+            raise ValueError(f'No IF.data report matches {date_filter}.')
 
         unavailable = repairs - advertised.keys()
         failed = [
@@ -173,7 +196,7 @@ def run_historical_collection(
             or not _valid(cache, inventory[key], item.period, force=False)
         }
         logger.info(
-            f'Historical catalog: {len(advertised)} selected, '
+            f'IF.data catalog: {len(advertised)} selected, '
             f'{len(advertised) - len(pending)} available locally, '
             f'{len(pending)} to export.'
         )
@@ -206,7 +229,7 @@ def run_historical_collection(
                         unchanged_count += int(not published)
 
         logger.info(
-            f'Historical collection: {published_count} versions published, '
+            f'IF.data collection: {published_count} versions published, '
             f'{unchanged_count} identical exports, {len(failed)} failures.'
         )
         if failed:

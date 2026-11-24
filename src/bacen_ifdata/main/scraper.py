@@ -110,14 +110,16 @@ def publish_export(
     downloaded: Path, destination: Path, existing: Path | None,
     *,
     source_selection: dict[str, int] | None = None,
+    source_url: str | None = None,
 ) -> tuple[Path, bool]:
-    """Validate, compare and publish a staged historical export.
+    """Validate, compare and publish a staged portal export.
 
     Args:
         downloaded: Staged initial CSV bytes.
         destination: Raw directory for the requested YYYY-MM period.
         existing: Previously published CSV for this key, if any.
         source_selection: IDs from the source catalog, when available.
+        source_url: Portal that generated the CSV.
     Returns:
         The active CSV path and whether a new version was published.
     Raises:
@@ -135,7 +137,7 @@ def publish_export(
             logger.warning(f'Could not compare the original: {error}')
 
     published = publish_report(
-        downloaded, destination, Cfg.URL, Cfg.SCRATCH_DIRECTORY,
+        downloaded, destination, source_url or Cfg.URL, Cfg.SCRATCH_DIRECTORY,
         source_selection=source_selection,
     )
     logger.info(f'Validated original saved to {published}')
