@@ -29,7 +29,57 @@ License: MIT
 """
 
 import time
+from collections.abc import Callable
 from pathlib import Path
+from typing import TypeVar
+
+from loguru import logger
+
+T = TypeVar('T')
+
+
+def retry_file_lock(operation: Callable[[], T], artifact: Path) -> T:
+    """Retry a filesystem operation while another process holds the file.
+
+    Args:
+        operation: A file operation that can be safely attempted again.
+        artifact: Path to report while waiting.
+
+    Returns:
+        The result of the successful operation.
+
+    Raises:
+        OSError: The operation failed beyond the lock retry window.
+    """
+    deadline = time.monotonic() + 8
+    while True:
+        try:
+            return operation()
+        except PermissionError as error:
+            if time.monotonic() >= deadline:
+                raise
+            logger.debug(f'Waiting for access to {artifact}: {error}')
+            time.sleep(0.25)
+
+
+def move_artifact(
+    source: Path, destination: Path, *, replace: bool = False,
+) -> None:
+    """Publish a file or directory despite short-lived filesystem locks.
+
+    Args:
+        source: Complete staged artifact.
+        destination: Visible destination on the same volume.
+        replace: Use atomic replacement for a mutable destination.
+
+    Returns:
+        None.
+
+    Raises:
+        OSError: The artifact could not be moved.
+    """
+    move = source.replace if replace else source.rename
+    retry_file_lock(lambda: move(destination), source)
 
 
 def process_downloaded_files(source_path: Path, destination_path: Path) -> None:
@@ -92,40 +142,43 @@ def ensure_directory(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def wait_for_download_completion(directory: Path, filename: str, timeout: int = 300) -> bool:
-    """
-    Waits until a file has been completely downloaded.
-
-    This function checks the specified download directory for the presence of a
-    fully downloaded file. It waits until the file with the specified beginning
-    of the filename is present and no longer has a temporary '.part' or other
-    browser-specific temporary extension.
+def move_completed_download(
+    source: Path, destination: Path, timeout: int,
+) -> None:
+    """Wait for Firefox to release the finished export, then move it.
 
     Args:
-        directory (Path): The directory where the file is being downloaded.
-        filename (str): The beginning of the filename to check for.
-        timeout (int): The maximum amount of time to wait for the file to download, in seconds.
-                       Defaults to 300 seconds.
+        source: Exact filename expected from the portal.
+        destination: Unique path for the completed export.
+        timeout: Maximum time to wait, in seconds.
 
     Returns:
-        bool: True if the file was downloaded completely within
-              the timeout, False otherwise.
+        None.
+
+    Raises:
+        TimeoutError: The expected file could not be moved before timeout.
+        OSError: Another filesystem error prevented moving the file.
     """
+    deadline = time.monotonic() + timeout
+    previous = None
+    while time.monotonic() < deadline:
+        if source.is_file() and not any(source.parent.glob('*.part')):
+            try:
+                stat = source.stat()
+                signature = (stat.st_size, stat.st_mtime_ns)
+                if signature == previous:
+                    source.rename(destination)
+                    return
+                previous = signature
+            except (FileNotFoundError, PermissionError) as error:
+                logger.debug(f'Firefox has not released {source}: {error}')
+        else:
+            previous = None
+        time.sleep(0.25)
 
-    start_time = time.time()
-    directory_path = Path(directory)
-
-    while time.time() - start_time < timeout:
-        # Check if the filename exists in the directory.
-        for file_path in directory_path.glob(f'{filename}*'):
-            if not file_path.name.endswith('.crdownload') and not file_path.name.endswith('.part'):
-                # The file has been completely downloaded.
-                return True
-
-        # Wait for the file to be downloaded.
-        time.sleep(1)
-
-    return False
+    raise TimeoutError(
+        f'Firefox did not finish writing {source} within {timeout}s.'
+    )
 
 
 def check_file_already_downloaded(file: Path) -> bool:
