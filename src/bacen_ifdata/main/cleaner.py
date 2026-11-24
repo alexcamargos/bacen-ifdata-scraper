@@ -29,24 +29,38 @@ License: MIT
 """
 
 from enum import StrEnum
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from loguru import logger
 
 from bacen_ifdata.data_cleaner.processing import normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.storage.processing import build_directory_path, ensure_directory
+from bacen_ifdata.scraper.storage.collection import (
+    report_inputs,
+    validate_report_csv,
+)
+from bacen_ifdata.scraper.storage.processing import (
+    build_directory_path,
+    ensure_directory,
+    move_artifact,
+)
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
 def main(institution: Institutions, report: StrEnum) -> None:
-    """Main function for the cleaner.
-
-    This function orchestrates the normalization process for the reports
-    downloaded from the Banco Central do Brasil's IF.data tool.
+    """Normalize the validated originals for one report.
 
     Args:
         institution (StrEnum): The institution for which the reports will be normalized.
         report (StrEnum): The report that will be normalized.
+
+    Returns:
+        None.
+
+    Raises:
+        IfDataScraperException: The selected original has an unexpected date.
+        OSError: A normalized file could not be created.
     """
 
     # Ensure that the processed files directory exists.
@@ -58,8 +72,24 @@ def main(institution: Institutions, report: StrEnum) -> None:
     # Build the path to the input data directory.
     input_data_path = build_directory_path(Cfg.DOWNLOAD_DIRECTORY, institution.name.lower(), report.name.lower())
 
-    # List all CSV files in the input data directory.
-    for file in input_data_path.glob('*.csv'):
-        logger.info(f'Normalizing {report.name} ({file.name}) from {institution.name}.')
-        # Normalize the CSV file.
-        normalize_csv(institution, report, file.name)
+    Cfg.SCRATCH_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    with TemporaryDirectory(dir=Cfg.SCRATCH_DIRECTORY) as temporary:
+        for period, source in sorted(report_inputs(input_data_path).items()):
+            date = f'{period[5:]}/{period[:4]}'
+            validate_report_csv(source, date)
+            filename = f'{period}.csv'
+            destination = output_directory / filename
+            if destination.exists() and (
+                destination.stat().st_mtime_ns >= source.stat().st_mtime_ns
+            ):
+                continue
+            logger.info(
+                f'Normalizing {institution.name}/{report.name}/{filename}.'
+            )
+            staged = Path(temporary) / filename
+            if not normalize_csv(
+                institution, report, filename,
+                source=source, destination=staged,
+            ):
+                raise OSError(f'Could not normalize {source}.')
+            move_artifact(staged, destination, replace=True)

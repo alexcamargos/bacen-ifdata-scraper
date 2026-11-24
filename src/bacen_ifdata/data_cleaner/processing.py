@@ -154,7 +154,14 @@ def _process_csv_header(data: list[str]) -> tuple[list[str], int]:
 
 
 # pylint: disable=too-many-locals
-def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool:
+def normalize_csv(
+    institution: Institutions,
+    report: StrEnum,
+    file: str,
+    *,
+    source: Path | None = None,
+    destination: Path | None = None,
+) -> bool:
     """Normalizes a CSV file from Bacen If.Data by correcting its header
     structure and removing inconsistent lines at both the start and end
     of the file.
@@ -172,6 +179,8 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
         institution (Institutions): An enumerated value representing the institution.
         report (StrEnum): An enumerated value representing the report type.
         file (str): The name of the file to be normalized.
+        source: Optional validated original, including versioned files.
+        destination: Optional staging path for the normalized output.
 
     Returns:
         bool: True if the file is successfully normalized, False otherwise.
@@ -193,7 +202,7 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
     output_path = build_directory_path(Cfg.PROCESSED_FILES_DIRECTORY, institution.name.lower(), report.name.lower())
 
     # Check if the file has already been normalized.
-    if check_file_already_processed(output_path, file):
+    if source is None and check_file_already_processed(output_path, file):
         logger.info(f'File {file} has already been normalized, skipping...')
         return False
 
@@ -201,8 +210,12 @@ def normalize_csv(institution: Institutions, report: StrEnum, file: str) -> bool
     try:
         with (
             # Note: 'utf-8-sig' is used to handle potential BOM in the input CSV files.
-            open(f'{input_path}\\{file}', 'r', encoding='utf-8-sig') as input_file,
-            open(f'{output_path}\\{file}', 'w', encoding='utf-8') as output_file,
+            open(
+                source or input_path / file, encoding='utf-8-sig',
+            ) as input_file,
+            open(
+                destination or output_path / file, 'w', encoding='utf-8',
+            ) as output_file,
         ):
             data = input_file.readlines()
 
