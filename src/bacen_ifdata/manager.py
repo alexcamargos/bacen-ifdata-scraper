@@ -14,10 +14,23 @@
 #  License: MIT
 # ------------------------------------------------------------------------------
 
+"""Orchestrate IF.data collection and analytical builds.
+
+Args:
+    None.
+
+Returns:
+    None.
+
+Raises:
+    None.
+"""
+
 import os
 import subprocess
 from enum import StrEnum
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -27,9 +40,13 @@ from bacen_ifdata.data_loader.storage import DatabaseService
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.reports import REPORTS
-from bacen_ifdata.scraper.storage.processing import build_directory_path
+from bacen_ifdata.scraper.storage.collection import (
+    report_inputs,
+    validate_report_csv,
+)
+from bacen_ifdata.scraper.storage.processing import move_artifact
 from bacen_ifdata.scraper.utils import validate_report_selection
-from bacen_ifdata.utilities.clean import clean_download_base_directory, clean_empty_csv_files
+from bacen_ifdata.updates import update_warehouse
 from bacen_ifdata.utilities.configurations import Config as Cfg
 
 
@@ -51,31 +68,6 @@ class PipelineManager:
         self.pipeline = pipeline
         # The DatabaseService is responsible for managing the connection to the DuckDB database.
         self._database_service = database_service or DatabaseService()
-
-    def _clean_download_directory(self) -> None:
-        """Performs comprehensive cleaning operations on the download directory.
-
-        This function orchestrates a two-step cleaning process:
-        1. It first removes all empty CSV files from the download directory.
-        This step helps in eliminating files that were downloaded but contain
-        no data, possibly due to errors in the data scraping process.
-        2. Then, it cleans up the download base directory by removing any
-        remaining CSV files. This is typically done to prepare for a fresh start,
-        ensuring that no outdated or unnecessary files remain that could interfere
-        with subsequent scraping sessions.
-
-        The cleaning process targets the directory specified in the configuration's DOWNLOAD_DIRECTORY,
-        using paths built from the configuration settings. Messages are printed to the console to
-        indicate the progress of cleaning operations.
-        """
-
-        # Clean up the empty CSV files in the download directory.
-        logger.info('Cleaning up empty CSV files...')
-        clean_empty_csv_files(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
-
-        # Clean up the download base directory.
-        logger.info('Cleaning up the download base directory...')
-        clean_download_base_directory(build_directory_path(Cfg.DOWNLOAD_DIRECTORY))
 
     def _reset_database(self) -> None:
         """Resets the database before loading to prevent data duplication.
@@ -107,8 +99,10 @@ class PipelineManager:
             try:
                 # Get the enum member by its name (e.g. 'PRUDENTIAL_CONGLOMERATES')
                 target_inst = Institutions[institution_filter.upper()]
-            except KeyError:
-                logger.warning(f"Institution filter '{institution_filter}' not found. Ignoring filter.")
+            except KeyError as error:
+                raise ValueError(
+                    f'Unknown institution filter: {institution_filter}.'
+                ) from error
 
         for institution in Institutions:
             if target_inst and institution != target_inst:
@@ -122,39 +116,95 @@ class PipelineManager:
 
         return targets
 
-    def run_scraper(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the scraper."""
+    def run_scraper(
+        self,
+        institution: str | None = None,
+        report: str | None = None,
+        *,
+        data_base: str | None = None,
+        repair_raw: bool = False,
+        refresh: bool = False,
+    ) -> None:
+        """Collect selected reports or repair invalid original exports.
 
-        if self.pipeline.session is None:
-            raise ValueError('Session is not initialized.')
+        Args:
+            institution: Optional name of an institutional scope.
+            report: Optional name of a report.
+            data_base: Optional reference month in YYYY-MM format.
+            repair_raw: Recollect only invalid originals already on disk.
+            refresh: Download the selected month even when it is valid locally.
 
-        try:
-            # Get the available data bases.
-            data_base: list[str] = self.pipeline.session.get_data_bases()
+        Returns:
+            None.
 
-            # Run the scraper...
-            targets = self._get_execution_targets(institution, report)
+        Raises:
+            ValueError: The selection matches no published reports.
+            IfDataScraperException: One or more repairs are still pending.
+        """
+        if refresh and (not data_base or repair_raw):
+            raise ValueError('Refresh requires a date and excludes raw repair.')
+        targets = self._get_execution_targets(institution, report)
+        if not targets:
+            raise ValueError(f'Unknown report for the selection: {report}.')
+
+        requested = f'{data_base[5:]}/{data_base[:4]}' if data_base else None
+        repairs: dict[tuple[Institutions, StrEnum], set[str]] = {}
+        if repair_raw:
             for inst, rep in targets:
-                # Validate the report selection.
-                cutoff_data_base = validate_report_selection(inst, rep, data_base)
+                directory = (
+                    Cfg.DOWNLOAD_DIRECTORY
+                    / inst.name.lower()
+                    / rep.name.lower()
+                )
+                for period, path in report_inputs(directory).items():
+                    if data_base and period != data_base:
+                        continue
+                    date = f'{period[5:]}/{period[:4]}'
+                    try:
+                        validate_report_csv(path, date)
+                    except IfDataScraperException as error:
+                        logger.warning(f'Recollection required: {error}')
+                        repairs.setdefault((inst, rep), set()).add(date)
+            if not repairs:
+                logger.info('No invalid originals found in the selection.')
+                return
+            targets = list(repairs)
 
-                for data in cutoff_data_base:
-                    # Download the reports.
-                    logger.info(f'Downloading report "{rep.name}" from ' f'{inst.name} referring to "{data}"...')
-                    self.pipeline.scraper(data, inst, rep)
-        except IfDataScraperException as error:
-            logger.exception(error.message)
+        session = self.pipeline.session
+        if session is None:
+            raise ValueError('Session is not initialized.')
+        dates = session.get_data_bases()
 
-        # BUG: The IF.data system generates CSV files for download in real-time,
-        # using the loaded data table as the foundation.
-        # Internally, it triggers the `downloadCsv` JavaScript function, which
-        # constructs a Blob object of type "text/csv" and saves this file.
-        # I have not been able to find a permanent solution to this issue.
-        #
-        # A temporary measure is to delete the empty files and rerun the
-        # data scraping process, repeating this step until there are no
-        # more content-less files remaining.
-        self._clean_download_directory()
+        attempted = 0
+        pending: list[str] = []
+        for inst, rep in targets:
+            available = validate_report_selection(inst, rep, dates)
+            selected = repairs.get((inst, rep))
+            if repair_raw:
+                unavailable = repairs[inst, rep].difference(available)
+                pending.extend(
+                    f'{inst.name}/{rep.name}/{date} unavailable in the portal'
+                    for date in sorted(unavailable)
+                )
+            elif requested:
+                selected = {requested}
+
+            for date in available:
+                if selected is not None and date not in selected:
+                    continue
+                attempted += 1
+                logger.info(f'Collecting {inst.name}/{rep.name}/{date}.')
+                try:
+                    self.pipeline.scraper(date, inst, rep, refresh=refresh)
+                except IfDataScraperException as error:
+                    pending.append(f'{inst.name}/{rep.name}/{date}: {error}')
+
+        if pending:
+            raise IfDataScraperException(
+                f'{len(pending)} pending exports:\n' + '\n'.join(pending)
+            )
+        if requested and not attempted:
+            raise ValueError(f'No selected report available for {data_base}.')
 
     def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Main function for executing the cleaner."""
@@ -191,62 +241,95 @@ class PipelineManager:
             self.pipeline.loader(loaded_institution, loaded_report)
 
     def run_analytics(self) -> None:
-        """Executes the analytics layer (dbt) to transform Bronze data into Gold (Star Schema).
+        """Build and test Gold before replacing the published warehouse.
 
-        This method triggers the dbt build command within the data_analytics directory.
+        Args:
+            None.
+
+        Returns:
+            None.
+
+        Raises:
+            FileNotFoundError: The dbt project or Silver database is missing.
+            ValueError: Silver and Gold are configured with the same path.
+            subprocess.CalledProcessError: A model or test failed.
+            OSError: The tested warehouse could not be published.
         """
+        dbt_project = Cfg.DATA_ANALYTICS_DIRECTORY
+        load_dotenv(Cfg.BASE_DIRECTORY / '.env', override=False)
+        load_dotenv(dbt_project / '.env', override=False)
 
-        logger.info('Starting analytics transformation (dbt)...')
+        silver = Cfg.SILVER_DATABASE_FILE
+        gold = Cfg.GOLD_DATABASE_FILE
+        if Cfg.DATA_DIRECTORY == Cfg.BASE_DIRECTORY / 'data':
+            silver = Path(os.getenv('SILVER_DB_PATH') or silver).resolve()
+            gold = Path(os.getenv('GOLD_DB_PATH') or gold).resolve()
+        if not silver.is_file():
+            raise FileNotFoundError(f'Silver database not found: {silver}')
+        if silver == gold:
+            raise ValueError('Silver and Gold require separate paths.')
 
-        # Define the path to the dbt project directory, which contains the dbt models and configurations.
-        dbt_project_directory = Cfg.DATA_ANALYTICS_DIRECTORY
+        Cfg.SCRATCH_DIRECTORY.mkdir(parents=True, exist_ok=True)
+        gold.parent.mkdir(parents=True, exist_ok=True)
+        with TemporaryDirectory(dir=Cfg.SCRATCH_DIRECTORY) as temporary:
+            stage = Path(temporary)
+            draft = stage / gold.name
+            self._build_gold(silver, draft, stage)
+            move_artifact(draft, gold, replace=True)
+        logger.info(f'Validated Gold database published: {gold}')
 
-        # Ensure the directory exists
-        if not dbt_project_directory.exists():
-            logger.error(f'Analytics directory not found: {dbt_project_directory}')
-            raise FileNotFoundError(f'dbt project directory not found: {dbt_project_directory}')
+    def run_update(self) -> None:
+        """Process changed reports and publish the validated warehouse pair.
 
-        # Load .env files so dbt can run both from pipeline and standalone.
-        project_env_file = Cfg.BASE_DIRECTORY / '.env'
-        analytics_env_file = dbt_project_directory / '.env'
+        Args:
+            None.
 
-        # Load environment variables from both .env files,
-        # with the analytics .env taking precedence if there are conflicts.
-        load_dotenv(project_env_file, override=False)
-        load_dotenv(analytics_env_file, override=False)
+        Returns:
+            None.
 
-        # Set environment variables for dbt
-        # Prioritize values from .env if available, otherwise use defaults from Cfg.
-        silver_db_path = os.getenv('SILVER_DB_PATH') or str(Cfg.SILVER_DATABASE_FILE)
-        gold_db_path = os.getenv('GOLD_DB_PATH') or str(Cfg.GOLD_DATABASE_FILE)
+        Raises:
+            ValueError: An input is missing or fails validation.
+            OSError: A candidate or pointer could not be published.
+            duckdb.Error: The Silver load failed or another update is active.
+            subprocess.CalledProcessError: The dbt build failed.
+        """
+        update_warehouse(self.pipeline.transformer_controller, self._build_gold)
 
-        # Prepare the environment variables for the subprocess call to dbt.
+    @staticmethod
+    def _build_gold(silver: Path, draft: Path, stage: Path) -> None:
+        """Run dbt on explicit candidate paths.
+
+        Args:
+            silver: Silver database to attach read-only.
+            draft: Output path of the Gold build.
+            stage: Temporary directory for dbt logs and target files.
+
+        Returns:
+            None.
+
+        Raises:
+            FileNotFoundError: The dbt project is missing.
+            subprocess.CalledProcessError: The dbt build failed.
+        """
+        dbt_project = Cfg.DATA_ANALYTICS_DIRECTORY
+        if not dbt_project.is_dir():
+            raise FileNotFoundError(f'dbt project not found: {dbt_project}')
         env = os.environ.copy()
-        env.update(
-            {
-                'SILVER_DB_PATH': silver_db_path,
-                'GOLD_DB_PATH': gold_db_path,
-                # Ensure subprocess Python uses UTF-8 consistently on Windows.
-                'PYTHONUTF8': '1',
-                'PYTHONIOENCODING': 'utf-8',
-            }
+        env.update({
+            'SILVER_DB_PATH': str(silver),
+            'GOLD_DB_PATH': str(draft),
+            'PYTHONUTF8': '1',
+            'PYTHONIOENCODING': 'utf-8',
+        })
+        subprocess.run(
+            [
+                'uv', 'run', '--project', str(Cfg.BASE_DIRECTORY), '--locked',
+                'dbt', 'build', '--project-dir', str(dbt_project),
+                '--profiles-dir', str(dbt_project),
+                '--target-path', str(stage / 'target'),
+                '--log-path', str(stage / 'logs'),
+            ],
+            cwd=dbt_project,
+            env=env,
+            check=True,
         )
-
-        # Remove existing Gold database to ensure a clean slate for dbt transformations.
-        # We use gold_db_path (which may have been overridden by .env) instead of Cfg.GOLD_DATABASE_FILE
-        # to ensure consistency between the manager and the dbt model output.
-        gold_db_file = Path(gold_db_path)
-        if gold_db_file.exists():
-            gold_db_file.unlink()
-            logger.info(f'Existing Gold database removed: {gold_db_file}')
-
-        try:
-            # Execute dbt build (runs models and tests)
-            # Output streams directly to the CLI for real-time visibility
-            result = subprocess.run(['uv', 'run', 'dbt', 'build'], cwd=dbt_project_directory, env=env, check=True)
-
-            logger.info('\nAnalytics transformation completed successfully!')
-
-        except subprocess.CalledProcessError as error:
-            logger.error(f'dbt build failed with exit code {error.returncode}.')
-            raise

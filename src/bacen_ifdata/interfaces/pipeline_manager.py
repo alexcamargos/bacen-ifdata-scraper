@@ -35,8 +35,30 @@ class PipelineManagerProtocol(Protocol):
     must provide for orchestrating the data pipeline stages.
     """
 
-    def run_scraper(self, institution: str | None = None, report: str | None = None) -> None:
-        """Execute the scraping stage of the pipeline."""
+    def run_scraper(
+        self,
+        institution: str | None = None,
+        report: str | None = None,
+        *,
+        data_base: str | None = None,
+        repair_raw: bool = False,
+        refresh: bool = False,
+    ) -> None:
+        """Execute the scraping stage of the pipeline.
+
+        Args:
+            institution: Optional institutional scope.
+            report: Optional report name.
+            data_base: Optional reference month in YYYY-MM format.
+            repair_raw: Limit collection to invalid originals already on disk.
+            refresh: Download the selected month even if it is valid locally.
+
+        Returns:
+            None.
+
+        Raises:
+            IfDataScraperException: A requested export is invalid.
+        """
 
     def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the cleaning stage of the pipeline."""
@@ -49,3 +71,17 @@ class PipelineManagerProtocol(Protocol):
 
     def run_analytics(self) -> None:
         """Execute the analytics stage of the pipeline (dbt)."""
+
+    def run_update(self) -> None:
+        """Process changed inputs and publish the validated warehouse pair.
+
+        Args:
+            None.
+
+        Returns:
+            None.
+
+        Raises:
+            ValueError: An input is missing or invalid.
+            OSError: Publication failed.
+        """
