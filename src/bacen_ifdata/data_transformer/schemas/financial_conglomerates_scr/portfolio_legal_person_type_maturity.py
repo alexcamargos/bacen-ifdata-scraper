@@ -45,11 +45,13 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
             'description': 'Nome da instituição.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -170,6 +172,7 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
             'description': 'Data-base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'total_da_carteira_de_pessoa_juridica': {
             'description': (
@@ -307,108 +310,166 @@ class FinancialConglomerateSCRPortfolioLegalPersonTypeMaturitySchema(BaseSchema)
         'operacoes_com_recebiveis_vencido_a_partir_15_dias': {
             'description': 'Operações com Recebíveis - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Operações com Recebíveis',
         },
         'operacoes_com_recebiveis_a_vencer_ate_90_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A Vencer em até 90 Dias'
+            ),
         },
         'operacoes_com_recebiveis_a_vencer_de_91_ate_360_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A Vencer Entre 91 a 360 Dias'
+            ),
         },
         'operacoes_com_recebiveis_a_vencer_de_361_ate_1080_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A Vencer Entre 361 a 1080 Dias'
+            ),
         },
         'operacoes_com_recebiveis_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A Vencer Entre 1081 a 1800 Dias'
+            ),
         },
         'operacoes_com_recebiveis_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A Vencer Entre 1801 a 5400 Dias'
+            ),
         },
         'operacoes_com_recebiveis_a_vencer_acima_5400_dias': {
             'description': 'Operações com Recebíveis - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Operações com Recebíveis'
+                ' - A vencer Acima de 5400 Dias'
+            ),
         },
         'operacoes_com_recebiveis_total': {
             'description': 'Operações com Recebíveis - Total do grupo.',
             'type': 'numeric',
+            'raw_csv_header': 'Operações com Recebíveis - Total',
         },
         # Comércio Exterior
         'comercio_exterior_vencido_a_partir_15_dias': {
             'description': 'Comércio Exterior - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
-            'csv_header': 'Comércio Exterior',
+            'raw_csv_header': 'Comércio Exterior',
         },
         'comercio_exterior_a_vencer_ate_90_dias': {
             'description': 'Comércio Exterior - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
-            'csv_header': 'Comércio Exterior - A Vencer em até 90 Dias',
+            'raw_csv_header': 'Comércio Exterior - A Vencer em até 90 Dias',
         },
         'comercio_exterior_a_vencer_de_91_ate_360_dias': {
             'description': 'Comércio Exterior - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Comércio Exterior'
+                ' - A Vencer Entre 91 a 360 Dias'
+            ),
         },
         'comercio_exterior_a_vencer_de_361_ate_1080_dias': {
             'description': 'Comércio Exterior - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Comércio Exterior'
+                ' - A Vencer Entre 361 a 1080 Dias'
+            ),
         },
         'comercio_exterior_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Comércio Exterior - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Comércio Exterior'
+                ' - A Vencer Entre 1081 a 1800 Dias'
+            ),
         },
         'comercio_exterior_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Comércio Exterior - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Comércio Exterior'
+                ' - A Vencer Entre 1801 a 5400 Dias'
+            ),
         },
         'comercio_exterior_a_vencer_acima_5400_dias': {
             'description': 'Comércio Exterior - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
-            'csv_header': 'Comércio Exterior - A vencer Acima de 5400 Dias',
+            'raw_csv_header': (
+                'Comércio Exterior'
+                ' - A vencer Acima de 5400 Dias'
+            ),
         },
         'comercio_exterior_total': {
             'description': 'Comércio Exterior - Total do grupo.',
             'type': 'numeric',
-            'csv_header': 'Comércio Exterior - Total',
+            'raw_csv_header': 'Comércio Exterior - Total',
         },
         # Outros Créditos
         'outros_creditos_vencido_a_partir_15_dias': {
             'description': 'Outros Créditos - Operações vencidas há, no mínimo, 15 dias.',
             'type': 'numeric',
-            'csv_header': 'Outros Créditos',
+            'raw_csv_header': 'Outros Créditos',
         },
         'outros_creditos_a_vencer_ate_90_dias': {
             'description': 'Outros Créditos - Operações a vencer em até 90 dias ou vencidas há, no máximo, 14 dias.',
             'type': 'numeric',
-            'csv_header': 'Outros Créditos - A Vencer em até 90 Dias',
+            'raw_csv_header': 'Outros Créditos - A Vencer em até 90 Dias',
         },
         'outros_creditos_a_vencer_de_91_ate_360_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 91 a 360 dias.',
             'type': 'numeric',
+            'raw_csv_header': 'Outros Créditos - A Vencer Entre 91 a 360 Dias',
         },
         'outros_creditos_a_vencer_de_361_ate_1080_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 361 a 1080 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Outros Créditos'
+                ' - A Vencer Entre 361 a 1080 Dias'
+            ),
         },
         'outros_creditos_a_vencer_de_1081_ate_1800_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 1081 a 1800 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Outros Créditos'
+                ' - A Vencer Entre 1081 a 1800 Dias'
+            ),
         },
         'outros_creditos_a_vencer_de_1801_ate_5400_dias': {
             'description': 'Outros Créditos - Operações a vencer entre 1801 a 5400 dias.',
             'type': 'numeric',
+            'raw_csv_header': (
+                'Outros Créditos'
+                ' - A Vencer Entre 1801 a 5400 Dias'
+            ),
         },
         'outros_creditos_a_vencer_acima_5400_dias': {
             'description': 'Outros Créditos - Operações a vencer acima de 5400 dias.',
             'type': 'numeric',
-            'csv_header': 'Outros Créditos - A vencer Acima de 5400 Dias',
+            'raw_csv_header': 'Outros Créditos - A vencer Acima de 5400 Dias',
         },
         'outros_creditos_total': {
             'description': 'Outros Créditos - Total do grupo.',
             'type': 'numeric',
-            'csv_header': 'Outros Créditos - Total',
+            'raw_csv_header': 'Outros Créditos - Total',
         },
         # Financiamento de Infraestrutura/Desenvolvimento/Projeto e Outros Créditos
         'financiamento_infraestrutura_vencido_a_partir_15_dias': {
