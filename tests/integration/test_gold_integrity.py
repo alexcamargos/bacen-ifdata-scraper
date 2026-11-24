@@ -16,10 +16,7 @@ import duckdb
 import pytest
 
 from bacen_ifdata.utilities.configurations import Config
-
-# Constants for database file paths
-BRONZE_DB = Config.SILVER_DATABASE_FILE
-GOLD_DB = Config.GOLD_DATABASE_FILE
+from bacen_ifdata.utilities.releases import current_release
 
 pytestmark = pytest.mark.transformation
 
@@ -124,15 +121,28 @@ QUERY_EXPECTED_ATIVO_TOTAL_SUMMARY = """
 
 @pytest.fixture
 def create_gold_database_connection():
-    """Opens a DuckDB connection to the Gold database with Bronze attached."""
+    """Open the selected Gold database with its paired Silver attached.
 
-    if not GOLD_DB.exists():
-        pytest.skip(f"Gold database not found: {GOLD_DB}")
-    if not BRONZE_DB.exists():
-        pytest.skip(f"Bronze database not found: {BRONZE_DB}")
+    Args:
+        None.
 
-    connection = duckdb.connect(str(GOLD_DB), read_only=True)
-    connection.execute(f"ATTACH '{BRONZE_DB}' AS bronze (READ_ONLY)")
+    Returns:
+        A read-only DuckDB connection with the historical source alias.
+
+    Raises:
+        duckdb.Error: The databases could not be opened.
+    """
+    release = current_release(Config.DATA_DIRECTORY)
+    gold = release.gold if release else Config.GOLD_DATABASE_FILE
+    silver = release.silver if release else Config.SILVER_DATABASE_FILE
+    if not gold.is_file():
+        pytest.skip(f"Gold database not found: {gold}")
+    if not silver.is_file():
+        pytest.skip(f"Silver database not found: {silver}")
+
+    connection = duckdb.connect(str(gold), read_only=True)
+    silver_literal = silver.as_posix().replace("'", "''")
+    connection.execute(f"ATTACH '{silver_literal}' AS bronze (READ_ONLY)")
 
     yield connection
 
