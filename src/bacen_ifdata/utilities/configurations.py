@@ -70,6 +70,10 @@ class Config:
         'https://www3.bcb.gov.br/ifdata/rest/relatorios2000a2024'
     )
     HISTORICAL_END: ClassVar[str] = '2024-12'
+    CURRENT_URL: ClassVar[str] = 'https://www3.bcb.gov.br/ifdata/'
+    CURRENT_CATALOG: ClassVar[str] = (
+        'https://www3.bcb.gov.br/ifdata/rest/relatorios2025a2030'
+    )
 
     # Maximum waiting time for elements to load.
     TIMEOUT: int = 120

@@ -49,7 +49,15 @@ from bacen_ifdata.scraper.institutions import InstitutionType
 
 
 class ReportsPrudentialConglomerates(StrEnum):
-    """Enumeration of the types of reports to download."""
+    """Reports published for the prudential scope.
+
+    Args:
+        None.
+    Returns:
+        None.
+    Raises:
+        None.
+    """
 
     SUMMARY = 'Resumo'
     ASSETS = 'Ativo'
@@ -57,6 +65,44 @@ class ReportsPrudentialConglomerates(StrEnum):
     INCOME_STATEMENT = 'Demonstração de Resultado'
     CAPITAL_INFORMATION = 'Informações de Capital'
     SEGMENTATION = 'Segmentação'
+
+
+class ReportsCurrentPrudential(StrEnum):
+    """Credit reports introduced in the prudential scope from 2025.
+
+    Args:
+        None.
+    Returns:
+        None.
+    Raises:
+        None.
+    """
+
+    PORTFOLIO_INDIVIDUALS_TYPE_MATURITY = (
+        'Carteira de crédito ativa Pessoa Física - modalidade e prazo '
+        'de vencimento'
+    )
+    PORTFOLIO_LEGAL_PERSON_TYPE_MATURITY = (
+        'Carteira de crédito ativa Pessoa Jurídica - modalidade e prazo '
+        'de vencimento'
+    )
+    PORTFOLIO_LEGAL_PERSON_ECONOMIC_ACTIVITY = (
+        'Carteira de crédito ativa Pessoa Jurídica - por atividade '
+        'econômica (CNAE)'
+    )
+    PORTFOLIO_LEGAL_PERSON_BUSINESS_SIZE = (
+        'Carteira de crédito ativa Pessoa Jurídica - por porte do tomador'
+    )
+    PORTFOLIO_NUMBER_CLIENTS_OPERATIONS = (
+        'Carteira de crédito ativa - quantidade de clientes e de operações'
+    )
+    PORTFOLIO_INDEXER = 'Carteira de crédito ativa - por indexador'
+    PORTFOLIO_GEOGRAPHIC_REGION = (
+        'Carteira de crédito ativa - por região geográfica'
+    )
+    PORTFOLIO_FINANCIAL_INSTRUMENTS = (
+        'Carteira de crédito ativa - por carteiras de instrumentos financeiros'
+    )
 
 
 class ReportsFinancialConglomerates(StrEnum):
@@ -122,4 +168,8 @@ REPORTS: dict[InstitutionType, type[StrEnum]] = {
     InstitutionType.FOREIGN_EXCHANGE: ReportsForeignExchange,
 }
 
-__all__ = ['REPORTS']
+CURRENT_ONLY_REPORTS: dict[InstitutionType, type[StrEnum]] = {
+    InstitutionType.PRUDENTIAL_CONGLOMERATES: ReportsCurrentPrudential,
+}
+
+__all__ = ['CURRENT_ONLY_REPORTS', 'REPORTS']
