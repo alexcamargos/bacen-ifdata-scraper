@@ -73,7 +73,7 @@ unpivoted_pj AS (
     SELECT 
         codigo, 
         data_base, 
-        nome_coluna, 
+        {{ historic_scr_product_column('nome_coluna') }} as nome_coluna,
         valor,
         'Conglomerado Financeiro (SCR)' as tipo_instituicao
     FROM {{ source('silver', 'financial_conglomerates_scr_portfolio_legal_person_type_maturity') }}

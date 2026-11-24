@@ -22,7 +22,11 @@ with silver_totais as (
     join {{ ref('dim_produto_credito') }} as produto
       on produto.tipo_pessoa in ('{{ tipo_pessoa }}', 'Ambos')
     join {{ ref('dim_faixa_vencimento') }} as faixa
+      {% if report == 'financial_conglomerates_scr_portfolio_legal_person_type_maturity' %}
+      on {{ historic_scr_product_column('valores.coluna') }} = produto.prefixo_coluna || faixa.sufixo_coluna
+      {% else %}
       on valores.coluna = produto.prefixo_coluna || faixa.sufixo_coluna
+      {% endif %}
     group by 1, 2, 3, 4
     {% if not loop.last %}union all{% endif %}
     {% endfor %}
