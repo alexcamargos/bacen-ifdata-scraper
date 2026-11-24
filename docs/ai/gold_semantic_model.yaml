@@ -1,0 +1,1740 @@
+schema_version: '1.0'
+dataset:
+  name: bacen_ifdata_gold
+  package: bacen-ifdata-scraper
+  source: Banco Central do Brasil - Portal IF.data
+  engine: DuckDB
+  resolution:
+    python_helper: bacen_ifdata.utilities.releases.warehouse_path('gold')
+    release_pointer: data/processed/current.json
+    open_mode: read_only=True
+  temporal_coverage:
+    min_id_data: 20000301
+    max_id_data: 20241201
+    total_quarters: 100
+    id_data_format: 'YYYYMMDD (inteiro, sempre dia 01 do mês de fechamento do trimestre: 03, 06, 09, 12)'
+  units:
+    monetary_values: R$ mil (milhares de reais)
+    ratios_and_rates: 'fração decimal (ex.: 0.1651 = 16,51%)'
+    counts: inteiro absoluto
+guardrails:
+- id: no_double_counting
+  rule: 'Nunca somar ou agregar tabelas contábeis sem filtrar tipo_instituicao (ex.: ''Conglomerado Prudencial'',
+    ''Conglomerado Financeiro'' ou ''Instituicao Individual''). Atenção à grafia exata ''Instituicao Individual''
+    (sem cedilha/acento).'
+- id: dre_semiannual_accumulation
+  rule: Na DRE (fato_demonstracao_resultado, view_dre_relatorios e lucro_liquido do resumo), março (03) e setembro
+    (09) acumulam 3 meses; junho (06) e dezembro (12) acumulam 6 meses. Para total anual de YYYY, some apenas YYYY0601
+    + YYYY1201. Para 2T isolado use YYYY0601 - YYYY0301; para 4T isolado use YYYY1201 - YYYY0901.
+- id: roe_roa_not_annualized
+  rule: As colunas roe e roa são calculadas como lucro_liquido / patrimonio_liquido (ou ativo_total) da própria
+    data-base, sem anualização (3 meses em 03/09, 6 meses em 06/12).
+- id: credit_portfolio_scope
+  rule: As tabelas de carteira de crédito (fato_carteira_credito_*, fato_risco_credito, fato_regiao_credito, fato_operacoes_clientes)
+    só existem para Conglomerado Financeiro (2014-06..2024-12) e Conglomerado Financeiro (SCR) (2012-06..2014-03).
+    Não filtre por Conglomerado Prudencial nessas tabelas.
+- id: capital_scope_transition
+  rule: Em fato_capital_prudencial, o período 2000-12..2014-12 está em Conglomerado Financeiro e o período 2015-03..2024-12
+    está em Conglomerado Prudencial.
+- id: prefer_views_when_available
+  rule: Prefira view_resumo_financeiro_relatorios, view_balanco_patrimonial_relatorios, view_dre_relatorios e view_instituicoes_historico_nomes
+    para evitar erros de join.
+institution_scopes:
+- tipo_instituicao: Conglomerado Financeiro
+  tipo_relatorio_bcb: Conglomerados Financeiros e Instituições Independentes
+  count: 3696
+- tipo_instituicao: Instituicao Individual
+  tipo_relatorio_bcb: Instituições Individuais
+  count: 3284
+- tipo_instituicao: Conglomerado Financeiro (SCR)
+  tipo_relatorio_bcb: Conglomerados Financeiros e Instituições Independentes
+  count: 2199
+- tipo_instituicao: Conglomerado Prudencial
+  tipo_relatorio_bcb: Conglomerados Prudenciais e Instituições Independentes
+  count: 1981
+- tipo_instituicao: Instituição de Câmbio
+  tipo_relatorio_bcb: Instituições com Operações de Câmbio
+  count: 217
+views:
+  view_balanco_patrimonial_relatorios:
+    table_type: VIEW
+    description: Data Mart View unificando o Fato Balanço Patrimonial (Ativos e Passivos) com as Dimensões, para
+      o relatório completo do IF.data.
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial)
+    primary_key:
+    - id_instituicao
+    - id_data
+    recommended_for:
+    - Análise detalhada de composição do Ativo (crédito, TVM, disponibilidades) e Passivo (depósitos, LCI, LCA,
+      LF)
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave da instituição (FK para dim_instituicao).
+    - name: id_data
+      type: INTEGER
+      description: Chave da data (FK para dim_tempo).
+    - name: codigo_origem
+      type: BIGINT
+    - name: nome_instituicao
+      type: VARCHAR
+      description: Nome da instituição.
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: tipo_instituicao
+      type: VARCHAR
+      description: Classificação Original.
+    - name: nome_conglomerado
+      type: VARCHAR
+      description: Nome do conglomerado pertencente.
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence.
+    - name: segmento
+      type: VARCHAR
+      description: Segmento de atuação.
+    - name: segmento_descricao
+      type: VARCHAR
+    - name: cidade
+      type: VARCHAR
+      description: Cidade da sede.
+    - name: uf
+      type: VARCHAR
+      description: UF da sede.
+    - name: regiao
+      type: VARCHAR
+      description: Região da sede.
+    - name: tipo_de_controle
+      type: VARCHAR
+      description: Qual a natureza do controle acionário (Público, Privado Nacional, etc).
+    - name: tcb
+      type: VARCHAR
+      description: 'Sigla do Tipo de Consolidado Bancário (ex: b1, b2, b3C, n4).'
+    - name: consolidado_bancario
+      type: VARCHAR
+      description: Descrição completa do Tipo de Consolidado Bancário.
+    - name: classe_instituicao
+      type: VARCHAR
+      description: Classe da instituição.
+    - name: data_base
+      type: DATE
+      description: 'Ativo: (a) Disponibilidades'
+    - name: disponibilidades
+      type: DOUBLE
+    - name: aplicacoes_interfinanceiras_liquidez
+      type: DOUBLE
+      description: 'Ativo: (b) Aplicações Interfinanceiras de Liquidez'
+    - name: tvm_derivativos
+      type: DOUBLE
+      description: 'Ativo: (c) TVM e Instrumentos Financeiros Derivativos'
+    - name: operacoes_de_credito
+      type: DOUBLE
+      description: 'Ativo: (d1) Operações de Crédito'
+    - name: provisao_operacoes_de_credito
+      type: DOUBLE
+      description: 'Ativo: (d2) Provisão sobre Operações de Crédito'
+    - name: operacoes_de_credito_liquidas_provisao
+      type: DOUBLE
+      description: 'Ativo: (d) Operações de Crédito Líquidas de Provisão'
+    - name: arrendamento_mercantil_a_receber
+      type: DOUBLE
+      description: 'Ativo: (e1) Arrendamento Mercantil a Receber'
+    - name: imobilizado_de_arrendamento
+      type: DOUBLE
+      description: 'Ativo: (e2) Imobilizado de Arrendamento'
+    - name: credores_antecipacao_valor_residual
+      type: DOUBLE
+      description: 'Ativo: (e3) / (j) Credores por Antecipação de Valor Residual'
+    - name: provisao_arrendamento_mercantil
+      type: DOUBLE
+      description: 'Ativo: (e4) Provisão sobre Arrendamento Mercantil'
+    - name: arrendamento_mercantil_liquido_de_provisao
+      type: DOUBLE
+      description: 'Ativo: (e) Arrendamento Mercantil Líquido de Provisão'
+    - name: outros_creditos_liquido_de_provisao
+      type: DOUBLE
+      description: 'Ativo: (f) Outros Créditos - Líquido de Provisão'
+    - name: outros_ativos_realizaveis
+      type: DOUBLE
+      description: 'Ativo: (g) Outros Ativos Realizáveis'
+    - name: permanente_ajustado
+      type: DOUBLE
+      description: 'Ativo: (h) Permanente Ajustado'
+    - name: ativo_total_ajustado
+      type: DOUBLE
+      description: 'Ativo: (i) Ativo Total Ajustado'
+    - name: ativo_total
+      type: DOUBLE
+      description: 'Ativo: (k) Ativo Total'
+    - name: depositos_vista
+      type: DOUBLE
+      description: 'Passivo: (a1) Depósitos à Vista'
+    - name: depositos_poupanca
+      type: DOUBLE
+      description: 'Passivo: (a2) Depósitos de Poupança'
+    - name: depositos_interfinanceiros
+      type: DOUBLE
+      description: 'Passivo: (a3) Depósitos Interfinanceiros'
+    - name: depositos_a_prazo
+      type: DOUBLE
+      description: 'Passivo: (a4) Depósitos a Prazo'
+    - name: conta_de_pagamento_pre_paga
+      type: DOUBLE
+      description: 'Passivo: (a5) Conta de Pagamento Pré-Paga'
+    - name: depositos_outros
+      type: DOUBLE
+      description: 'Passivo: (a6) Depósitos Outros'
+    - name: depositos
+      type: DOUBLE
+      description: 'Passivo: (a) Depósito Total'
+    - name: captacoes_mercado_aberto
+      type: DOUBLE
+      description: 'Passivo: (b) Obrigações por Operações Compromissadas'
+    - name: letras_de_credito_imobiliario
+      type: DOUBLE
+      description: 'Passivo: (c1) Letras de Crédito Imobiliário'
+    - name: letras_de_credito_agronegocio
+      type: DOUBLE
+      description: 'Passivo: (c2) Letras de Crédito do Agronegócio'
+    - name: letras_financeiras
+      type: DOUBLE
+      description: 'Passivo: (c3) Letras Financeiras'
+    - name: obrigacoes_titulos_e_valores_mobiliarios_exterior
+      type: DOUBLE
+      description: 'Passivo: (c4) Obrigações por Títulos e Valores Mobiliários no Exterior'
+    - name: outros_recursos_de_aceites_e_emissao_de_titulos
+      type: DOUBLE
+      description: 'Passivo: (c5) Outros Recursos de Aceites e Emissão de Títulos'
+    - name: recursos_aceites_cambiais
+      type: DOUBLE
+      description: 'Passivo: (c) Recursos de Aceites e Emissão de Títulos'
+    - name: obrigacoes_emprestimos_repasses
+      type: DOUBLE
+      description: 'Passivo: (d) Obrigações por Empréstimos e Repasses'
+    - name: captacoes
+      type: DOUBLE
+      description: 'Passivo: (e) Captações Totais'
+    - name: obrigacoes_por_instr_financeiros_derivativos
+      type: DOUBLE
+      description: 'Passivo: (f) Instrumentos Derivativos'
+    - name: outras_obrigacoes
+      type: DOUBLE
+      description: 'Passivo: (g) Outras Obrigações'
+    - name: passivo_circulante_exigivel_longo_prazo
+      type: DOUBLE
+      description: 'Passivo: (h) Passivo Circulante e Exigível a Longo Prazo'
+    - name: patrimonio_liquido
+      type: DOUBLE
+      description: 'Passivo: (i) Patrimônio Líquido'
+    - name: passivo_total
+      type: DOUBLE
+      description: 'Passivo: (j) Passivo Total'
+  view_dre_relatorios:
+    table_type: VIEW
+    description: Data Mart View unificando o Fato Demonstração de Resultados com as Dimensões.
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado)
+    primary_key:
+    - id_instituicao
+    - id_data
+    recommended_for:
+    - Análise de receitas de intermediação, despesas de captação, PDD, eficiência administrativa e lucro líquido
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave da instituição (FK para dim_instituicao).
+    - name: id_data
+      type: INTEGER
+      description: Chave da data (FK para dim_tempo).
+    - name: codigo_origem
+      type: BIGINT
+    - name: nome_instituicao
+      type: VARCHAR
+      description: Nome da instituição.
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: tipo_instituicao
+      type: VARCHAR
+      description: Classificação Original.
+    - name: nome_conglomerado
+      type: VARCHAR
+      description: Nome do conglomerado pertencente.
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence.
+    - name: segmento
+      type: VARCHAR
+      description: Segmento de atuação.
+    - name: segmento_descricao
+      type: VARCHAR
+    - name: cidade
+      type: VARCHAR
+      description: Cidade da sede.
+    - name: uf
+      type: VARCHAR
+      description: UF da sede.
+    - name: regiao
+      type: VARCHAR
+      description: Região da sede.
+    - name: tipo_de_controle
+      type: VARCHAR
+      description: Qual a natureza do controle acionário (Público, Privado Nacional, etc).
+    - name: tcb
+      type: VARCHAR
+      description: 'Sigla do Tipo de Consolidado Bancário (ex: b1, b2, b3C, n4).'
+    - name: consolidado_bancario
+      type: VARCHAR
+      description: Descrição completa do Tipo de Consolidado Bancário.
+    - name: classe_instituicao
+      type: VARCHAR
+      description: Classe da instituição.
+    - name: data_base
+      type: DATE
+      description: Data-base de referência.
+    - name: rendas_operacoes_de_credito
+      type: DOUBLE
+      description: (a1) Rendas de Operações de Crédito
+    - name: rendas_operacoes_de_arrendamento_mercantil
+      type: DOUBLE
+      description: (a2) Rendas de Operações de Arrendamento Mercantil
+    - name: rendas_operacoes_tvm
+      type: DOUBLE
+      description: (a3) Rendas de Operações com TVM
+    - name: rendas_operacoes_instrumentos_financeiros_derivativos
+      type: DOUBLE
+      description: (a4) Rendas de Operações com Instrumentos Financeiros Derivativos
+    - name: resultado_operacoes_cambio
+      type: DOUBLE
+      description: (a5/b4) Resultado de Operações de Câmbio
+    - name: rendas_aplicacoes_compulsorias
+      type: DOUBLE
+      description: (a6) Rendas de Aplicações Compulsórias
+    - name: receitas_intermediacao_financeira
+      type: DOUBLE
+      description: (a) Receitas de Intermediação Financeira
+    - name: despesas_captacao
+      type: DOUBLE
+      description: (b1) Despesas de Captação
+    - name: despesas_obrigacoes_emprestimos_repasses
+      type: DOUBLE
+      description: (b2) Despesas de Obrigações por Empréstimos e Repasses
+    - name: despesas_operacoes_arrendamento_mercantil
+      type: DOUBLE
+      description: (b3) Despesas de Operações de Arrendamento Mercantil
+    - name: despesas_operacoes_cambio
+      type: DOUBLE
+    - name: resultado_provisao_creditos_dificil_liquidacao
+      type: DOUBLE
+      description: (b5) Resultado de Provisão para Créditos de Difícil Liquidação
+    - name: despesas_intermediacao_financeira
+      type: DOUBLE
+      description: (b) Despesas de Intermediação Financeira
+    - name: resultado_intermediacao_financeira
+      type: DOUBLE
+      description: (c) Resultado de Intermediação Financeira
+    - name: rendas_prestacao_servicos
+      type: DOUBLE
+      description: (d1) Rendas de Prestação de Serviços
+    - name: rendas_tarifas_bancarias
+      type: DOUBLE
+      description: (d2) Rendas de Tarifas Bancárias
+    - name: despesas_pessoal
+      type: DOUBLE
+      description: (d3) Despesas de Pessoal
+    - name: despesas_administrativas
+      type: DOUBLE
+      description: (d4) Despesas Administrativas
+    - name: despesas_tributarias
+      type: DOUBLE
+      description: (d5) Despesas Tributárias
+    - name: resultado_participacoes
+      type: DOUBLE
+      description: (d6) Resultado de Participações
+    - name: outras_receitas_operacionais
+      type: DOUBLE
+      description: (d7) Outras Receitas Operacionais
+    - name: outras_despesas_operacionais
+      type: DOUBLE
+      description: (d8) Outras Despesas Operacionais
+    - name: outras_receitas_despesas_operacionais
+      type: DOUBLE
+      description: (d) Outras Receitas/Despesas Operacionais
+    - name: resultado_operacional
+      type: DOUBLE
+      description: (e) Resultado Operacional
+    - name: resultado_nao_operacional
+      type: DOUBLE
+      description: (f) Resultado Não Operacional
+    - name: resultado_antes_tributacao
+      type: DOUBLE
+      description: (g) Resultado antes da Tributação, Lucro e Participação
+    - name: imposto_renda_contribuicao_social
+      type: DOUBLE
+      description: (h) Imposto de Renda e Contribuição Social
+    - name: participacao_lucros
+      type: DOUBLE
+      description: (i) Participação nos Lucros
+    - name: lucro_liquido
+      type: DOUBLE
+      description: (j) Lucro Líquido
+    - name: juros_sobre_capital
+      type: DOUBLE
+      description: (k) Juros Sobre Capital Social/Próprio
+    - name: roe
+      type: DOUBLE
+    - name: roa
+      type: DOUBLE
+  view_instituicoes_historico_nomes:
+    table_type: VIEW
+    description: Data Mart View focada exclusivamente no acompanhamento histórico (De-Para) de mudanças de nome
+      das instituições nos relatórios do Bacen.
+    grain: 1 linha por instituição e data-base com comparação de nome anterior via LAG
+    primary_key:
+    - id_instituicao
+    - id_data
+    recommended_for:
+    - Rastreamento de mudanças de razão social, fusões e incorporações ao longo da série histórica
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave da instituição (FK para dim_instituicao).
+    - name: id_data
+      type: INTEGER
+      description: Chave da data (FK para dim_tempo).
+    - name: codigo_origem
+      type: BIGINT
+      description: Código original no Bacen.
+    - name: nome_instituicao
+      type: VARCHAR
+      description: Nome oficial e mais atualizado da instituição (Dimensional).
+    - name: nome_instituicao_anterior
+      type: VARCHAR
+      description: Nome que constava no relatório imediatamente anterior a este.
+    - name: nome_instituicao_historico
+      type: VARCHAR
+      description: Nome exato que a instituição declarou no Bacen nesta data-base.
+    - name: houve_mudanca_nome
+      type: BOOLEAN
+      description: Flag (true/false) sinalizando se houve troca no nome em relação ao período anterior (uso para
+        analistas filtrarem os momentos de mudança).
+    - name: tipo_instituicao
+      type: VARCHAR
+      description: Classificação Original.
+    - name: nome_conglomerado
+      type: VARCHAR
+      description: Nome do conglomerado pertencente.
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence.
+    - name: segmento
+      type: VARCHAR
+      description: Segmento de atuação.
+    - name: cidade
+      type: VARCHAR
+      description: Cidade da sede.
+    - name: uf
+      type: VARCHAR
+      description: UF da sede.
+    - name: regiao
+      type: VARCHAR
+      description: Região da sede.
+    - name: tipo_de_controle
+      type: VARCHAR
+      description: Qual a natureza do controle acionário (Público, Privado Nacional, etc).
+    - name: tcb
+      type: VARCHAR
+      description: 'Sigla do Tipo de Consolidado Bancário (ex: b1, b2, b3C, n4).'
+    - name: consolidado_bancario
+      type: VARCHAR
+      description: Descrição completa do Tipo de Consolidado Bancário.
+    - name: classe_instituicao
+      type: VARCHAR
+      description: Classe da instituição.
+    - name: data_base
+      type: DATE
+      description: Data-base de referência (Temporal).
+  view_resumo_financeiro_relatorios:
+    table_type: VIEW
+    description: Data Mart View unificando o Fato Resumo Financeiro com as Dimensões, facilitando o filtro por Tipo
+      de Relatório BCB.
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro)
+    primary_key:
+    - id_instituicao
+    - id_data
+    recommended_for:
+    - Rankings de instituições por ativo total, patrimônio líquido, captações ou lucro líquido
+    - Evolução temporal de indicadores principais sem necessidade de joins manuais
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave da instituição (FK para dim_instituicao).
+    - name: id_data
+      type: INTEGER
+      description: Chave da data (FK para dim_tempo).
+    - name: codigo_origem
+      type: BIGINT
+    - name: nome_instituicao
+      type: VARCHAR
+      description: Nome da instituição.
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: tipo_instituicao
+      type: VARCHAR
+    - name: nome_conglomerado
+      type: VARCHAR
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Qual dos 4 tipos de relatório oficiais do BCB esta linha pertence.
+    - name: segmento
+      type: VARCHAR
+    - name: segmento_descricao
+      type: VARCHAR
+    - name: cidade
+      type: VARCHAR
+    - name: uf
+      type: VARCHAR
+    - name: regiao
+      type: VARCHAR
+    - name: tipo_de_controle
+      type: VARCHAR
+    - name: tcb
+      type: VARCHAR
+    - name: consolidado_bancario
+      type: VARCHAR
+    - name: data_base
+      type: DATE
+    - name: ativo_total
+      type: DOUBLE
+    - name: carteira_credito
+      type: DOUBLE
+    - name: passivo_exigivel
+      type: DOUBLE
+    - name: captacoes
+      type: DOUBLE
+    - name: patrimonio_liquido
+      type: DOUBLE
+    - name: lucro_liquido
+      type: DOUBLE
+    - name: quantidade_agencias
+      type: BIGINT
+    - name: quantidade_postos_atendimento
+      type: BIGINT
+    - name: roe
+      type: DOUBLE
+    - name: roa
+      type: DOUBLE
+facts:
+  fato_balanco_patrimonial:
+    table_type: BASE TABLE
+    description: Fato consolidada de Ativos e Passivos para todas as instituições.
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Instituicao Individual: 20000301..20241201
+      Conglomerado Financeiro: 20000301..20241201
+      Conglomerado Prudencial: 20140301..20241201
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: tipo_consolidado
+      type: VARCHAR
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: disponibilidades
+      type: DOUBLE
+      description: Caixa e Equivalentes de Caixa.
+    - name: aplicacoes_interfinanceiras_liquidez
+      type: DOUBLE
+    - name: tvm_derivativos
+      type: DOUBLE
+    - name: operacoes_de_credito
+      type: DOUBLE
+      description: Carteira de Crédito Total.
+    - name: provisao_operacoes_de_credito
+      type: DOUBLE
+    - name: operacoes_de_credito_liquidas_provisao
+      type: DOUBLE
+    - name: arrendamento_mercantil_a_receber
+      type: DOUBLE
+    - name: imobilizado_de_arrendamento
+      type: DOUBLE
+    - name: credores_antecipacao_valor_residual
+      type: DOUBLE
+    - name: provisao_arrendamento_mercantil
+      type: DOUBLE
+    - name: arrendamento_mercantil_liquido_de_provisao
+      type: DOUBLE
+    - name: outros_creditos_liquido_de_provisao
+      type: DOUBLE
+    - name: outros_ativos_realizaveis
+      type: DOUBLE
+    - name: permanente_ajustado
+      type: DOUBLE
+    - name: ativo_total_ajustado
+      type: DOUBLE
+    - name: ativo_total
+      type: DOUBLE
+      description: Ativo Total.
+    - name: depositos_vista
+      type: DOUBLE
+    - name: depositos_poupanca
+      type: DOUBLE
+    - name: depositos_interfinanceiros
+      type: DOUBLE
+    - name: depositos_a_prazo
+      type: DOUBLE
+    - name: conta_de_pagamento_pre_paga
+      type: DOUBLE
+    - name: depositos_outros
+      type: DOUBLE
+    - name: depositos
+      type: DOUBLE
+      description: Depósitos Totais.
+    - name: captacoes_mercado_aberto
+      type: DOUBLE
+    - name: letras_de_credito_imobiliario
+      type: DOUBLE
+    - name: letras_de_credito_agronegocio
+      type: DOUBLE
+    - name: letras_financeiras
+      type: DOUBLE
+    - name: obrigacoes_titulos_e_valores_mobiliarios_exterior
+      type: DOUBLE
+    - name: outros_recursos_de_aceites_e_emissao_de_titulos
+      type: DOUBLE
+    - name: recursos_aceites_cambiais
+      type: DOUBLE
+    - name: obrigacoes_emprestimos_repasses
+      type: DOUBLE
+    - name: captacoes
+      type: DOUBLE
+      description: Total de Captações (Depósitos + Outras Obrigações).
+    - name: obrigacoes_por_instr_financeiros_derivativos
+      type: DOUBLE
+    - name: outras_obrigacoes
+      type: DOUBLE
+    - name: passivo_circulante_exigivel_longo_prazo
+      type: DOUBLE
+    - name: patrimonio_liquido
+      type: DOUBLE
+      description: Patrimônio Líquido.
+    - name: passivo_total
+      type: DOUBLE
+      description: Passivo Total (Exigível + PL).
+  fato_capital_prudencial:
+    table_type: BASE TABLE
+    description: Fato com informações de Capital Regulatório (Basileia III).
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Conglomerado Financeiro: 20001201..20141201
+      Conglomerado Prudencial: 20150301..20241201
+    recommended_for:
+    - Análise de solvência, Índice de Basileia, Capital Principal, RWA, razão de alavancagem e imobilização
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: capital_principal
+      type: DOUBLE
+    - name: capital_complementar
+      type: DOUBLE
+    - name: pr_nivel_1
+      type: DOUBLE
+    - name: capital_nivel_2
+      type: DOUBLE
+    - name: pr_total
+      type: DOUBLE
+    - name: rwa_total
+      type: DOUBLE
+      description: Ativos Ponderados pelo Risco Total.
+    - name: rwa_risco_credito
+      type: DOUBLE
+    - name: rwa_risco_mercado
+      type: DOUBLE
+    - name: rwa_risco_operacional
+      type: DOUBLE
+    - name: rwa_servicos_pagamento
+      type: DOUBLE
+    - name: rwa_cambio
+      type: DOUBLE
+    - name: rwa_commodities
+      type: DOUBLE
+    - name: rwa_juros
+      type: DOUBLE
+    - name: rwa_acoes
+      type: DOUBLE
+    - name: rwa_cva
+      type: DOUBLE
+    - name: rwa_drc
+      type: DOUBLE
+    - name: exposicao_total
+      type: DOUBLE
+    - name: indice_capital_principal
+      type: DOUBLE
+    - name: indice_capital_nivel_i
+      type: DOUBLE
+    - name: indice_basileia
+      type: DOUBLE
+      description: Índice de Basileia (PR / RWA).
+    - name: razao_alavancagem
+      type: DOUBLE
+    - name: indice_imobilizacao
+      type: DOUBLE
+    - name: adicional_capital_principal
+      type: DOUBLE
+  fato_carteira_credito_atividade:
+    table_type: BASE TABLE
+    description: Fato detalhando a carteira de crédito por atividade econômica (CNAE/Setor).
+    grain: 1 linha por instituição, data-base, atividade econômica (CNAE) e faixa de vencimento
+    primary_key:
+    - id_instituicao
+    - id_data
+    - id_atividade_economica
+    - id_faixa_vencimento
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Exposição de crédito PJ por setor econômico (CNAE) e faixa de vencimento
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: id_atividade_economica
+      type: INTEGER
+    - name: id_faixa_vencimento
+      type: INTEGER
+    - name: valor
+      type: DOUBLE
+  fato_carteira_credito_indexador:
+    table_type: BASE TABLE
+    description: Fato detalhando a carteira de crédito por indexador (Selic, IPCA, etc).
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Exposição da carteira de crédito por indexador (prefixado, pós-fixado, inflação, câmbio, TR)
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: total_carteira
+      type: DOUBLE
+    - name: prefixado
+      type: DOUBLE
+    - name: selic
+      type: DOUBLE
+      description: Carteira indexada à SELIC.
+    - name: cdi
+      type: DOUBLE
+      description: Carteira indexada ao CDI.
+    - name: tr
+      type: DOUBLE
+    - name: tjlp
+      type: DOUBLE
+    - name: tlp
+      type: DOUBLE
+    - name: libor
+      type: DOUBLE
+    - name: ipca
+      type: DOUBLE
+    - name: igpm
+      type: DOUBLE
+    - name: ipcc
+      type: DOUBLE
+    - name: outros_indices_de_preco
+      type: DOUBLE
+    - name: outras_taxas_pos_fixadas
+      type: DOUBLE
+    - name: outras_taxas_flutuantes
+      type: DOUBLE
+    - name: outros_indexadores
+      type: DOUBLE
+    - name: total_exterior
+      type: DOUBLE
+    - name: total_nao_individualizado
+      type: DOUBLE
+  fato_carteira_credito_porte:
+    table_type: BASE TABLE
+    description: Fato detalhando a carteira de crédito por porte do tomador (PJ).
+    grain: 1 linha por instituição, data-base e porte do tomador PJ
+    primary_key:
+    - id_instituicao
+    - id_data
+    - id_porte
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Distribuição da carteira de crédito PJ por porte do tomador (micro, pequena, média, grande)
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: id_porte
+      type: INTEGER
+    - name: valor
+      type: DOUBLE
+  fato_carteira_credito_produto:
+    table_type: BASE TABLE
+    description: Carteira de crédito por instituição, data-base, produto, faixa de vencimento e tipo de pessoa.
+    grain: 1 linha por instituição, data-base, produto de crédito e faixa de vencimento
+    primary_key:
+    - id_instituicao
+    - id_data
+    - id_produto
+    - id_faixa_vencimento
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Composição da carteira de crédito ativa por modalidade PF/PJ e prazo de vencimento
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: id_produto
+      type: INTEGER
+    - name: id_faixa_vencimento
+      type: INTEGER
+    - name: valor
+      type: DOUBLE
+    - name: tipo_pessoa
+      type: VARCHAR
+      description: Tipo de pessoa identificado pelo relatório de origem na Silver.
+  fato_carteira_credito_totais:
+    table_type: BASE TABLE
+    description: Fato auxiliar com totais de carteira e valores não individualizados que não entram nos breakdowns
+      dimensionais.
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Totais consolidados da carteira ativa, vencida e a vencer por instituição
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: total_carteira_pj
+      type: DOUBLE
+      description: Valor Total da Carteira PJ informado nos relatórios.
+    - name: total_nao_individualizado_pj
+      type: DOUBLE
+      description: Parcela da carteira PJ não classificada por atividade (valor baixo ou sem info).
+    - name: total_exterior_pj
+      type: DOUBLE
+    - name: total_geral_risco
+      type: DOUBLE
+      description: Valor Total da Carteira sujeita a Risco (conferência).
+    - name: total_carteira_pf
+      type: DOUBLE
+      description: Valor Total da Carteira PF informado nos relatórios.
+    - name: total_exterior_pf
+      type: DOUBLE
+      description: Valor Total da Carteira PF no Exterior.
+  fato_demonstracao_resultado:
+    table_type: BASE TABLE
+    description: Fato consolidada de Demonstração de Resultados (DRE).
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Instituicao Individual: 20000301..20241201
+      Conglomerado Financeiro: 20000301..20241201
+      Conglomerado Prudencial: 20140301..20241201
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: receitas_intermediacao_financeira
+      type: DOUBLE
+      description: Receitas Totais de Intermediação.
+    - name: rendas_operacoes_de_credito
+      type: DOUBLE
+      description: Rendas de operações de crédito.
+    - name: rendas_operacoes_de_arrendamento_mercantil
+      type: DOUBLE
+    - name: rendas_operacoes_tvm
+      type: DOUBLE
+    - name: rendas_operacoes_instrumentos_financeiros_derivativos
+      type: DOUBLE
+    - name: resultado_operacoes_cambio
+      type: DOUBLE
+    - name: rendas_aplicacoes_compulsorias
+      type: DOUBLE
+    - name: despesas_intermediacao_financeira
+      type: DOUBLE
+      description: Despesas Totais de Intermediação.
+    - name: despesas_captacao
+      type: DOUBLE
+      description: Custos de captação de recursos.
+    - name: despesas_obrigacoes_emprestimos_repasses
+      type: DOUBLE
+    - name: despesas_operacoes_arrendamento_mercantil
+      type: DOUBLE
+    - name: despesas_operacoes_cambio
+      type: DOUBLE
+    - name: resultado_provisao_creditos_dificil_liquidacao
+      type: DOUBLE
+      description: Impacto das provisões para devedores duvidosos (PDD).
+    - name: resultado_intermediacao_financeira
+      type: DOUBLE
+      description: Resultado Bruto da Intermediação.
+    - name: rendas_prestacao_servicos
+      type: DOUBLE
+    - name: rendas_tarifas_bancarias
+      type: DOUBLE
+    - name: despesas_pessoal
+      type: DOUBLE
+      description: Despesas de Pessoal.
+    - name: despesas_administrativas
+      type: DOUBLE
+      description: Total de Despesas Administrativas.
+    - name: despesas_tributarias
+      type: DOUBLE
+      description: Despesas de Impostos e Taxas.
+    - name: resultado_participacoes
+      type: DOUBLE
+    - name: outras_receitas_operacionais
+      type: DOUBLE
+    - name: outras_despesas_operacionais
+      type: DOUBLE
+    - name: outras_receitas_despesas_operacionais
+      type: DOUBLE
+    - name: resultado_operacional
+      type: DOUBLE
+    - name: resultado_nao_operacional
+      type: DOUBLE
+    - name: resultado_antes_tributacao
+      type: DOUBLE
+    - name: imposto_renda_contribuicao_social
+      type: DOUBLE
+    - name: participacao_lucros
+      type: DOUBLE
+    - name: lucro_liquido
+      type: DOUBLE
+      description: Lucro Líquido final.
+    - name: juros_sobre_capital
+      type: DOUBLE
+    - name: roe
+      type: DOUBLE
+    - name: roa
+      type: DOUBLE
+  fato_movimentacao_cambio:
+    table_type: BASE TABLE
+    description: Fato de Movimentação no Mercado de Câmbio (Fluxo de Moedas).
+    grain: 1 linha por instituição de câmbio (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Instituição de Câmbio: 20141201..20230601
+    recommended_for:
+    - Fluxo trimestral de compras e vendas de câmbio (comercial e financeiro) por instituição
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: operacoes_comerciais_compra_numero_operacoes
+      type: BIGINT
+    - name: operacoes_comerciais_compra_valor
+      type: DOUBLE
+    - name: operacoes_comerciais_venda_numero_operacoes
+      type: BIGINT
+    - name: operacoes_comerciais_venda_valor
+      type: DOUBLE
+    - name: operacoes_comerciais_total_numero_operacoes
+      type: BIGINT
+    - name: operacoes_comerciais_total_valor
+      type: DOUBLE
+    - name: operacoes_financeiras_compra_numero_operacoes
+      type: BIGINT
+    - name: operacoes_financeiras_compra_valor
+      type: DOUBLE
+    - name: operacoes_financeiras_venda_numero_operacoes
+      type: BIGINT
+    - name: operacoes_financeiras_venda_valor
+      type: DOUBLE
+    - name: operacoes_financeiras_total_numero_operacoes
+      type: BIGINT
+    - name: operacoes_financeiras_total_valor
+      type: DOUBLE
+    - name: mercado_primario_total_numero_operacoes
+      type: BIGINT
+    - name: mercado_primario_total_valor
+      type: DOUBLE
+    - name: mercado_interbancario_compra_numero_operacoes
+      type: BIGINT
+    - name: mercado_interbancario_compra_valor
+      type: DOUBLE
+    - name: mercado_interbancario_venda_numero_operacoes
+      type: BIGINT
+    - name: mercado_interbancario_venda_valor
+      type: DOUBLE
+    - name: mercado_interbancario_total_numero_operacoes
+      type: BIGINT
+    - name: mercado_interbancario_total_valor
+      type: DOUBLE
+    - name: total_geral_numero_operacoes
+      type: BIGINT
+    - name: total_geral_valor
+      type: DOUBLE
+      description: Valor total das operações (Primário + Interbancário) em milhares de USD.
+  fato_operacoes_clientes:
+    table_type: BASE TABLE
+    description: Fato com contagem de clientes e operações ativas.
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Quantidade de clientes e número de operações ativas de crédito por instituição
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: quantidade_clientes
+      type: BIGINT
+      description: Número de clientes com operações ativas.
+    - name: quantidade_operacoes
+      type: BIGINT
+  fato_regiao_credito:
+    table_type: BASE TABLE
+    description: Fato detalhando a carteira de crédito por região geográfica.
+    grain: 1 linha por instituição, data-base e região geográfica
+    primary_key:
+    - id_instituicao
+    - id_data
+    - id_regiao
+    foreign_keys:
+    - column: id_regiao
+      references: dim_regiao.id_regiao
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140901..20241201
+    recommended_for:
+    - Distribuição geográfica da carteira de crédito por macrorregião brasileira
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: id_regiao
+      type: INTEGER
+    - name: valor
+      type: DOUBLE
+  fato_resumo_financeiro:
+    table_type: BASE TABLE
+    description: Fato com métricas financeiras resumidas (Ativo Total, Lucro, Patrimônio) para visualização rápida.
+    grain: 1 linha por instituição (id_instituicao) e data-base (id_data)
+    primary_key:
+    - id_instituicao
+    - id_data
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    - column: id_data
+      references: dim_tempo.id_data
+    coverage_by_scope:
+      Instituicao Individual: 20000301..20241201
+      Conglomerado Financeiro: 20000301..20241201
+      Conglomerado Prudencial: 20140301..20241201
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: nome_instituicao_historico
+      type: VARCHAR
+    - name: ativo_total
+      type: DOUBLE
+      description: Ativo Total em milhares de R$.
+    - name: carteira_credito
+      type: DOUBLE
+      description: Carteira de Crédito Classificada em milhares de R$.
+    - name: passivo_exigivel
+      type: DOUBLE
+      description: Passivo Circulante e Exigível a Longo Prazo.
+    - name: captacoes
+      type: DOUBLE
+      description: Captações Totais.
+    - name: patrimonio_liquido
+      type: DOUBLE
+      description: Patrimônio Líquido.
+    - name: lucro_liquido
+      type: DOUBLE
+      description: Lucro Líquido do período.
+    - name: quantidade_agencias
+      type: BIGINT
+      description: Número de agências físicas.
+    - name: quantidade_postos_atendimento
+      type: BIGINT
+      description: Número de postos de atendimento.
+    - name: roe
+      type: DOUBLE
+      description: Return on Equity (Lucro / PL).
+    - name: roa
+      type: DOUBLE
+      description: Return on Assets (Lucro / Ativo Total).
+  fato_risco_credito:
+    table_type: BASE TABLE
+    description: Fato detalhando a carteira de crédito por nível de risco.
+    grain: 1 linha por instituição, data-base e nível de risco (AA–H)
+    primary_key:
+    - id_instituicao
+    - id_data
+    - id_nivel_risco
+    foreign_keys:
+    - column: id_instituicao
+      references: dim_instituicao.id_instituicao
+    coverage_by_scope:
+      Conglomerado Financeiro (SCR): 20120601..20140301
+      Conglomerado Financeiro: 20140601..20241201
+    recommended_for:
+    - Qualidade de crédito e distribuição da carteira pelos níveis de risco AA até H
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+    - name: id_data
+      type: INTEGER
+    - name: id_nivel_risco
+      type: INTEGER
+    - name: valor
+      type: DOUBLE
+dimensions:
+  dim_atividade:
+    table_type: BASE TABLE
+    description: 1 linha por setor de atividade econômica (CNAE)
+    grain: 1 linha por setor de atividade econômica (CNAE)
+    primary_key: []
+    allowed_values:
+    - id_atividade: '1'
+      nome_atividade: Agricultura
+      prefixo_coluna: agricultura
+    - id_atividade: '2'
+      nome_atividade: Industrias de Transformacao
+      prefixo_coluna: industrias_transformacao
+    - id_atividade: '3'
+      nome_atividade: Construcao
+      prefixo_coluna: construcao
+    - id_atividade: '4'
+      nome_atividade: Servicos Industriais
+      prefixo_coluna: servicos_industriais
+    - id_atividade: '5'
+      nome_atividade: Industrias Extrativas
+      prefixo_coluna: industrias_extrativas
+    - id_atividade: '6'
+      nome_atividade: Comercio
+      prefixo_coluna: comercio
+    - id_atividade: '7'
+      nome_atividade: Administracao Publica
+      prefixo_coluna: administracao_publica
+    - id_atividade: '8'
+      nome_atividade: Transporte
+      prefixo_coluna: transporte
+    - id_atividade: '9'
+      nome_atividade: Outros
+      prefixo_coluna: outros
+    - id_atividade: '10'
+      nome_atividade: Exterior
+      prefixo_coluna: total_exterior
+    columns:
+    - name: id_atividade
+      type: INTEGER
+    - name: nome_atividade
+      type: VARCHAR
+    - name: prefixo_coluna
+      type: VARCHAR
+  dim_classe_instituicao:
+    table_type: BASE TABLE
+    description: Dimensão de Classe/Tipo Detalhado da Instituição.
+    grain: 1 linha por classe detalhada de instituição
+    primary_key:
+    - id_classe
+    allowed_values:
+    - codigo: '1'
+      descricao: Banco do Brasil - Banco Múltiplo
+    - codigo: '2'
+      descricao: Banco Comercial
+    - codigo: '3'
+      descricao: Banco Comercial Cooperativo
+    - codigo: '4'
+      descricao: BNDES
+    - codigo: '5'
+      descricao: Banco de Desenvolvimento
+    - codigo: '6'
+      descricao: Caixa Econômica Federal
+    - codigo: '7'
+      descricao: Caixa Econômica Estadual
+    - codigo: '8'
+      descricao: Banco Múltiplo
+    - codigo: '9'
+      descricao: Cooperativa de Crédito
+    - codigo: '10'
+      descricao: Sociedade de Crédito ao Microempreendedor
+    - codigo: '11'
+      descricao: Banco Múltiplo Cooperativo
+    - codigo: '13'
+      descricao: Banco de Investimento
+    - codigo: '14'
+      descricao: Sociedade de Crédito, Financiamento e Investimento
+    - codigo: '15'
+      descricao: Sociedade Corretora de TVM
+    - codigo: '16'
+      descricao: Sociedade Distribuidora de TVM
+    - codigo: '19'
+      descricao: Sociedade de Arrendamento Mercantil
+    - codigo: '20'
+      descricao: Sociedade de Crédito Imobiliário
+    - codigo: '21'
+      descricao: Sociedade Corretora de Câmbio
+    - codigo: '25'
+      descricao: Associação de Poupança e Empréstimo
+    - codigo: '28'
+      descricao: Banco Comercial Estrangeiro - Filial no país
+    - codigo: '29'
+      descricao: Companhia Hipotecária
+    - codigo: '30'
+      descricao: Agência de Fomento
+    - codigo: '31'
+      descricao: Sociedade de Crédito Imobiliário - Repassadora
+    - codigo: '39'
+      descricao: Banco de Câmbio
+    - codigo: '41'
+      descricao: Instituições de Pagamento
+    - codigo: '43'
+      descricao: Sociedades de Crédito Direto
+    - codigo: '44'
+      descricao: Sociedades de Empréstimo entre Pessoas
+    - codigo: '196'
+      descricao: Conglomerado de Mercado de Capitais
+    - codigo: '197'
+      descricao: Conglomerado Não-Bancário de Crédito
+    - codigo: '198'
+      descricao: Conglomerado - Bancário II
+    - codigo: '199'
+      descricao: Conglomerado - Bancário I
+    - codigo: '38'
+      descricao: Cooperativa Central de Crédito
+    columns:
+    - name: id_classe
+      type: VARCHAR
+    - name: codigo
+      type: INTEGER
+    - name: descricao
+      type: VARCHAR
+  dim_consolidado:
+    table_type: BASE TABLE
+    description: Dimensão de Tipo de Consolidado Bancário.
+    grain: 1 linha por código de consolidado bancário (TCB)
+    primary_key:
+    - id_consolidado
+    allowed_values:
+    - codigo: b1
+      descricao: Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas.
+    - codigo: b2
+      descricao: Banco Múltiplo sem Carteira Comercial ou Banco de Câmbio ou Banco de Investimento.
+    - codigo: b3s
+      descricao: Cooperativa de Crédito Singular.
+    - codigo: b3c
+      descricao: Central e Confederação de Cooperativas de Crédito.
+    - codigo: b4
+      descricao: Banco de Desenvolvimento.
+    - codigo: n1
+      descricao: Instituição não bancária atuante no mercado de crédito.
+    - codigo: n2
+      descricao: Instituição não bancária atuante no mercado de capitais.
+    - codigo: n4
+      descricao: Instituições de pagamento.
+    - codigo: z2
+      descricao: ''
+    columns:
+    - name: id_consolidado
+      type: VARCHAR
+    - name: codigo
+      type: VARCHAR
+    - name: descricao
+      type: VARCHAR
+  dim_controle:
+    table_type: BASE TABLE
+    description: Dimensão de Tipo de Controle de Capital.
+    grain: 1 linha por tipo de controle societário
+    primary_key:
+    - id_controle
+    allowed_values:
+    - codigo: '1'
+      descricao: Público
+    - codigo: '2'
+      descricao: Privado Nacional
+    - codigo: '3'
+      descricao: Controle Estrangeiro
+    columns:
+    - name: id_controle
+      type: VARCHAR
+    - name: codigo
+      type: INTEGER
+    - name: descricao
+      type: VARCHAR
+  dim_faixa_vencimento:
+    table_type: BASE TABLE
+    description: 1 linha por faixa de prazo de vencimento
+    grain: 1 linha por faixa de prazo de vencimento
+    primary_key: []
+    allowed_values:
+    - id_faixa: '1'
+      nome_faixa: Vencido acima de 15 dias
+      ordem: '1'
+      sufixo_coluna: _vencido_a_partir_15_dias
+    - id_faixa: '2'
+      nome_faixa: A vencer ate 90 dias
+      ordem: '2'
+      sufixo_coluna: _a_vencer_ate_90_dias
+    - id_faixa: '3'
+      nome_faixa: A vencer 91 a 360 dias
+      ordem: '3'
+      sufixo_coluna: _a_vencer_91_a_360_dias
+    - id_faixa: '4'
+      nome_faixa: A vencer 361 a 1080 dias
+      ordem: '4'
+      sufixo_coluna: _a_vencer_361_a_1080_dias
+    - id_faixa: '5'
+      nome_faixa: A vencer 1081 a 1800 dias
+      ordem: '5'
+      sufixo_coluna: _a_vencer_1081_a_1800_dias
+    - id_faixa: '6'
+      nome_faixa: A vencer 1801 a 5400 dias
+      ordem: '6'
+      sufixo_coluna: _a_vencer_1801_a_5400_dias
+    - id_faixa: '7'
+      nome_faixa: A vencer acima de 5400 dias
+      ordem: '7'
+      sufixo_coluna: _a_vencer_acima_5400_dias
+    columns:
+    - name: id_faixa
+      type: INTEGER
+    - name: nome_faixa
+      type: VARCHAR
+    - name: ordem
+      type: INTEGER
+    - name: sufixo_coluna
+      type: VARCHAR
+  dim_instituicao:
+    table_type: BASE TABLE
+    description: Dimensão de Instituições. Unifica dados de Conglomerados Prudenciais, Financeiros e Instituições
+      Independentes.
+    grain: 1 linha por instituição por escopo institucional (codigo_origem + tipo_instituicao)
+    primary_key:
+    - id_instituicao
+    foreign_keys:
+    - column: id_segmento
+      references: dim_segmento.id_segmento
+    - column: id_localizacao
+      references: dim_localizacao.id_localizacao
+    - column: id_controle
+      references: dim_controle.id_controle
+    - column: id_consolidado
+      references: dim_consolidado.id_consolidado
+    - column: id_classe
+      references: dim_classe_instituicao.id_classe
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave primária substituta (Surrogate Key) gerada via MD5 do código da instituição.
+    - name: codigo_origem
+      type: BIGINT
+      description: Código original da instituição no Bacen.
+    - name: nome
+      type: VARCHAR
+      description: Nome da instituição.
+    - name: tipo_instituicao
+      type: VARCHAR
+      description: Tipo da fonte de dados (Conglomerado Prudencial, Financeiro, etc).
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Classificação padronizada para os 4 tipos oficiais de relatório do BCB IF.data.
+    - name: id_segmento
+      type: VARCHAR
+      description: Chave estrangeira para dim_segmento (Segmento Prudencial).
+    - name: id_localizacao
+      type: VARCHAR
+      description: Chave estrangeira para dim_localizacao (região, UF, cidade).
+    - name: id_controle
+      type: VARCHAR
+      description: Chave estrangeira para dim_controle (Tipo de Controle).
+    - name: id_consolidado
+      type: VARCHAR
+      description: Chave estrangeira para dim_consolidado (Consolidado Bancário).
+    - name: id_classe
+      type: VARCHAR
+      description: Chave estrangeira para dim_classe_instituicao (Tipo detalhado).
+    - name: nome_conglomerado
+      type: VARCHAR
+      description: Nome do conglomerado ao qual a instituição pertence. Específico para Instituições Individuais.
+  dim_localizacao:
+    table_type: BASE TABLE
+    description: Dimensão de Localidade (Cidade, UF, Região).
+    grain: 1 linha por combinação única de cidade, UF e região
+    primary_key:
+    - id_localizacao
+    columns:
+    - name: id_localizacao
+      type: VARCHAR
+      description: Chave primária (MD5 de Cidade + UF + Região).
+    - name: cidade
+      type: VARCHAR
+      description: Cidade da instituição.
+    - name: uf
+      type: VARCHAR
+      description: Unidade Federativa.
+    - name: regiao
+      type: VARCHAR
+      description: Região Geográfica.
+  dim_porte:
+    table_type: BASE TABLE
+    description: 1 linha por porte do tomador PJ
+    grain: 1 linha por porte do tomador PJ
+    primary_key: []
+    allowed_values:
+    - id_porte: '1'
+      nome_porte: Micro
+      coluna: micro
+    - id_porte: '2'
+      nome_porte: Pequena
+      coluna: pequena
+    - id_porte: '3'
+      nome_porte: Media
+      coluna: media
+    - id_porte: '4'
+      nome_porte: Grande
+      coluna: grande
+    - id_porte: '5'
+      nome_porte: Indisponivel
+      coluna: indisponivel
+    - id_porte: '6'
+      nome_porte: Exterior
+      coluna: total_exterior_pessoa_juridica
+    columns:
+    - name: id_porte
+      type: INTEGER
+    - name: nome_porte
+      type: VARCHAR
+    - name: coluna
+      type: VARCHAR
+  dim_produto_credito:
+    table_type: BASE TABLE
+    description: 1 linha por modalidade de produto de crédito (PF/PJ)
+    grain: 1 linha por modalidade de produto de crédito (PF/PJ)
+    primary_key: []
+    allowed_values:
+    - id_produto: '1'
+      nome_produto: Consignado
+      tipo_pessoa: PF
+      prefixo_coluna: consignacao
+    - id_produto: '2'
+      nome_produto: Sem Consignacao
+      tipo_pessoa: PF
+      prefixo_coluna: sem_consignacao
+    - id_produto: '3'
+      nome_produto: Veiculos
+      tipo_pessoa: PF
+      prefixo_coluna: veiculos
+    - id_produto: '4'
+      nome_produto: Habitacao
+      tipo_pessoa: PF
+      prefixo_coluna: habitacao
+    - id_produto: '5'
+      nome_produto: Cartao de Credito
+      tipo_pessoa: PF
+      prefixo_coluna: cartao_credito
+    - id_produto: '6'
+      nome_produto: Rural e Agroindustrial
+      tipo_pessoa: Ambos
+      prefixo_coluna: rural_agroindustrial
+    - id_produto: '7'
+      nome_produto: Outros Creditos
+      tipo_pessoa: Ambos
+      prefixo_coluna: outros_creditos
+    - id_produto: '8'
+      nome_produto: Capital de Giro
+      tipo_pessoa: PJ
+      prefixo_coluna: capital_giro
+    - id_produto: '9'
+      nome_produto: Investimento
+      tipo_pessoa: PJ
+      prefixo_coluna: investimento
+    - id_produto: '10'
+      nome_produto: Cheque Especial e Conta Garantida
+      tipo_pessoa: PJ
+      prefixo_coluna: cheque_especial_conta_garantida
+    - id_produto: '11'
+      nome_produto: Operacoes com Recebiveis
+      tipo_pessoa: PJ
+      prefixo_coluna: operacoes_recebiveis
+    - id_produto: '12'
+      nome_produto: Comercio Exterior
+      tipo_pessoa: PJ
+      prefixo_coluna: comercio_exterior
+    - id_produto: '13'
+      nome_produto: Financiamento Infraestrutura
+      tipo_pessoa: PJ
+      prefixo_coluna: financiamento_infraestrutura
+    - id_produto: '14'
+      nome_produto: Habitacao PJ
+      tipo_pessoa: PJ
+      prefixo_coluna: habitacional
+    columns:
+    - name: id_produto
+      type: INTEGER
+    - name: nome_produto
+      type: VARCHAR
+    - name: tipo_pessoa
+      type: VARCHAR
+    - name: prefixo_coluna
+      type: VARCHAR
+  dim_regiao:
+    table_type: BASE TABLE
+    description: 1 linha por macrorregião geográfica
+    grain: 1 linha por macrorregião geográfica
+    primary_key: []
+    allowed_values:
+    - id_regiao: '1'
+      nome_regiao: Sudeste
+      coluna: sudeste
+    - id_regiao: '2'
+      nome_regiao: Centro-Oeste
+      coluna: centro_oeste
+    - id_regiao: '3'
+      nome_regiao: Nordeste
+      coluna: nordeste
+    - id_regiao: '4'
+      nome_regiao: Norte
+      coluna: norte
+    - id_regiao: '5'
+      nome_regiao: Sul
+      coluna: sul
+    - id_regiao: '6'
+      nome_regiao: Nao Informado
+      coluna: regiao_nao_informada
+    - id_regiao: '7'
+      nome_regiao: Exterior
+      coluna: total_exterior
+    columns:
+    - name: id_regiao
+      type: INTEGER
+    - name: nome_regiao
+      type: VARCHAR
+    - name: coluna
+      type: VARCHAR
+  dim_risco:
+    table_type: BASE TABLE
+    description: 1 linha por nível de risco (AA a H)
+    grain: 1 linha por nível de risco (AA a H)
+    primary_key: []
+    allowed_values:
+    - id_risco: '1'
+      nome_risco: AA
+      coluna: aa
+    - id_risco: '2'
+      nome_risco: A
+      coluna: a
+    - id_risco: '3'
+      nome_risco: B
+      coluna: b
+    - id_risco: '4'
+      nome_risco: C
+      coluna: c
+    - id_risco: '5'
+      nome_risco: D
+      coluna: d
+    - id_risco: '6'
+      nome_risco: E
+      coluna: e
+    - id_risco: '7'
+      nome_risco: F
+      coluna: f
+    - id_risco: '8'
+      nome_risco: G
+      coluna: g
+    - id_risco: '9'
+      nome_risco: H
+      coluna: h
+    - id_risco: '10'
+      nome_risco: Exterior
+      coluna: total_exterior
+    columns:
+    - name: id_risco
+      type: INTEGER
+    - name: nome_risco
+      type: VARCHAR
+    - name: coluna
+      type: VARCHAR
+  dim_segmento:
+    table_type: BASE TABLE
+    description: Dimensão de Segmento Prudencial (S1, S2, etc).
+    grain: 1 linha por segmento prudencial (S1 a S5)
+    primary_key:
+    - id_segmento
+    allowed_values:
+    - codigo: s1
+      descricao: Bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas
+        de grande porte.
+    - codigo: s2
+      descricao: Bancos e demais instituições de médio porte.
+    - codigo: s3
+      descricao: Instituições de porte inferior a 1% e igual ou superior a 0.1% do PIB.
+    - codigo: s4
+      descricao: Instituições de porte inferior a 0.1%.
+    - codigo: s5
+      descricao: Instituições de pequeno porte com metodologia simplificada.
+    columns:
+    - name: id_segmento
+      type: VARCHAR
+    - name: codigo
+      type: VARCHAR
+    - name: descricao
+      type: VARCHAR
+  dim_tempo:
+    table_type: BASE TABLE
+    description: Dimensão de Tempo baseada nas datas base dos relatórios.
+    grain: 1 linha por data-base trimestral (id_data YYYYMMDD)
+    primary_key:
+    - id_data
+    columns:
+    - name: id_data
+      type: INTEGER
+      description: Chave primária (YYYYMMDD) inteira.
+    - name: data
+      type: DATE
+      description: Data completa.
+    - name: ano
+      type: INTEGER
+    - name: trimestre
+      type: INTEGER
+    - name: mes
+      type: INTEGER
+  int_instituicao_enriquecida:
+    table_type: BASE TABLE
+    description: Modelo intermediário reutilizável com enriquecimento dimensional da instituição para consumo dos
+      data marts de relatório.
+    grain: 1 linha por instituição já enriquecida com atributos das dimensões cadastrais
+    primary_key:
+    - id_instituicao
+    columns:
+    - name: id_instituicao
+      type: VARCHAR
+      description: Chave única da instituição enriquecida.
+    - name: codigo_origem
+      type: BIGINT
+      description: Código original da instituição no Bacen.
+    - name: nome_instituicao
+      type: VARCHAR
+      description: Nome oficial da instituição na dimensão.
+    - name: tipo_instituicao
+      type: VARCHAR
+    - name: nome_conglomerado
+      type: VARCHAR
+    - name: tipo_relatorio_bcb
+      type: VARCHAR
+      description: Tipo de relatório oficial do BCB associado à instituição.
+    - name: segmento
+      type: VARCHAR
+      description: Código de segmento prudencial em formato padronizado.
+    - name: segmento_descricao
+      type: VARCHAR
+      description: Descrição textual do segmento prudencial.
+    - name: cidade
+      type: VARCHAR
+      description: Cidade da sede.
+    - name: uf
+      type: VARCHAR
+      description: Unidade federativa da sede.
+    - name: regiao
+      type: VARCHAR
+      description: Região geográfica da sede.
+    - name: tipo_de_controle
+      type: VARCHAR
+      description: Descrição do tipo de controle acionário.
+    - name: tcb
+      type: VARCHAR
+      description: Código do tipo de consolidado bancário.
+    - name: consolidado_bancario
+      type: VARCHAR
+      description: Descrição do tipo de consolidado bancário.
+    - name: classe_instituicao
+      type: VARCHAR
+      description: Classe detalhada da instituição.
