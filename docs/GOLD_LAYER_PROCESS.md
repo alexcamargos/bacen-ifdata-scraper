@@ -92,7 +92,7 @@ Consolida a visão de posição financeira (o que a instituição tem e deve).
         Assets & Liabilities -->|FULL OUTER JOIN on Instituicao + Data| Gold[fato_balanco_patrimonial]
     ```
 
-* **Agregação**: Unificamos colunas chave como `ativo_total`, `patrimonio_liquido` e `captacoes_totais` em uma única tabela larga.
+* **Agregação**: Unificamos colunas chave como `ativo_total`, `patrimonio_liquido` e `captacoes` em uma única tabela larga.
 
 ### fato_demonstracao_resultado
 
@@ -131,7 +131,7 @@ Alguns relatórios Silver chegam "pivotados" (colunas como `comercio`, `industri
 
 * `fato_carteira_credito_atividade`
 * `fato_carteira_credito_porte`
-* `fato_carteira_credito_modalidade` (via tabelas type_maturity)
+* `fato_carteira_credito_produto` (via tabelas `type_maturity`)
 
 ---
 
@@ -142,3 +142,11 @@ O processo de build inclui testes automáticos (`dbt test`) que verificam:
 1. **Unique Keys**: Se as chaves primárias compostas (`id_instituicao` + `id_data` + ...) são únicas.
 2. **Not Null**: Se campos obrigatórios estão preenchidos.
 3. **Relationships**: Se todos os IDs (instituição, segmento, classe) nas tabelas fato existem nas tabelas de dimensão. Isso garante que nunca tenhamos um saldo órfão sem saber a quem pertence.
+
+---
+
+## 5. Documentação Relacionada
+
+* [Catálogo de Dados Gold](DATA_CATALOG.md): inventário completo de colunas, tipos DuckDB e seeds.
+* [Regras de Domínio](DOMAIN_RULES.md): anti-dupla contagem, DRE semestral e cobertura temporal.
+* [Manifesto Semântico (IA)](ai/gold_semantic_model.yaml) e [Cookbook de Consultas](COOKBOOK.md).

@@ -10,8 +10,10 @@ O objetivo deste pipeline é converter os dados fragmentados e heterogêneos dos
 
 | Camada | Tecnologia | Descrição |
 | :--- | :--- | :--- |
-| **Silver** | DuckDB Tables | Dados brutos carregados diretamente dos CSVs processados e tipados. As tabelas refletem a estrutura original dos arquivos (ex: `prudential_conglomerates_assets`) com tipos de dados corrigidos. |
-| **Gold** | DuckDB Tables (via SQL/dbt) | Dados modelados em Dimensões e Fatos. As tabelas são desnormalizadas onde apropriado para performance de leitura (OLAP). |
+| **Silver** | DuckDB Tables (`interim/releases/.../silver_warehouse.duckdb`) | Dados brutos carregados dos CSVs processados e tipados. As tabelas refletem a estrutura original dos arquivos (ex.: `prudential_conglomerates_assets`) com tipos corrigidos e controle de ledger (`ifdata_control.applied_inputs`). |
+| **Gold** | DuckDB Tables e Views (`processed/releases/.../gold_warehouse.duckdb`) | Dados modelados em 13 dimensões, 13 fatos e 4 views analíticas prontas (via dbt). A release ativa é apontada por `data/processed/current.json` e resolvida via `bacen_ifdata.utilities.releases.warehouse_path('gold')`. |
+
+> Para operação do pipeline, variáveis de ambiente (`IFDATA_DATA_DIRECTORY`) e consumo em Python, consulte [Guia de Uso](USAGE.md). Para o catálogo completo de tabelas e regras contábeis do IF.data, veja [Catálogo de Dados](DATA_CATALOG.md), [Regras de Domínio](DOMAIN_RULES.md) e [Cookbook de Consultas](COOKBOOK.md).
 
 ## Modelagem Dimensional (Gold Layer)
 
