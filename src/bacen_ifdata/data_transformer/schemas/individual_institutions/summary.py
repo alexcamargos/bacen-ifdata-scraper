@@ -44,11 +44,13 @@ class IndividualInstitutionSummarySchema(BaseSchema):
             'description': 'Nome da instituição no cadastro do Banco Central.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Código do conglomerado ou CNPJ no cadastro do Banco Central.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'conglomerado': {
             'description': (
@@ -63,7 +65,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
                 'Código do conglomerado financeiro a que pertence a instituição individual.'
                 ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Conglomerado Financeiro',
         },
         'conglomerado_prudencial': {
@@ -71,7 +73,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
                 'Código do conglomerado prudencial a que pertence a instituição individual.'
                 ' Caso a instituição não pertença a nenhum conglomerado, esse campo estará sem informação.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Conglomerado Prudencial',
         },
         'consolidado_bancario': {
@@ -150,6 +152,7 @@ class IndividualInstitutionSummarySchema(BaseSchema):
             'description': 'Data-base do Relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'ativo_total': {
             'description': 'Ativo Circulante e Realizável a Longo Prazo + Ativo Permanente.',
@@ -183,12 +186,12 @@ class IndividualInstitutionSummarySchema(BaseSchema):
         },
         'numero_de_agencias': {
             'description': 'Número de Agências, incluídas as sedes (exceto para cooperativas).',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Número de Agências',
         },
         'numero_de_postos_de_atendimento': {
             'description': 'Número de Postos de Atendimento.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Número de Postos de Atendimento',
         },
     }
