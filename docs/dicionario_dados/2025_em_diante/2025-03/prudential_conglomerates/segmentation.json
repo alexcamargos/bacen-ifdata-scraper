@@ -1,0 +1,400 @@
+{
+  "fontes": [
+    "https://www3.bcb.gov.br/ifdata/rest/arquivos?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Ftrel202503_122.json",
+    "https://www3.bcb.gov.br/ifdata/rest/arquivos?nomeArquivo=ifdata_2025_2030%2F%2F202503%2Finfo202503.json"
+  ],
+  "relatorio": {
+    "id": 122,
+    "n": "Segmentação",
+    "ni": "Segmentation",
+    "ifd": 79865,
+    "mo": 1,
+    "ge": "19/05/2026",
+    "v": "1",
+    "cp": "Segmentação<br />",
+    "ci": "Segmentation<br />",
+    "rp": "1. A divulgação das informações deste relatório observa a periodicidade trimestral do IF.Data. Conforme dispõe o art. 5º da Resolução CMN nº 4.553/2017, os valores referentes ao porte e à atividade internacional das instituições, apurados nas datas-base de 30 de junho e 31 de dezembro de cada ano, devem ser utilizados para fins de enquadramento nos segmentos prudenciais.<br />2. <strong>NI</strong>: Informação não enviada pela instituição até a data de publicação do relatório.<br />3. Na data-base de dezembro, serão republicadas as informações contábeis, de capital e de crédito dos quatro trimestres anteriores, com base nos dados mais atualizados recebidos das instituições. Os valores poderão sofrer alterações caso haja reapresentação de documentos.<br />4. Os recursos <em>\"Composição de Colunas\"</em> e <em>\"Composição de Colunas em PDF\"</em> permitem consultar as rubricas contábeis correspondentes a cada coluna do relatório.<br />5. <strong>NA</strong>: Informação não aplicável à instituição.<br />6. Taxa de câmbio de venda utilizada: <a href=\"https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarValores&hdOidSeriesSelecionadas=1\" target=\"_blank\">https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarValores&hdOidSeriesSelecionadas=1</a><br /><br />",
+    "ri": "1. The disclosure of the information in this report follows the quarterly periodicity of IF.Data. According to Art. 5 of CMN Resolution No. 4,553/2017, the values referring to the size and international activity of institutions, calculated as of June 30 and December 31 of each year, must be used for classification into prudential segments.<br />2. <strong>NI</strong>: Information not submitted by the institution by the date of the report's publication.<br />3. On the December reference date, accounting, capital, and credit information for the previous four quarters will be republished based on the most up-to-date data received from institutions. Values may change in case of document resubmission.<br />4. The <em>\"Column Composition\"</em> and <em>\"Column Composition in PDF\"</em> features allow users to view the accounting headings corresponding to each report column.<br />5. <strong>NA</strong>: Information not applicable to the institution.<br />6. Exchange rate used (sell): <a href=\"https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarValores&hdOidSeriesSelecionadas=1\" target=\"_blank\">https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarValores&hdOidSeriesSelecionadas=1</a><br /><br />",
+    "o": 20,
+    "fx": "",
+    "cot": 5.7422,
+    "s": [
+      {
+        "id": 1009
+      }
+    ],
+    "c": [
+      {
+        "id": 21927,
+        "ip": null,
+        "ifd": 79670,
+        "o": 0,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 8,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21928,
+        "ip": null,
+        "ifd": 79706,
+        "o": 1,
+        "a": false,
+        "na": false,
+        "nc": true,
+        "fid": 9,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21929,
+        "ip": null,
+        "ifd": 79671,
+        "o": 2,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21930,
+        "ip": null,
+        "ifd": 79675,
+        "o": 3,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21931,
+        "ip": null,
+        "ifd": 79676,
+        "o": 4,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21932,
+        "ip": null,
+        "ifd": 79672,
+        "o": 5,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21933,
+        "ip": null,
+        "ifd": 79673,
+        "o": 6,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21934,
+        "ip": null,
+        "ifd": 79678,
+        "o": 7,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 14,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21935,
+        "ip": null,
+        "ifd": 79879,
+        "o": 8,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 16,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21936,
+        "ip": null,
+        "ifd": 79877,
+        "o": 9,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 16,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21937,
+        "ip": null,
+        "ifd": 79865,
+        "o": 10,
+        "a": true,
+        "na": false,
+        "nc": false,
+        "fid": 13,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21938,
+        "ip": null,
+        "ifd": 79711,
+        "o": 11,
+        "a": true,
+        "na": false,
+        "nc": false,
+        "fid": 13,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21939,
+        "ip": null,
+        "ifd": 79867,
+        "o": 12,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      },
+      {
+        "id": 21940,
+        "ip": null,
+        "ifd": 79730,
+        "o": 13,
+        "a": false,
+        "na": false,
+        "nc": false,
+        "fid": 1,
+        "co": "#025C75",
+        "nac": "",
+        "sc": []
+      }
+    ],
+    "a": [],
+    "f": [
+      {
+        "id": 1786,
+        "ic": 7,
+        "n": "SR - Segmento Resolução nº 4.553/2017",
+        "ni": "SR - Resolution nº 4.553/2017 - Segmentation"
+      },
+      {
+        "id": 1787,
+        "ic": 6,
+        "n": "TCip - Resolução nº 197/2022",
+        "ni": "TCip - Resolution nº 197/2022"
+      },
+      {
+        "id": 1788,
+        "ic": 3,
+        "n": "TD - Tipo de Consolidação",
+        "ni": "TD - Aggregation type"
+      },
+      {
+        "id": 1789,
+        "ic": 2,
+        "n": "TC - Tipo de Controle",
+        "ni": "TC - Control"
+      },
+      {
+        "id": 1790,
+        "ic": 1,
+        "n": "TCB - Tipo de Consolidado Bancário",
+        "ni": "TCB - Business Model Category"
+      }
+    ]
+  },
+  "campos": [
+    {
+      "id": 79670,
+      "n": "Instituição",
+      "ni": "Institution",
+      "d": "Nome da instituição",
+      "di": "Institution name",
+      "a": 1,
+      "td": 1,
+      "lid": 2,
+      "ty": 0
+    },
+    {
+      "id": 79671,
+      "n": "TCB",
+      "ni": "TCB",
+      "d": "TCB – Tipo de Consolidado: classificação interna usada para segmentar as instituições, na divulgação, por recorte bancário e não bancário, conforme os tipos:\n(b1) Banco Comercial, Banco Múltiplo com Carteira Comercial ou Caixas Econômicas\n(b2) Banco Múltiplo sem Carteira Comercial, Banco de Câmbio ou Banco de Investimento\n(b3S) Cooperativa de Crédito Singular\n(b3C) Central e Confederação de Cooperativas de Crédito\n(b4) Banco de Desenvolvimento\n(n1) Não bancário de Crédito\n(n2) Não bancário do Mercado de Capitais\n(n4) Instituições de Pagamento",
+      "di": "TCB – Consolidation Type: internal classification used to segment institutions, for disclosure purposes, into banking and non-banking breakdowns, according to the following types:\n(b1) Commercial Bank, Multiple Bank with a Commercial Banking Portfolio, or Savings Bank\n(b2) Multiple Bank without a Commercial Banking Portfolio, Foreign Exchange Bank, or Investment Bank\n(b3S) Single Credit Cooperative\n(b3C) Central and Confederation of Credit Cooperatives\n(b4) Development Bank\n(n1) Non-banking Credit Institution\n(n2) Non-banking Capital Markets Institution\n(n4) Payment Institutions",
+      "a": 1,
+      "td": 1,
+      "lid": 3,
+      "ty": 0
+    },
+    {
+      "id": 79672,
+      "n": "Cidade",
+      "ni": "Headquarters - City",
+      "d": "Cidade da sede da instituição",
+      "di": "Headquarters - City",
+      "a": 1,
+      "td": 1,
+      "lid": 11,
+      "ty": 0
+    },
+    {
+      "id": 79673,
+      "n": "UF",
+      "ni": "Headquarters - State",
+      "d": "Estado",
+      "di": "Headquarters - State",
+      "a": 1,
+      "td": 1,
+      "lid": 10,
+      "ty": 0
+    },
+    {
+      "id": 79675,
+      "n": "TD",
+      "ni": "TD",
+      "d": "TD - Tipo de Consolidação: \n(I) Instituição Independente \n(C) Conglomerado",
+      "di": "TD - Aggregation type: \n(I) Independent Institutions \n(C) Conglomerate",
+      "a": 1,
+      "td": 1,
+      "lid": 4,
+      "ty": 0
+    },
+    {
+      "id": 79676,
+      "n": "TC",
+      "ni": "TC",
+      "d": "TC - Tipo de Controle: \n(1) Público \n(2) Privado Nacional \n(3) Privado com Controle Estrangeiro",
+      "di": "TC - Control: \n(1) Government Owned \n(2) Domestic Private \n(3) Foreign Controlled Private",
+      "a": 1,
+      "td": 1,
+      "lid": 6,
+      "ty": 0
+    },
+    {
+      "id": 79678,
+      "n": "Data",
+      "ni": "Date",
+      "d": "Data-base",
+      "di": "Reference date",
+      "a": 1,
+      "td": 1,
+      "lid": 1,
+      "ty": 0
+    },
+    {
+      "id": 79706,
+      "n": "Código",
+      "ni": "Code",
+      "d": "Conglomerado ou CNPJ",
+      "di": "Institution Code",
+      "a": 1,
+      "td": 1,
+      "lid": 0,
+      "ty": 0
+    },
+    {
+      "id": 79711,
+      "n": "Total de Ativos Consolidados no Exterior \n(US$ mil)",
+      "ni": "Total Consolidated Foreign Assets",
+      "d": "Valor total de ativos consolidados no exterior, convertido em dólares com base na taxa de câmbio de venda informada pelo Banco Central do Brasil para efeito de balancete ou balanço patrimonial (art. 4º Res 4553/2017)",
+      "di": "n, in United States dollars, using the foreign exchange rate published by the Central Bank of Brazil for accounting purposes (art. 4º Res 4553/2017)",
+      "a": 5,
+      "td": 3,
+      "lid": 148475,
+      "ty": 1
+    },
+    {
+      "id": 79730,
+      "n": "TCip",
+      "ni": "TCpi",
+      "d": "TCip – Resolução BCB 436/2024 - \nAs instituições singulares autorizadas a funcionar pelo Banco Central do Brasil e os conglomerados prudenciais liderados por elas serão classificados em: \n(1) Tipo 1: 1.a) instituição singular exceto IP, CTVM, DTVM, CC e 1.b) conglomerado prudencial liderado por uma delas; \n(2)  Tipo 2: 2.a) IP singular e 2.b) conglomerado prudencial liderado por IP e constituído exclusivamente por: b.1) IP autorizada a funcionar pelo BCB, b.2) IP não autorizada, b.3) entidades que realizem aquisição de operações de crédito, inclusive imobiliário ou de direitos creditórios, b.4) outras pessoas jurídicas que tenham por objeto social exclusivo a participação societária nas entidades mencionadas nos itens b.1 a b.3, ou b.5) fundos de investimento; ou \n(3) Tipo 3: 3.a) CTVM,DTVM e CC, 3.b) conglomerado prudencial liderado por uma das citadas em 3.a, e 3.c) conglomerado prudencial liderado por IP não mencionado em 2.b",
+      "di": "TCip – BCB Resolution 436/2024 \nThe individual institutions authorized to operate by the Banco Central do Brasil and the prudential conglomerates led by them shall be classified into: \n(1) Type 1: 1.a) Individual institution, except Payment Institutions (IP), Securities Brokers (CTVM), Securities Dealers (DTVM), and Currency exchange broker (CC); and  1.b) Prudential conglomerate led by one of these institutions. \n(2) Type 2:  2.a) Individual Payment Institution (IP); and  2.b) Prudential conglomerate led by a Payment Institution (IP) and composed exclusively of:  b.1) IP authorized to operate by the Banco Central do Brasil;  b.2) IP not authorized;  b.3) Entities engaged in the acquisition of credit operations, including real estate credit or credit rights;  b.4) Other legal entities whose exclusive corporate purpose is to hold equity interests in the entities mentioned in items b.1 to b.3; or  b.5) Investment funds. \n(3) Type 3:  3.a) Securities Brokers (CTVM), Securities Dealers (DTVM), and Currency exchange broker (CC);  3.b) Prudential conglomerate led by one of the entities listed in 3.a; and  3.c) Prudential conglomerate led by an IP not covered under item 2.b.",
+      "a": 1,
+      "td": 1,
+      "lid": 31,
+      "ty": 1
+    },
+    {
+      "id": 79865,
+      "n": "Exposição Total ou Ativo Total \n(R$ mil)",
+      "ni": "Total Exposure or Total Assets",
+      "d": "Para cálculo do porte da instituição é considerada a exposição total, calculada conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for sujeita a apuração da exposição total, deve substituir pelo valor do ativo total (art 3º, Res 4553/2017)",
+      "di": "The institution size depends on the total exposure, according the methodology established by the Central Bank of Brazil. If the institution is not required to calculate the total exposure, it should use the total assets (art. 3º, Res 4553/2017)",
+      "a": 5,
+      "td": 3,
+      "lid": 148474,
+      "ty": 1
+    },
+    {
+      "id": 79867,
+      "n": "SR",
+      "ni": "SR",
+      "d": "SR - Segmento Resolução nº 4.553/2017: \n(S1) bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas que (i) tenham porte (Exposição/Produto Interno Bruto) superior a 10%; ou (ii) exerçam atividade internacional relevante (ativos no exterior superiores a US$ 10 bilhões). \n(S2) (i) bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas de porte inferior a 10% e igual ou superior a 1%; e (ii) demais instituições autorizadas a funcionar pelo Banco Central do Brasil de porte igual ou superior a 1% do PIB. \n(S3) Instituições de porte inferior a 1% e igual ou superior a 0,1%.  \n(S4) Instituições de porte inferior a 0,1%. \n(S5) Composto por: (i) instituições de porte inferior a 0,1% que utilizem metodologia facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio de Referência (PR), de Nível I e de Capital Principal, exceto bancos múltiplos, bancos comerciais, bancos de investimento, bancos de câmbio e caixas econômicas; e (ii) não sujeitas a apuração de PR.",
+      "di": "SR - Resolution nº 4.553/2017 - Segmentation: \n(S1) Universal banks, commercial banks, investment banks, foreign exchange banks and federal savings banks that present either of the following characteristics: (i) size equal to or greater than 10% (Total Exposure/Gross Domestic Product); or (ii) relevant international activity (foreign assets are equal to or greater than US$ 10 billion). \n(S2) (i) - Universal banks, commercial banks, investment banks, foreign exchange banks and federal savings banks whose size is less than 10% and equal to or greater than 1% of GDP; and (ii) other institutions whose size is equal to or greater than 1% of GDP. \n(S3) Institutions whose size is less than 1% of GDP and equal to or greater than 0.1% of GDP. \n(S4) Institutions whose size is less than 0.1% of GDP. \n(S5) (i) Institutions whose size is less than 0.1% of GDP and that use an optional simplified methodology to calculate the minimum requirements of regulatory capital (Patrimônio de Referência – PR), Tier I Capital and Core Capital, except for multiple banks, commercial banks, investment banks, foreign exchange banks and federal saving banks; and (ii) Institutions that are not required to calculate PR.",
+      "a": 1,
+      "td": 1,
+      "lid": 32,
+      "ty": 0
+    },
+    {
+      "id": 79877,
+      "n": "Instituição Utiliza \nMetodologia Simplificada",
+      "ni": "Institution Uses \nOptional Simplified Methodology",
+      "d": "Informação se a instituição utiliza a metodologia facultativa simplificada para apuração dos requerimentos mínimos de Patrimônio de Referência, de Nível I e de Capital Principal (art. 2º, Res 4553/2007)",
+      "di": "Institution uses optional simplified methodology to calculate the minimum requirements of regulatory capital, Tier I Capital and Common Equity Tier I (CET1) (art. 2º, Res 4553/2007)",
+      "a": 5,
+      "td": 3,
+      "lid": 149619,
+      "ty": 1
+    },
+    {
+      "id": 79879,
+      "n": "Instituição Sujeita à \nApuração da Exposição Total",
+      "ni": "Institution is Required to \nCalculate Total Exposure",
+      "d": "Para cálculo do porte da instituição é considerada a exposição total, calculada conforme metodologia definida pelo Banco Central do Brasil. Se a instituição não for sujeita a apuração da exposição total, deve substituir pelo valor do ativo total (art 3º, Res 4553/2017)",
+      "di": "The institution size depends on the total exposure, according the methodology established by the Central Bank of Brazil. If the institution is not required to calculate the total exposure, it should use the total assets (art. 3º, Res 4553/2017)",
+      "a": 5,
+      "td": 3,
+      "lid": 148471,
+      "ty": 1
+    }
+  ]
+}

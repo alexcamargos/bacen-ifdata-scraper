@@ -34,6 +34,7 @@ from tempfile import TemporaryDirectory
 
 from loguru import logger
 
+from bacen_ifdata.data_cleaner.current import clean_current_report
 from bacen_ifdata.data_cleaner.processing import normalize_csv
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
 from bacen_ifdata.scraper.storage.collection import (
@@ -75,6 +76,17 @@ def main(institution: Institutions, report: StrEnum) -> None:
     Cfg.SCRATCH_DIRECTORY.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(dir=Cfg.SCRATCH_DIRECTORY) as temporary:
         for period, source in sorted(report_inputs(input_data_path).items()):
+            if period > Cfg.HISTORICAL_END:
+                current = (
+                    Cfg.CURRENT_INTERIM_DIRECTORY / 'cleaned'
+                    / institution.name.lower() / report.name.lower()
+                    / f'{period}.csv'
+                )
+                clean_current_report(
+                    source, current, period, Cfg.DOWNLOAD_DIRECTORY,
+                    Cfg.SCRATCH_DIRECTORY,
+                )
+                continue
             date = f'{period[5:]}/{period[:4]}'
             validate_report_csv(source, date)
             filename = f'{period}.csv'

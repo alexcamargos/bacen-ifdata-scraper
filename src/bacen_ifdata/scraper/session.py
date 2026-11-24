@@ -102,6 +102,7 @@ class Session:
         self._download_directory = download_directory
         self._historical_scope: tuple[str, InstitutionType] | None = None
         self._reload_historical_page = False
+        self._page_url: str | None = None
 
         self.session_data: SessionData = {
             'url': self._url,
@@ -138,6 +139,7 @@ class Session:
 
         self._historical_scope = None
         self._browser.initialize(self._url)
+        self._page_url = self._url
 
     def cleanup(self) -> None:
         """Cleans up the web session and log details."""
@@ -221,9 +223,12 @@ class Session:
             IfDataScraperException: The browser or portal failed to export it.
         """
         scope = (target.period, target.institution)
+        url = target.source_url or self._url
         try:
-            if fresh or self._reload_historical_page:
-                self.open()
+            if fresh or self._reload_historical_page or self._page_url != url:
+                self._historical_scope = None
+                self._browser.initialize(url)
+                self._page_url = url
             contents = self._browser.export_historical_report(
                 target, Cfg.TIMEOUT, reuse=self._historical_scope == scope,
             )

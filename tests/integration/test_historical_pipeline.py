@@ -244,10 +244,12 @@ def test_manual_load_rolls_back_a_bad_historical_file(
         ]
 
 
-def test_inventory_excludes_periods_after_2024(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mocker: MockerFixture,
+def test_inventory_preserves_historical_and_current_periods(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mocker: MockerFixture,
 ) -> None:
-    """Exclude out-of-scope originals before reading their contents.
+    """Route the same report to different layouts by its reference month.
 
     Args:
         tmp_path: Isolated raw directory root.
@@ -262,7 +264,8 @@ def test_inventory_excludes_periods_after_2024(
     directory.mkdir(parents=True)
     included = directory / '2024-12.csv'
     included.write_text('Included', encoding='utf-8')
-    (directory / '2025-03.csv').write_text('Excluded', encoding='utf-8')
+    current = directory / '2025-03.csv'
+    current.write_text('Current', encoding='utf-8')
     monkeypatch.setattr(Config, 'DOWNLOAD_DIRECTORY', tmp_path)
     checksum = mocker.patch(
         'bacen_ifdata.updates.report_checksum', return_value='digest',
@@ -270,5 +273,13 @@ def test_inventory_excludes_periods_after_2024(
 
     inputs = _inventory()
 
-    assert [entry.period for entry in inputs.values()] == [date(2024, 12, 1)]
-    checksum.assert_called_once_with(included)
+    assert [
+        (entry.period, entry.current_layout, entry.source_url)
+        for entry in inputs.values()
+    ] == [
+        (date(2024, 12, 1), False, Config.URL),
+        (date(2025, 3, 1), True, Config.CURRENT_URL),
+    ]
+    assert [call.args[0] for call in checksum.call_args_list] == [
+        included, current,
+    ]

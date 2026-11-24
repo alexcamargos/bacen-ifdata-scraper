@@ -41,7 +41,9 @@ from bacen_ifdata.scraper.historical_collection import (
     run_historical_collection,
 )
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
-from bacen_ifdata.scraper.reports import REPORTS
+from bacen_ifdata.scraper.reports import CURRENT_ONLY_REPORTS, REPORTS
+from bacen_ifdata.scraper.storage.collection import report_inputs
+from bacen_ifdata.scraper.storage.consolidation import consolidate_reports
 from bacen_ifdata.scraper.storage.processing import move_artifact
 from bacen_ifdata.updates import update_warehouse
 from bacen_ifdata.utilities.configurations import Config as Cfg
@@ -76,13 +78,18 @@ class PipelineManager:
         self._database_service.close()
 
     def _get_execution_targets(
-        self, institution_filter: str | None = None, report_filter: str | None = None
+        self,
+        institution_filter: str | None = None,
+        report_filter: str | None = None,
+        *,
+        include_current: bool = False,
     ) -> list[tuple[Institutions, StrEnum]]:
         """Determine which institutions and reports to process based on filters.
 
         Args:
             institution_filter: Optional name of the institution Enum to filter by.
             report_filter: Optional name of the report Enum to filter by.
+            include_current: Include collection-only reports from 2025.
 
         Returns:
             A list of tuples (Institution, Report) to process.
@@ -105,7 +112,10 @@ class PipelineManager:
             if target_inst and institution != target_inst:
                 continue
 
-            for report in REPORTS[institution]:
+            reports = tuple(REPORTS[institution])
+            if include_current:
+                reports += tuple(CURRENT_ONLY_REPORTS.get(institution, ()))
+            for report in reports:
                 if report_filter and report.name.upper() != report_filter.upper():
                     continue
 
@@ -140,7 +150,9 @@ class PipelineManager:
         """
         if refresh and (not data_base or repair_raw):
             raise ValueError('Refresh requires a date and excludes raw repair.')
-        targets = self._get_execution_targets(institution, report)
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         if not targets:
             raise ValueError(f'Unknown report for the selection: {report}.')
 
@@ -150,21 +162,79 @@ class PipelineManager:
             period=data_base,
             refresh=refresh,
             repair=repair_raw,
+            include_current=True,
         )
 
-    def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the cleaner."""
+    def run_csv_consolidation(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Build consolidated CSVs for the selected local originals.
 
-        # Run the cleaner.
-        targets = self._get_execution_targets(institution, report)
+        Args:
+            institution: Optional institutional scope.
+            report: Optional report name.
+        Returns:
+            None.
+        Raises:
+            IfDataScraperException: An original failed validation.
+            OSError: A consolidated CSV could not be published.
+            ValueError: The selection has no local originals.
+        """
+        root = Cfg.DOWNLOAD_DIRECTORY
+        output = Cfg.DATA_DIRECTORY / 'interim' / 'consolidated' / 'ifdata'
+        found = False
+        for scope, report_type in self._get_execution_targets(
+            institution, report, include_current=True,
+        ):
+            directory = Path(scope.name.lower()) / report_type.name.lower()
+            inputs = report_inputs(root / directory)
+            if not inputs:
+                continue
+            consolidate_reports(
+                inputs, output / directory / 'series.csv',
+                root, Cfg.SCRATCH_DIRECTORY,
+            )
+            found = True
+        if not found:
+            raise ValueError('No local IF.data originals match the selection.')
+
+    def run_cleaner(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Normalize originals in the requested institutional scopes.
+
+        Args:
+            institution: Optional scope filter.
+            report: Optional report filter.
+        Returns:
+            None.
+        Raises:
+            IfDataScraperException: An original failed validation.
+            OSError: A local staging file could not be written.
+        """
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         for process_institution, process_report in targets:
             self.pipeline.cleaner(process_institution, process_report)
 
-    def run_transformer(self, institution: str | None = None, report: str | None = None) -> None:
-        """Main function for executing the transformer."""
+    def run_transformer(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Type normalized periods in the requested institutional scopes.
 
-        # Run the transformer for all institutions.
-        targets = self._get_execution_targets(institution, report)
+        Args:
+            institution: Optional scope filter.
+            report: Optional report filter.
+        Returns:
+            None.
+        Raises:
+            ValueError: An input period is invalid.
+            OSError: A local staging file could not be written.
+        """
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         for process_institution, process_report in targets:
             self.pipeline.transformer(process_institution, process_report)
 
@@ -185,7 +255,9 @@ class PipelineManager:
             OSError: A transformed CSV cannot be read.
             duckdb.Error: DuckDB cannot complete the reload.
         """
-        targets = self._get_execution_targets(institution, report)
+        targets = self._get_execution_targets(
+            institution, report, include_current=True,
+        )
         filtered = bool(institution or report)
         with self._database_service.transaction():
             if not filtered:

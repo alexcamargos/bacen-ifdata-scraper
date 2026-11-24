@@ -1,4 +1,4 @@
-"""Read the IF.data catalog for the historical export layout.
+"""Read the catalogs published by the IF.data portals.
 
 Args:
     None.
@@ -22,7 +22,7 @@ from loguru import logger
 
 from bacen_ifdata.scraper.exceptions import IfDataScraperException
 from bacen_ifdata.scraper.institutions import InstitutionType
-from bacen_ifdata.scraper.reports import REPORTS
+from bacen_ifdata.scraper.reports import CURRENT_ONLY_REPORTS, REPORTS
 from bacen_ifdata.scraper.storage.collection import PERIOD
 from bacen_ifdata.utilities.configurations import Config
 
@@ -38,6 +38,8 @@ class HistoricalReport:
         institution_id: Institutional scope ID in the portal.
         report_id: Report ID in the portal.
         data_files: Names of all source data files for the period.
+        source_url: Current portal URL, or None for the historical portal.
+        pdf_file: Portuguese column dictionary path in the current portal.
     Returns:
         The report selection.
     Raises:
@@ -50,19 +52,22 @@ class HistoricalReport:
     institution_id: int
     report_id: int
     data_files: tuple[str, ...]
+    source_url: str | None = None
+    pdf_file: str | None = None
 
 
-def _read_catalog(timeout: int) -> list[dict]:
+def _read_catalog(timeout: int, url: str | None = None) -> list[dict]:
     """Fetch the source catalog with a bounded retry for transport errors.
 
     Args:
         timeout: Network timeout in seconds.
+        url: Catalog endpoint. Defaults to the historical catalog.
     Returns:
         A catalog entry for each published month.
     Raises:
         IfDataScraperException: The catalog could not be fetched or decoded.
     """
-    url = Config.HISTORICAL_CATALOG
+    url = url or Config.HISTORICAL_CATALOG
     request = Request(url, headers={'Accept-Encoding': 'gzip'})
     for attempt in (1, 2):
         try:
@@ -85,44 +90,59 @@ def _read_catalog(timeout: int) -> list[dict]:
                 raise IfDataScraperException(
                     f'Could not read {url}: {error}'
                 ) from error
-            logger.warning(f'Retrying the historical IF.data catalog: {error}')
+            logger.warning(f'Retrying IF.data catalog {url}: {error}')
             sleep(1)
             continue
 
         break
 
     if not isinstance(entries, list) or not entries:
-        raise IfDataScraperException('Historical IF.data catalog is empty.')
+        raise IfDataScraperException(f'IF.data catalog is empty: {url}.')
     return entries
 
 
-def historical_reports(timeout: int) -> list[HistoricalReport]:
+def historical_reports(
+    timeout: int, *, current: bool = False,
+) -> list[HistoricalReport]:
     """Resolve supported targets by month from the published catalog.
 
     Args:
         timeout: Network timeout in seconds.
+        current: Read the catalog for data from 2025 onward.
     Returns:
         Exports ordered by descending month, scope and report ID.
     Raises:
         IfDataScraperException: The catalog is unavailable or inconsistent.
     """
+    extra_reports = CURRENT_ONLY_REPORTS if current else {}
     supported = {
         ' '.join(institution.value.split()).casefold(): (
             institution,
             {
                 ' '.join(report.value.split()).casefold(): report
-                for report in reports
+                for report in (
+                    *reports,
+                    *extra_reports.get(institution, ()),
+                )
             },
         )
         for institution, reports in REPORTS.items()
     }
+    entries = (
+        _read_catalog(timeout, Config.CURRENT_CATALOG)
+        if current else _read_catalog(timeout)
+    )
+    source_url = Config.CURRENT_URL if current else None
     selections = {}
     try:
-        for entry in _read_catalog(timeout):
+        for entry in entries:
             date = str(entry['dt'])
             period = f'{date[:4]}-{date[4:]}'
-            if not PERIOD.fullmatch(period) or period > Config.HISTORICAL_END:
-                raise ValueError(f'unexpected historical month {date}')
+            if (
+                not PERIOD.fullmatch(period)
+                or (period > Config.HISTORICAL_END) != current
+            ):
+                raise ValueError(f'unexpected reference month {date}')
 
             files = entry['files']
             data_files = tuple(
@@ -152,16 +172,22 @@ def historical_reports(timeout: int) -> list[HistoricalReport]:
                     key = (period, institution, report)
                     if key in selections or not data_files:
                         raise ValueError(f'invalid source selection for {key}')
+                    pdf = (
+                        file['f'].replace('.json', '_0.pdf')
+                        if current else None
+                    )
                     selections[key] = HistoricalReport(
                         period, institution, report, scope_id,
-                        definition['id'], data_files,
+                        definition['id'], data_files, source_url, pdf,
                     )
     except (AttributeError, KeyError, TypeError, ValueError) as error:
         raise IfDataScraperException(
-            f'Invalid historical IF.data catalog: {error}'
+            f'Invalid IF.data catalog for {source_url or Config.URL}: {error}'
         ) from error
     if not selections:
-        raise IfDataScraperException('No known reports in historical catalog.')
+        raise IfDataScraperException(
+            f'No known reports in catalog for {source_url or Config.URL}.'
+        )
     return sorted(
         selections.values(),
         key=lambda target: (

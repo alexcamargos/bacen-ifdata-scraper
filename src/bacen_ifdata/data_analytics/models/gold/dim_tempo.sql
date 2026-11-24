@@ -128,6 +128,9 @@ WITH datas_unicas AS (
     -- Câmbio
     SELECT DISTINCT data_base
     FROM {{ source('silver', 'foreign_exchange_quarterly_foreign_currency_flow') }}
+    UNION
+    SELECT DISTINCT data_base
+    FROM {{ ref('fato_ifdata_2025_campos') }}
 )
 
 SELECT

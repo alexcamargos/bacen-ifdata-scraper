@@ -34,6 +34,7 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
+from bacen_ifdata.data_transformer.current import transform_current_report
 from bacen_ifdata.data_transformer.interfaces.controller import (
     TransformerControllerInterface,
 )
@@ -41,6 +42,7 @@ from bacen_ifdata.data_transformer.schemas.mapper import (
     SCHEMA_BY_INSTITUTION_AND_REPORT,
 )
 from bacen_ifdata.scraper.institutions import InstitutionType as Institutions
+from bacen_ifdata.scraper.storage.collection import PERIOD
 from bacen_ifdata.scraper.storage.processing import (
     build_directory_path,
     ensure_directory,
@@ -64,17 +66,34 @@ def _store_transformed_data(transformed_data: pd.DataFrame, output_directory: Pa
     logger.info(f'Successfully transformed: {output_directory / file_name}')
 
 
-def main(transformer_controller: TransformerControllerInterface, institution: Institutions, report: StrEnum) -> None:
-    """Main function for the transformer.
+def main(
+    transformer_controller: TransformerControllerInterface,
+    institution: Institutions,
+    report: StrEnum,
+) -> None:
+    """Transform the normalized periods for both IF.data layouts.
 
-    This function orchestrates the transformation process for the reports
-    downloaded from the Banco Central do Brasil's IF.data tool.
-
-    Arguments:
-        transformer_controller (TransformerControllerInterface): The transformer controller.
-        institution (Institutions): The institution type.
-        report (StrEnum): The report type.
+    Args:
+        transformer_controller: Transformer for historical exports.
+        institution: Institutional scope.
+        report: Report type.
+    Returns:
+        None.
+    Raises:
+        ValueError: A current period filename is invalid.
+        OSError: A local artifact cannot be read or written.
     """
+
+    scope, name = institution.name.lower(), report.name.lower()
+    current = Cfg.CURRENT_INTERIM_DIRECTORY
+    current_input = current / 'cleaned' / scope / name
+    for file in sorted(current_input.glob('*.csv')):
+        if not PERIOD.fullmatch(file.stem) or file.stem <= Cfg.HISTORICAL_END:
+            raise ValueError(f'Unexpected current report filename: {file}')
+        transform_current_report(
+            file, current / 'typed' / scope / name / f'{file.stem}.parquet',
+            scope, name, Cfg.SCRATCH_DIRECTORY,
+        )
 
     # Check if we have schemas for this institution.
     if institution not in SCHEMA_BY_INSTITUTION_AND_REPORT:
@@ -96,7 +115,6 @@ def main(transformer_controller: TransformerControllerInterface, institution: In
     # Get the schema for the report.
     report_schema = schema_by_report.get(report)
     if report_schema is None:
-        logger.warning(f'No schema found for report: {report.name} in {institution.name}. Skipping.')
         return
 
     # List all CSV files in the input data directory.

@@ -1,6 +1,6 @@
-"""Run the historical portal's native CSV export in the browser.
+"""Run the IF.data portals' native CSV export in the browser.
 
-The packaged JavaScript targets the report model of ``index2024.html``.
+Both portals expose the same report selection and CSV export functions.
 
 Args:
     None.
@@ -50,7 +50,7 @@ def export_historical_csv(
     """Capture the exact native export bytes for one catalog entry.
 
     Args:
-        driver: Firefox session on the historical portal page.
+        driver: Firefox session on the portal for the selected reference month.
         target: Catalog IDs and expected data files.
         timeout: Maximum time to wait for each source load, in seconds.
         reuse: Reuse the loaded data for the same period and institution.

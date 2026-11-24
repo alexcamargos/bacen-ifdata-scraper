@@ -70,6 +70,10 @@ class Config:
         'https://www3.bcb.gov.br/ifdata/rest/relatorios2000a2024'
     )
     HISTORICAL_END: ClassVar[str] = '2024-12'
+    CURRENT_URL: ClassVar[str] = 'https://www3.bcb.gov.br/ifdata/'
+    CURRENT_CATALOG: ClassVar[str] = (
+        'https://www3.bcb.gov.br/ifdata/rest/relatorios2025a2030'
+    )
 
     # Maximum waiting time for elements to load.
     TIMEOUT: int = 120
@@ -79,6 +83,9 @@ class Config:
     ).resolve()
     SCRATCH_DIRECTORY: Path = BASE_DIRECTORY / 'scratch'
     DOWNLOAD_DIRECTORY: Path = DATA_DIRECTORY / 'raw'
+    CURRENT_INTERIM_DIRECTORY: Path = (
+        DATA_DIRECTORY / 'interim' / 'ifdata_2025'
+    )
     DOWNLOAD_FILE_NAME: str = 'dados.csv'
     _ISOLATED_DATA = DATA_DIRECTORY != BASE_DIRECTORY / 'data'
     PROCESSED_FILES_DIRECTORY: Path = DATA_DIRECTORY / (

@@ -29,6 +29,9 @@ from bacen_ifdata.scraper.storage.processing import (
 PERIOD = re.compile(r'[0-9]{4}-(?:0[1-9]|1[0-2])')
 REPORT_DATE = re.compile(r'(?:0[1-9]|1[0-2])/[0-9]{4}')
 INSTITUTION_CODE = re.compile(r'[0-9]+(?:\.[0-9]+)*')
+LOCAL_ARCHIVE_PREFIX = '0000-archive-'
+# A local baseline sorts before any timestamped publication.
+LOCAL_VERSION = '0000-local'
 
 
 def report_checksum(path: Path) -> str:
@@ -105,6 +108,23 @@ def validate_report_csv(path: Path, expected_date: str) -> None:
         )
 
 
+def legacy_report_inputs(directory: Path) -> dict[str, Path]:
+    """Find flat CSVs named after their reference month.
+
+    Args:
+        directory: Raw directory for a report and institutional scope.
+    Returns:
+        Legacy CSVs indexed by YYYY-MM.
+    Raises:
+        OSError: The directory cannot be read.
+    """
+    return {
+        path.stem: path
+        for path in directory.glob('*.csv')
+        if PERIOD.fullmatch(path.stem) and path.is_file()
+    }
+
+
 def report_inputs(directory: Path) -> dict[str, Path]:
     """Resolve the most recent published version of each reference month.
 
@@ -117,12 +137,10 @@ def report_inputs(directory: Path) -> dict[str, Path]:
     Raises:
         OSError: If the directory cannot be read.
     """
-    inputs = {
-        path.stem: path
-        for path in directory.glob('*.csv')
-        if PERIOD.fullmatch(path.stem)
-    }
+    inputs = legacy_report_inputs(directory)
     for metadata in sorted(directory.glob('*/*/metadata.json')):
+        if metadata.parent.name.startswith(LOCAL_ARCHIVE_PREFIX):
+            continue
         period = metadata.parent.parent.name
         version = metadata.with_name('report.csv')
         if PERIOD.fullmatch(period) and version.is_file():
@@ -156,6 +174,75 @@ def publish_report(
     collected_at = datetime.now(UTC)
     stamp = collected_at.strftime('%Y%m%dT%H%M%S%fZ')
     version = destination / f'{stamp}-{uuid4().hex}'
+    provenance: dict[str, str | dict[str, int]] = {
+        'source_url': source_url,
+        'collected_at': collected_at.isoformat(),
+    }
+    if source_selection is not None:
+        provenance['source_selection'] = source_selection
+    return _publish_bundle(downloaded, version, scratch, provenance)
+
+
+def publish_local_report(
+    source: Path,
+    raw_root: Path,
+    scratch: Path,
+    checksum: str,
+    *,
+    archive_only: bool,
+) -> Path:
+    """Publish a byte-identical local original with its actual provenance.
+
+    Args:
+        source: Validated flat CSV.
+        raw_root: Base for the relative source path.
+        scratch: Temporary workspace on the destination volume.
+        checksum: SHA-256 of the validated source.
+        archive_only: Retain the existing active version.
+    Returns:
+        Published CSV path.
+    Raises:
+        IfDataScraperException: The copied bytes differ from the source hash.
+        OSError: The bundle cannot be published.
+    """
+    name = (
+        f'{LOCAL_ARCHIVE_PREFIX}{checksum}' if archive_only else LOCAL_VERSION
+    )
+    version = source.with_suffix('') / name
+    return _publish_bundle(
+        source, version, scratch,
+        {
+            'source_type': 'local_csv',
+            'source_path': source.relative_to(raw_root).as_posix(),
+            'imported_at': datetime.now(UTC).isoformat(),
+        },
+        expected_checksum=checksum,
+    )
+
+
+def _publish_bundle(
+    source: Path,
+    version: Path,
+    scratch: Path,
+    provenance: dict[str, str | dict[str, int]],
+    *,
+    expected_checksum: str | None = None,
+) -> Path:
+    """Stage the original and manifest and publish them together.
+
+    Args:
+        source: Original bytes to copy.
+        version: Final bundle directory.
+        scratch: Temporary workspace on the destination volume.
+        provenance: Metadata specific to the source.
+        expected_checksum: Optional hash required before publication.
+    Returns:
+        Published CSV path.
+    Raises:
+        IfDataScraperException: The copy does not match the expected hash.
+        OSError: The bundle cannot be copied or published.
+    """
+    destination = version.parent
     scratch.mkdir(parents=True, exist_ok=True)
     destination.mkdir(parents=True, exist_ok=True)
 
@@ -163,17 +250,19 @@ def publish_report(
         bundle = Path(temporary) / 'report'
         bundle.mkdir()
         csv_path = bundle / 'report.csv'
-        retry_file_lock(lambda: copyfile(downloaded, csv_path), downloaded)
-        metadata: dict[str, str | dict[str, int]] = {
-            'source_url': source_url,
-            'collected_at': collected_at.isoformat(),
+        retry_file_lock(lambda: copyfile(source, csv_path), source)
+        checksum = report_checksum(csv_path)
+        if expected_checksum is not None and checksum != expected_checksum:
+            raise IfDataScraperException(
+                f'Original changed during copy: {source}'
+            )
+        metadata = {
+            **provenance,
             'institution': destination.parent.parent.name,
             'report': destination.parent.name,
             'data_base': destination.name,
-            'sha256': report_checksum(csv_path),
+            'sha256': checksum,
         }
-        if source_selection is not None:
-            metadata['source_selection'] = source_selection
         (bundle / 'metadata.json').write_text(
             json.dumps(metadata, indent=2) + '\n', encoding='utf-8',
         )
