@@ -25,8 +25,11 @@ from uuid import uuid4
 import duckdb
 from loguru import logger
 
+from bacen_ifdata.data_cleaner.current import clean_current_report
 from bacen_ifdata.data_cleaner.processing import normalize_csv
+from bacen_ifdata.data_loader.current import replace_current_period
 from bacen_ifdata.data_loader.storage import DatabaseService
+from bacen_ifdata.data_transformer.current import transform_current_report
 from bacen_ifdata.data_transformer.interfaces.controller import (
     TransformerControllerInterface,
 )
@@ -34,6 +37,7 @@ from bacen_ifdata.data_transformer.schemas.mapper import (
     SCHEMA_BY_INSTITUTION_AND_REPORT,
 )
 from bacen_ifdata.scraper.institutions import InstitutionType
+from bacen_ifdata.scraper.reports import CURRENT_ONLY_REPORTS, REPORTS
 from bacen_ifdata.scraper.storage.collection import (
     report_checksum,
     report_inputs,
@@ -95,6 +99,19 @@ class RawInput:
             self.report.name.lower(), self.period,
         )
 
+    @property
+    def current_layout(self) -> bool:
+        """Identify entries published under the current portal layout.
+
+        Args:
+            None.
+        Returns:
+            Whether the reference month follows the historical cutoff.
+        Raises:
+            None.
+        """
+        return self.period.isoformat()[:7] > Config.HISTORICAL_END
+
 
 @contextmanager
 def _update_lock(root: Path, scratch: Path) -> Iterator[None]:
@@ -139,18 +156,22 @@ def _inventory() -> dict[InputKey, RawInput]:
         OSError: A raw input or its metadata cannot be read.
     """
     inputs = {}
-    for institution, reports in SCHEMA_BY_INSTITUTION_AND_REPORT.items():
-        for report in reports:
+    for institution, report_types in REPORTS.items():
+        legacy = SCHEMA_BY_INSTITUTION_AND_REPORT.get(institution, {})
+        current = {*report_types, *CURRENT_ONLY_REPORTS.get(institution, ())}
+        available = sorted(legacy.keys() | current, key=lambda item: item.name)
+        for report in available:
             directory = (
                 Config.DOWNLOAD_DIRECTORY
                 / institution.name.lower()
                 / report.name.lower()
             )
             for month, path in sorted(report_inputs(directory).items()):
-                if month > Config.HISTORICAL_END:
+                use_current = month > Config.HISTORICAL_END
+                if report not in (current if use_current else legacy):
                     continue
                 checksum = report_checksum(path)
-                source_url = Config.URL
+                source_url = Config.CURRENT_URL if use_current else Config.URL
                 collected_at = None
                 if path.name == 'report.csv':
                     metadata = json.loads(
@@ -216,7 +237,10 @@ def _revisions() -> tuple[str, str]:
     transformation = [
         Path(__file__),
         package / 'data_cleaner/processing.py',
+        package / 'data_cleaner/current.py',
+        package / 'data_loader/current.py',
         package / 'data_loader/storage.py',
+        package / 'scraper/storage/consolidation.py',
         package / 'utilities/csv_loader.py',
         package / 'utilities/geographic_regions.py',
         package / 'utilities/string_utils.py',
@@ -301,27 +325,44 @@ def _load_changes(
         ''')
         cleaned = workspace / 'cleaned.csv'
         typed = workspace / 'typed.csv'
+        current_file = workspace / 'typed_current.parquet'
         for entry in changed:
             _, institution, report, period = entry.key
-            table = f'{institution}_{report}'
-            schema = SCHEMA_BY_INSTITUTION_AND_REPORT[entry.institution][
-                entry.report
-            ]
-            validate_report_csv(entry.path, period.strftime('%m/%Y'))
-            if not normalize_csv(
-                entry.institution, entry.report, entry.path.name,
-                source=entry.path, destination=cleaned,
-            ):
-                raise OSError(f'Could not normalize {entry.path}')
-            data = transformer.transform(cleaned, schema, entry.institution)
-            data.to_csv(typed, index=False)
-            if table not in tables:
-                database.create_table(table, schema)
-                tables.add(table)
-            with database.transaction():
-                rows = database.replace_period(
-                    table, typed, schema, period, source=entry.path,
+            if entry.current_layout:
+                clean_current_report(
+                    entry.path, cleaned, period.strftime('%Y-%m'),
+                    Config.DOWNLOAD_DIRECTORY, workspace,
                 )
+                transform_current_report(
+                    cleaned, current_file, institution, report, workspace,
+                )
+            else:
+                table = f'{institution}_{report}'
+                schema = SCHEMA_BY_INSTITUTION_AND_REPORT[entry.institution][
+                    entry.report
+                ]
+                validate_report_csv(entry.path, period.strftime('%m/%Y'))
+                if not normalize_csv(
+                    entry.institution, entry.report, entry.path.name,
+                    source=entry.path, destination=cleaned,
+                ):
+                    raise OSError(f'Could not normalize {entry.path}')
+                data = transformer.transform(
+                    cleaned, schema, entry.institution,
+                )
+                data.to_csv(typed, index=False)
+                if table not in tables:
+                    database.create_table(table, schema)
+                    tables.add(table)
+            with database.transaction():
+                if entry.current_layout:
+                    rows = replace_current_period(
+                        connection, current_file, institution, report, period,
+                    )
+                else:
+                    rows = database.replace_period(
+                        table, typed, schema, period, source=entry.path,
+                    )
                 connection.execute(
                     f'INSERT OR REPLACE INTO {LEDGER} '
                     'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
