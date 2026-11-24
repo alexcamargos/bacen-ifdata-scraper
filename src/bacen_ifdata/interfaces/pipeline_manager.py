@@ -60,6 +60,22 @@ class PipelineManagerProtocol(Protocol):
             IfDataScraperException: A requested export is invalid.
         """
 
+    def run_csv_consolidation(
+        self, institution: str | None = None, report: str | None = None,
+    ) -> None:
+        """Consolidate local originals into one CSV per scope and report.
+
+        Args:
+            institution: Optional institutional scope.
+            report: Optional report name.
+        Returns:
+            None.
+        Raises:
+            IfDataScraperException: An original failed validation.
+            OSError: A consolidated CSV could not be published.
+            ValueError: The selection has no local originals.
+        """
+
     def run_cleaner(self, institution: str | None = None, report: str | None = None) -> None:
         """Execute the cleaning stage of the pipeline."""
 

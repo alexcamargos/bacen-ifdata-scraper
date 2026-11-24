@@ -37,7 +37,6 @@ from bacen_ifdata.application import Application
 from bacen_ifdata.interfaces import PipelineManagerProtocol
 from bacen_ifdata.measure_coverage import audit_measure_coverage
 from bacen_ifdata.scraper.storage.collection import PERIOD
-from bacen_ifdata.utilities.configurations import Config
 from bacen_ifdata.utilities.version import __version__ as version
 
 
@@ -75,7 +74,7 @@ def get_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         '--data-base', metavar='YYYY-MM',
-        help=f'Collect one reference month through {Config.HISTORICAL_END}.',
+        help='Collect one published reference month.',
     )
     parser.add_argument(
         '--repair-raw',
@@ -85,6 +84,10 @@ def get_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--refresh', action='store_true',
         help='Collect the selected month again to check for revisions.',
+    )
+    parser.add_argument(
+        '--consolidate-csv', action='store_true',
+        help='Combine local originals across all months by scope and report.',
     )
     parser.add_argument(
         '--update', action='store_true',
@@ -104,8 +107,6 @@ def get_arguments() -> argparse.Namespace:
     args = parser.parse_args()
     if args.data_base and not PERIOD.fullmatch(args.data_base):
         parser.error('--data-base must be a month in YYYY-MM format')
-    if args.data_base and args.data_base > Config.HISTORICAL_END:
-        parser.error(f'historical collection ends at {Config.HISTORICAL_END}')
     if args.refresh and (not args.data_base or args.repair_raw):
         parser.error('--refresh requires --data-base and excludes --repair-raw')
     if args.repair_raw or args.refresh:
@@ -120,7 +121,7 @@ def get_arguments() -> argparse.Namespace:
         parser.error('--institution and --report with --update filter collection')
     if args.audit_coverage and any((
         args.scraper, args.cleaner, args.transformer, args.loader,
-        args.analytics, args.update,
+        args.analytics, args.update, args.consolidate_csv,
     )):
         parser.error('--audit-coverage must run as a separate read-only action')
     return args
@@ -179,6 +180,10 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
             else:
                 runner(**kwargs)  # pylint: disable=not-callable
             action_executed = True
+
+    if getattr(args, 'consolidate_csv', False):
+        pipeline_manager.run_csv_consolidation(**kwargs)
+        action_executed = True
 
     if getattr(args, 'update', False):
         pipeline_manager.run_update()

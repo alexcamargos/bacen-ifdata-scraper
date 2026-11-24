@@ -75,6 +75,8 @@ def main(institution: Institutions, report: StrEnum) -> None:
     Cfg.SCRATCH_DIRECTORY.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(dir=Cfg.SCRATCH_DIRECTORY) as temporary:
         for period, source in sorted(report_inputs(input_data_path).items()):
+            if period > Cfg.HISTORICAL_END:
+                continue
             date = f'{period[5:]}/{period[:4]}'
             validate_report_csv(source, date)
             filename = f'{period}.csv'
