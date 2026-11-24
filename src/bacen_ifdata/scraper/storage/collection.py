@@ -135,6 +135,8 @@ def publish_report(
     destination: Path,
     source_url: str,
     scratch: Path,
+    *,
+    source_selection: dict[str, int] | None = None,
 ) -> Path:
     """Publish an immutable original and its metadata together.
 
@@ -143,6 +145,7 @@ def publish_report(
         destination: Raw directory for the scope, report and YYYY-MM.
         source_url: URL of the source portal.
         scratch: Temporary workspace on the same volume as the destination.
+        source_selection: IDs from the source catalog, when available.
 
     Returns:
         Path of the published original CSV.
@@ -161,7 +164,7 @@ def publish_report(
         bundle.mkdir()
         csv_path = bundle / 'report.csv'
         retry_file_lock(lambda: copyfile(downloaded, csv_path), downloaded)
-        metadata = {
+        metadata: dict[str, str | dict[str, int]] = {
             'source_url': source_url,
             'collected_at': collected_at.isoformat(),
             'institution': destination.parent.parent.name,
@@ -169,6 +172,8 @@ def publish_report(
             'data_base': destination.name,
             'sha256': report_checksum(csv_path),
         }
+        if source_selection is not None:
+            metadata['source_selection'] = source_selection
         (bundle / 'metadata.json').write_text(
             json.dumps(metadata, indent=2) + '\n', encoding='utf-8',
         )
