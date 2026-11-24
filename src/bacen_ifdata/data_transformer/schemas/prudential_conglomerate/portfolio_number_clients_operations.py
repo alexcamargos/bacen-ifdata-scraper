@@ -44,10 +44,12 @@ class PrudentialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'instituicao': {
             'description': 'Nome da instituição.',
             'type': 'text',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -148,14 +150,18 @@ class PrudentialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
         'cidade': {'description': 'Cidade da sede da instituição.', 'type': 'text'},
         'uf': {'description': 'Unidade da Federação onde fica a sede da instituição.', 'type': 'categorical'},
         'regiao': {'description': 'Região geográfica onde fica a sede da instituição.', 'type': 'categorical'},
-        'data_base': {'description': 'Data-base do relatório.', 'type': 'date'},
+        'data_base': {
+            'description': 'Data-base do relatório.',
+            'type': 'date',
+            'required': True,
+        },
         'quantidade_de_clientes_com_operacoes_ativas': {
             'description': (
                 'O total de clientes é calculado para os clientes, que possuam carteira ativa, identificados, '
                 'ou seja, aqueles possuidores de dívidas acima do limite de individualização do SCR. '
                 'A porção agregada das informações constantes do documento 3040 não está refletida nesse número.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
         },
         'quantidade_de_operacoes_ativas': {
             'description': (
@@ -163,6 +169,6 @@ class PrudentialConglomeratePortfolioNumberClientsOperationsSchema(BaseSchema):
                 'que são reportados de forma desmembrada e aparecem como mais de uma operação no SCR como, '
                 'por exemplo, cartão de crédito à vista, cartão de crédito parcelado e cartão de crédito rotativo.'
             ),
-            'type': 'numeric',
+            'type': 'integer',
         },
     }
