@@ -45,11 +45,13 @@ class FinancialConglomerateSCRPortfolioIndividualsTypeMaturitySchema(BaseSchema)
             'description': 'Nome da instituição.',
             'type': 'text',
             'raw_csv_header': 'Instituição',
+            'required': True,
         },
         'codigo': {
             'description': 'Conglomerado ou CNPJ.',
-            'type': 'numeric',
+            'type': 'integer',
             'raw_csv_header': 'Código',
+            'required': True,
         },
         'consolidado_bancario': {
             'description': 'Tipo de Consolidado Bancário (B1, B2, B3S, B3C, B4, N1, N2, N4).',
@@ -170,6 +172,7 @@ class FinancialConglomerateSCRPortfolioIndividualsTypeMaturitySchema(BaseSchema)
             'description': 'Data-base do relatório.',
             'type': 'date',
             'raw_csv_header': 'Data',
+            'required': True,
         },
         'total_da_carteira_de_pessoa_fisica': {
             'description': (
