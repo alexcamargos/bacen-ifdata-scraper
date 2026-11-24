@@ -13,6 +13,27 @@ def base_transformer():
     return BaseTransformer()
 
 
+def test_percentage_with_thousands(base_transformer: BaseTransformer) -> None:
+    """Preserve signed, grouped percentages and plain decimal percentages.
+
+    Args:
+        base_transformer: The transformer that converts report columns.
+    Returns:
+        None.
+    Raises:
+        None.
+    """
+    data = pd.DataFrame({
+        'ratio': ['1.300,48%', '-2.117,18%', '1.25%', 'NA%'],
+    })
+    result = base_transformer.transform_percentage_columns(data, ['ratio'])
+
+    assert result['ratio'].iloc[:3].tolist() == pytest.approx(
+        [13.0048, -21.1718, 0.0125]
+    )
+    assert pd.isna(result['ratio'].iloc[3])
+
+
 @pytest.mark.parametrize(
     "input_data, expected_len, deduplication_column, expected_value",
     [
