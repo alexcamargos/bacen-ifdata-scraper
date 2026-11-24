@@ -35,14 +35,21 @@ from loguru import logger
 
 from bacen_ifdata.application import Application
 from bacen_ifdata.interfaces import PipelineManagerProtocol
+from bacen_ifdata.scraper.storage.collection import PERIOD
 from bacen_ifdata.utilities.version import __version__ as version
 
 
 def get_arguments() -> argparse.Namespace:
     """Parse command-line arguments.
 
+    Args:
+        None.
+
     Returns:
         argparse.Namespace: The command-line arguments parser.
+
+    Raises:
+        SystemExit: Invalid flags or reference month were supplied.
     """
 
     parser = argparse.ArgumentParser(prog='ifdata', description='Bacen IF.data AutoScraper & Data Manager')
@@ -64,6 +71,22 @@ def get_arguments() -> argparse.Namespace:
     parser.add_argument(
         '-r', '--report', type=str, default=None, help='Filter execution by report name (e.g., SUMMARY).'
     )
+    parser.add_argument(
+        '--data-base', metavar='YYYY-MM', help='Collect one reference month.',
+    )
+    parser.add_argument(
+        '--repair-raw',
+        action='store_true',
+        help='Recollect CSVs with invalid reference dates or headers.',
+    )
+    parser.add_argument(
+        '--refresh', action='store_true',
+        help='Collect the selected month again to check for revisions.',
+    )
+    parser.add_argument(
+        '--update', action='store_true',
+        help='Load changed reports and publish a tested warehouse release.',
+    )
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument(
         '--no-cleanup',
@@ -71,7 +94,22 @@ def get_arguments() -> argparse.Namespace:
         help='Keep the browser session open after execution (useful for debugging).',
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.data_base and not PERIOD.fullmatch(args.data_base):
+        parser.error('--data-base must be a month in YYYY-MM format')
+    if args.refresh and (not args.data_base or args.repair_raw):
+        parser.error('--refresh requires --data-base and excludes --repair-raw')
+    if args.repair_raw or args.refresh:
+        args.scraper = True
+    if args.data_base and not args.scraper:
+        parser.error('--data-base requires --scraper or --repair-raw')
+    if args.update and any((
+        args.cleaner, args.transformer, args.loader, args.analytics,
+    )):
+        parser.error('--update replaces the individual processing stages')
+    if args.update and not args.scraper and (args.institution or args.report):
+        parser.error('--institution and --report with --update filter collection')
+    return args
 
 
 def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Namespace) -> None:
@@ -80,6 +118,12 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
     Args:
         pipeline_manager: The pipeline manager instance.
         args: Parsed command-line arguments.
+
+    Returns:
+        None.
+
+    Raises:
+        IfDataScraperException: A requested export could not be validated.
     """
 
     logger.info('Starting the Bacen IF.data AutoScraper & Data Manager')
@@ -105,11 +149,22 @@ def run_pipeline(pipeline_manager: PipelineManagerProtocol, args: argparse.Names
     for argument_name, (message, runner) in actions.items():
         if getattr(args, argument_name):
             logger.info(message)
-            if argument_name == 'analytics':
+            if argument_name == 'scraper':
+                runner(
+                    **kwargs,
+                    data_base=getattr(args, 'data_base', None),
+                    repair_raw=getattr(args, 'repair_raw', False),
+                    refresh=getattr(args, 'refresh', False),
+                )
+            elif argument_name == 'analytics':
                 runner()  # Analytics does not take filter kwargs.
             else:
                 runner(**kwargs)  # pylint: disable=not-callable
             action_executed = True
+
+    if getattr(args, 'update', False):
+        pipeline_manager.run_update()
+        return
 
     # If no specific action was requested, run the default pipeline.
     if not action_executed:
