@@ -147,6 +147,8 @@ def _inventory() -> dict[InputKey, RawInput]:
                 / report.name.lower()
             )
             for month, path in sorted(report_inputs(directory).items()):
+                if month > Config.HISTORICAL_END:
+                    continue
                 checksum = report_checksum(path)
                 source_url = Config.URL
                 collected_at = None
@@ -310,27 +312,9 @@ def _load_changes(
             if table not in tables:
                 database.create_table(table, schema)
                 tables.add(table)
-            connection.begin()
-            try:
-                connection.execute(
-                    f'CREATE TEMP TABLE ifdata_input AS '
-                    f'SELECT * FROM {table} LIMIT 0'
-                )
-                database.insert_data('ifdata_input', typed, schema)
-                rows, codes, dates = connection.execute(
-                    'SELECT count(*), count(DISTINCT codigo), '
-                    'count(*) FILTER (WHERE data_base = ?) FROM ifdata_input',
-                    [period],
-                ).fetchone()
-                if not rows or rows != codes or rows != dates:
-                    raise ValueError(
-                        f'{entry.path}: invalid institution or date keys.'
-                    )
-                connection.execute(
-                    f'DELETE FROM {table} WHERE data_base = ?', [period],
-                )
-                connection.execute(
-                    f'INSERT INTO {table} SELECT * FROM ifdata_input',
+            with database.transaction():
+                rows = database.replace_period(
+                    table, typed, schema, period, source=entry.path,
                 )
                 connection.execute(
                     f'INSERT OR REPLACE INTO {LEDGER} '
@@ -342,11 +326,6 @@ def _load_changes(
                         rows,
                     ],
                 )
-                connection.execute('DROP TABLE ifdata_input')
-                connection.commit()
-            except (OSError, ValueError, duckdb.Error):
-                connection.rollback()
-                raise
     finally:
         database.close()
 
