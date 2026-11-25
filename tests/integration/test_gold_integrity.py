@@ -49,6 +49,18 @@ QUERY_EXPECTED_DATES = """
     )
 """
 
+QUERY_EXPECTED_DATES_WITH_CURRENT = """
+    SELECT COUNT(*) FROM (
+        SELECT DISTINCT data_base FROM bronze.main.prudential_conglomerates_summary
+        UNION
+        SELECT DISTINCT data_base FROM bronze.main.financial_conglomerates_summary
+        UNION
+        SELECT DISTINCT data_base FROM bronze.main.individual_institutions_summary
+        UNION
+        SELECT DISTINCT data_base FROM bronze.main.ifdata_2025_campos
+    )
+"""
+
 QUERY_INVALID_ID_DATA = """
     SELECT COUNT(*)
     FROM dim_tempo
@@ -176,10 +188,16 @@ def _bronze_table_exists(database_connection: duckdb.DuckDBPyConnection, table_n
             SELECT
                 count(*)
             FROM
-                bronze.information_schema.tables WHERE table_name = ?
+                information_schema.tables
+            WHERE
+                table_catalog = 'bronze'
+                AND table_name = ?
         """,
         [table_name],
     ).fetchone()
+
+    if result is None:
+        return False
 
     return result[0] > 0
 
@@ -249,12 +267,17 @@ def test_dim_instituicao_tipo_instituicao_coverage(create_gold_database_connecti
 
 
 def test_dim_tempo_row_count_matches_distinct_dates(create_gold_database_connection):
-    """dim_tempo row count should match DISTINCT dates across Bronze summaries."""
+    """dim_tempo row count should match DISTINCT dates across historical summaries and 2025+ fields."""
 
     if not _table_exists(create_gold_database_connection, "dim_tempo"):
         pytest.skip("dim_tempo table not found in Gold DB")
 
-    expected = create_gold_database_connection.execute(QUERY_EXPECTED_DATES).fetchone()[0]
+    query = (
+        QUERY_EXPECTED_DATES_WITH_CURRENT
+        if _bronze_table_exists(create_gold_database_connection, "ifdata_2025_campos")
+        else QUERY_EXPECTED_DATES
+    )
+    expected = create_gold_database_connection.execute(query).fetchone()[0]
 
     actual = create_gold_database_connection.execute("SELECT COUNT(*) FROM dim_tempo").fetchone()[0]
 
