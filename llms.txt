@@ -1,6 +1,6 @@
 # Bacen IF.data AutoScraper & Data Manager (`bacen-ifdata-scraper`)
 
-> Dataset analítico estruturado (Star Schema em DuckDB) com dados financeiros, contábeis, prudenciais, de carteira de crédito (SCR) e de câmbio das instituições financeiras brasileiras publicados pelo Banco Central do Brasil no portal IF.data (`2000-03` a `2024-12`, 100 trimestres).
+> Dataset analítico estruturado (Star Schema + formato longo 2025+ em DuckDB) com dados financeiros, contábeis, prudenciais, de carteira de crédito (SCR) e de câmbio das instituições financeiras brasileiras publicados pelo Banco Central do Brasil no portal IF.data (`2000-03` a `2026-06`, 106 trimestres, cobrindo o regime histórico COSIF até 2024 e o leiaute atual da Resolução CMN nº 4.966 a partir de 2025).
 
 ## Como localizar o banco Gold em runtime
 
@@ -10,34 +10,38 @@
 
 ## Regras Obrigatórias Antes de Gerar SQL
 
-1. **Nunca agregue sem filtrar `tipo_instituicao`:** a tabela `dim_instituicao` reúne escopos sobrepostos (`Conglomerado Prudencial`, `Conglomerado Financeiro`, `Conglomerado Financeiro (SCR)`, `Instituicao Individual` [sem cedilha/acento] e `Instituição de Câmbio`). Somar sem filtro causa dupla contagem.
-2. **Unidades:** valores monetários estão em **R$ mil** (divida por `1e6` para bilhões de reais). Índices e rentabilidades (`roe`, `roa`, `indice_basileia`, `indice_imobilizacao`, `razao_alavancagem`) estão em **fração decimal** (`0.1651` = `16,51%`).
-3. **DRE acumulada semestralmente (COSIF):** março (`YYYY0301`) e setembro (`YYYY0901`) acumulam 3 meses; junho (`YYYY0601`) e dezembro (`YYYY1201`) acumulam 6 meses. Para lucro/receita anual de `YYYY`, some apenas `YYYY0601 + YYYY1201`. Para 2T isolado use `YYYY0601 - YYYY0301`; para 4T isolado use `YYYY1201 - YYYY0901`.
-4. **`roe` e `roa` não são anualizados:** refletem `lucro_liquido / patrimonio_liquido` (ou `ativo_total`) da própria data-base (3 meses em 03/09, 6 meses em 06/12).
-5. **Carteira de crédito só existe em Conglomerado Financeiro:** `fato_carteira_credito_*`, `fato_risco_credito`, `fato_regiao_credito` e `fato_operacoes_clientes` usam `Conglomerado Financeiro` (`2014-06`..`2024-12`) e `Conglomerado Financeiro (SCR)` (`2012-06`..`2014-03`). Não filtre por `Conglomerado Prudencial` nessas tabelas.
-6. **Transição em Capital Prudencial:** em `fato_capital_prudencial`, `2000-12`..`2014-12` está em `Conglomerado Financeiro` e `2015-03`..`2024-12` em `Conglomerado Prudencial`.
+1. **Dois regimes contábeis (2000–2024 vs 2025+):** as 13 tabelas fato históricas e as 4 views de relatórios cobrem `2000-03`..`2024-12` (`cosif_ate_2024`). Os dados de `2025-03` em diante (`cosif_desde_2025`, Resolução CMN 4.966) estão em `fato_ifdata_2025_campos` (formato longo: `escopo`, `relatorio`, `campo_original`, `valor_numerico`). Para séries contínuas de `Ativo Total` e `Patrimônio Líquido` de `Conglomerado Prudencial` de `2014-03` a `2026-06`, use `view_resumo_prudencial_serie` preservando `regime_contabil`.
+2. **Nunca agregue tabelas históricas sem filtrar `tipo_instituicao`:** `dim_instituicao` reúne escopos sobrepostos (`Conglomerado Prudencial`, `Conglomerado Financeiro`, `Conglomerado Financeiro (SCR)`, `Instituicao Individual` [sem cedilha/acento] e `Instituição de Câmbio`). Em `fato_ifdata_2025_campos`, sempre filtre `escopo` (`prudential_conglomerates`, `financial_conglomerates`, `individual_institutions`), `relatorio` e `campo_original`.
+3. **Unidades e diferença de escala de percentuais:** valores monetários estão em **R$ mil** nos dois regimes (divida por `1e6` para bilhões de reais). Índices e percentuais nas tabelas históricas (`2000–2024`) estão em **fração decimal** (`0.1651` = `16,51%`), enquanto em `fato_ifdata_2025_campos` (`formato_valor = 'percentual'`) já estão em **pontos percentuais** (`16.51` = `16,51%` — não multiplique por `100`).
+4. **DRE acumulada semestralmente (COSIF):** março (`YYYY0301`) e setembro (`YYYY0901`) acumulam 3 meses; junho (`YYYY0601`) e dezembro (`YYYY1201`) acumulam 6 meses. Para lucro/receita anual de `YYYY`, some apenas `YYYY0601 + YYYY1201`. Para 2T isolado use `YYYY0601 - YYYY0301`; para 4T isolado use `YYYY1201 - YYYY0901`.
+5. **`roe` e `roa` históricos não são anualizados:** refletem `lucro_liquido / patrimonio_liquido` (ou `ativo_total`) da própria data-base (3 meses em 03/09, 6 meses em 06/12).
+6. **Carteira de crédito histórica vs 2025+:** até `2024-12`, `fato_carteira_credito_*`, `fato_risco_credito`, `fato_regiao_credito` e `fato_operacoes_clientes` existem apenas em `Conglomerado Financeiro` (`2014-06`..`2024-12`) e `Conglomerado Financeiro (SCR)` (`2012-06`..`2014-03`). A partir de `2025-03`, os relatórios de carteira ficam em `fato_ifdata_2025_campos` com `escopo = 'prudential_conglomerates'`.
+7. **Transição em Capital Prudencial:** em `fato_capital_prudencial`, `2000-12`..`2014-12` está em `Conglomerado Financeiro` e `2015-03`..`2024-12` em `Conglomerado Prudencial`. A partir de `2025-03`, consulte `fato_ifdata_2025_campos` (`escopo = 'prudential_conglomerates'`, `relatorio = 'capital_information'`).
 
 ## Mapa de Roteamento (Pergunta -> Tabela/View)
 
-- **Rankings gerais, ativo total, PL, captações, agências:** `view_resumo_financeiro_relatorios`
-- **Composição detalhada de Ativo e Passivo (depósitos, LCI, LCA, LF, TVM):** `view_balanco_patrimonial_relatorios`
-- **Receitas, despesas, PDD, eficiência e lucro líquido (DRE):** `view_dre_relatorios`
-- **Histórico de mudanças de razão social / fusões:** `view_instituicoes_historico_nomes`
-- **Solvência, Basileia, Capital Principal, RWA, alavancagem, imobilização:** `fato_capital_prudencial` + `dim_instituicao` + `dim_tempo`
-- **Carteira de crédito por modalidade PF/PJ e prazo:** `fato_carteira_credito_produto` + `dim_produto_credito` + `dim_faixa_vencimento`
-- **Carteira de crédito PJ por setor (CNAE) ou porte:** `fato_carteira_credito_atividade` / `fato_carteira_credito_porte`
-- **Qualidade de crédito (níveis de risco AA–H):** `fato_risco_credito` + `dim_risco`
-- **Distribuição regional ou por indexador da carteira:** `fato_regiao_credito` + `dim_regiao` / `fato_carteira_credito_indexador`
-- **Clientes e operações ativas de crédito:** `fato_operacoes_clientes`
-- **Fluxo de câmbio (comercial/financeiro):** `fato_movimentacao_cambio` (`tipo_instituicao = 'Instituição de Câmbio'`, `2014-12`..`2023-06`)
+- **Série contínua 2014–2026 de Ativo Total e PL Prudencial (cruzando 2024 e 2025+):** `view_resumo_prudencial_serie`
+- **Qualquer relatório ou rubrica de 2025 em diante (Resumo, Ativo, Passivo, DRE, Capital, Carteira, Instrumentos Financeiros, Segmentação):** `fato_ifdata_2025_campos`
+- **Rankings gerais, ativo total, PL, captações, agências (`2000–2024`):** `view_resumo_financeiro_relatorios`
+- **Composição detalhada de Ativo e Passivo (`2000–2024`):** `view_balanco_patrimonial_relatorios`
+- **Receitas, despesas, PDD, eficiência e lucro líquido (`2000–2024`):** `view_dre_relatorios`
+- **Histórico de mudanças de razão social / fusões (`2000–2024`):** `view_instituicoes_historico_nomes`
+- **Solvência, Basileia, Capital Principal, RWA (`2000–2024`):** `fato_capital_prudencial` + `dim_instituicao` + `dim_tempo`
+- **Carteira de crédito por modalidade PF/PJ e prazo (`2012–2024`):** `fato_carteira_credito_produto` + `dim_produto_credito` + `dim_faixa_vencimento`
+- **Carteira de crédito PJ por setor (CNAE) ou porte (`2012–2024`):** `fato_carteira_credito_atividade` / `fato_carteira_credito_porte`
+- **Qualidade de crédito (níveis de risco AA–H, `2012–2024`):** `fato_risco_credito` + `dim_risco`
+- **Distribuição regional ou por indexador da carteira (`2012–2024`):** `fato_regiao_credito` + `dim_regiao` / `fato_carteira_credito_indexador`
+- **Clientes e operações ativas de crédito (`2012–2024`):** `fato_operacoes_clientes`
+- **Fluxo de câmbio (`2014-12`..`2023-06`):** `fato_movimentacao_cambio` (`tipo_instituicao = 'Instituição de Câmbio'`)
 
 ## Documentação
 
 - [Manifesto Semântico Estruturado (YAML)](docs/ai/gold_semantic_model.yaml): todas as tabelas, views, colunas, tipos DuckDB, chaves, valores permitidos (seeds) e guardrails.
-- [Regras de Domínio](docs/DOMAIN_RULES.md): regras contábeis, regulatórias e cobertura temporal por escopo.
-- [Catálogo de Dados Gold](docs/DATA_CATALOG.md): documentação humana completa das 13 dimensões, 13 fatos, 4 views e 10 seeds.
-- [Cookbook de Consultas](docs/COOKBOOK.md): receitas SQL DuckDB e Python/Polars validadas no warehouse real e lista de anti-patterns.
+- [Regras de Domínio](docs/DOMAIN_RULES.md): regimes contábeis (COSIF até 2024 vs Resolução CMN 4.966), escalas e cobertura temporal por escopo.
+- [Catálogo de Dados Gold](docs/DATA_CATALOG.md): documentação humana completa das 13 dimensões, 14 fatos, 5 views e 10 seeds.
+- [Cookbook de Consultas](docs/COOKBOOK.md): receitas SQL DuckDB e Python/Polars validadas no warehouse real (incluindo 2025+) e lista de anti-patterns.
 - [Guia de Uso do Pacote](docs/USAGE.md): instalação, CLI completa (`ifdata.py`), uso programático e layout de diretórios.
+- [Dicionários de Colunas 2025+](docs/dicionario_dados/2025_em_diante/README.md): PDFs/JSON oficiais do Bacen por data-base e `manifesto.json`.
 - [Arquitetura do Sistema](docs/ARCHITECTURE.md): desenho interno do ETL e subsistemas.
-- [Pipeline Silver para Gold](docs/DATA_PIPELINE.md): transformação dimensional em dbt.
+- [Pipeline Silver para Gold](docs/DATA_PIPELINE.md): transformação dimensional em dbt e integração dos dois leiautes.
 - [Processo da Camada Gold](docs/GOLD_LAYER_PROCESS.md): regras de unificação de dimensões e fatos.

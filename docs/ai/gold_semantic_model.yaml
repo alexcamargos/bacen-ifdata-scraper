@@ -10,14 +10,25 @@ dataset:
     open_mode: read_only=True
   temporal_coverage:
     min_id_data: 20000301
-    max_id_data: 20241201
-    total_quarters: 100
+    max_id_data: 20260601
+    total_quarters: 106
     id_data_format: 'YYYYMMDD (inteiro, sempre dia 01 do mês de fechamento do trimestre: 03, 06, 09, 12)'
   units:
     monetary_values: R$ mil (milhares de reais)
-    ratios_and_rates: 'fração decimal (ex.: 0.1651 = 16,51%)'
+    ratios_and_rates_historical_2000_2024: 'fração decimal (ex.: 0.1651 = 16,51%)'
+    ratios_and_rates_current_2025_plus: 'pontos percentuais em fato_ifdata_2025_campos quando formato_valor = ''percentual''
+      (ex.: 16.51 = 16,51%)'
     counts: inteiro absoluto
 guardrails:
+- id: two_accounting_regimes_2025
+  rule: 'As 13 tabelas fato históricas e 4 views de relatórios cobrem 2000-03..2024-12 (cosif_ate_2024). Os trimestres
+    de 2025-03 em diante (Resolução CMN 4.966 / cosif_desde_2025) ficam em fato_ifdata_2025_campos (formato longo:
+    escopo, relatorio, campo_original, valor_numerico). Para série contínua 2014–2026 de Ativo Total e Patrimônio
+    Líquido Prudencial, use view_resumo_prudencial_serie e sempre exiba ou considere a coluna regime_contabil.'
+- id: percent_scale_2025_diff
+  rule: 'Em fato_ifdata_2025_campos, valores com formato_valor = ''percentual'' já estão em pontos percentuais (ex.:
+    16.51 = 16,51%) — não multiplique por 100. Nas tabelas históricas (2000–2024), índices como indice_basileia,
+    roe e roa estão em fração decimal (ex.: 0.1651 = 16,51%).'
 - id: no_double_counting
   rule: 'Nunca somar ou agregar tabelas contábeis sem filtrar tipo_instituicao (ex.: ''Conglomerado Prudencial'',
     ''Conglomerado Financeiro'' ou ''Instituicao Individual''). Atenção à grafia exata ''Instituicao Individual''
@@ -60,7 +71,7 @@ views:
     table_type: VIEW
     description: Data Mart View unificando o Fato Balanço Patrimonial (Ativos e Passivos) com as Dimensões, para
       o relatório completo do IF.data.
-    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial)
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial, 2000–2024)
     primary_key:
     - id_instituicao
     - id_data
@@ -232,7 +243,7 @@ views:
   view_dre_relatorios:
     table_type: VIEW
     description: Data Mart View unificando o Fato Demonstração de Resultados com as Dimensões.
-    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado)
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado, 2000–2024)
     primary_key:
     - id_instituicao
     - id_data
@@ -387,7 +398,7 @@ views:
     table_type: VIEW
     description: Data Mart View focada exclusivamente no acompanhamento histórico (De-Para) de mudanças de nome
       das instituições nos relatórios do Bacen.
-    grain: 1 linha por instituição e data-base com comparação de nome anterior via LAG
+    grain: 1 linha por instituição e data-base com comparação de nome anterior via LAG (2000–2024)
     primary_key:
     - id_instituicao
     - id_data
@@ -456,7 +467,7 @@ views:
     table_type: VIEW
     description: Data Mart View unificando o Fato Resumo Financeiro com as Dimensões, facilitando o filtro por Tipo
       de Relatório BCB.
-    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro)
+    grain: 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro, 2000–2024)
     primary_key:
     - id_instituicao
     - id_data
@@ -522,6 +533,39 @@ views:
       type: DOUBLE
     - name: roa
       type: DOUBLE
+  view_resumo_prudencial_serie:
+    table_type: VIEW
+    description: 1 linha por instituição prudencial e data-base conciliando Ativo Total e PL de 2014-03 a 2026-06
+    grain: 1 linha por instituição prudencial e data-base conciliando Ativo Total e PL de 2014-03 a 2026-06
+    primary_key: []
+    recommended_for:
+    - Série contínua de Ativo Total e Patrimônio Líquido de Conglomerados Prudenciais cruzando 2014–2024 (cosif_ate_2024)
+      e 2025+ (cosif_desde_2025)
+    columns:
+    - name: data_base
+      type: DATE
+      description: Data de referência do trimestre (DATE, 2014-03-01 a 2026-06-01).
+    - name: codigo
+      type: VARCHAR
+      description: Código identificador da instituição no Bacen (VARCHAR).
+    - name: instituicao
+      type: VARCHAR
+      description: Nome histórico da instituição na data-base.
+    - name: ativo_total
+      type: DECIMAL(38,8)
+      description: Ativo Total em R$ mil (DECIMAL(38,8)).
+    - name: patrimonio_liquido
+      type: DECIMAL(38,8)
+      description: Patrimônio Líquido em R$ mil (DECIMAL(38,8)).
+    - name: regime_contabil
+      type: VARCHAR
+      description: Regime COSIF da observação ('cosif_ate_2024' ou 'cosif_desde_2025').
+    - name: escopo
+      type: VARCHAR
+      description: Escopo fixo 'prudential_conglomerates'.
+    - name: unidade
+      type: VARCHAR
+      description: Unidade monetária fixa 'BRL mil'.
 facts:
   fato_balanco_patrimonial:
     table_type: BASE TABLE
@@ -980,6 +1024,64 @@ facts:
       type: DOUBLE
     - name: roa
       type: DOUBLE
+  fato_ifdata_2025_campos:
+    table_type: BASE TABLE
+    description: 1 linha por escopo, relatório, data-base, linha da instituição e coluna publicada (formato longo
+      2025+)
+    grain: 1 linha por escopo, relatório, data-base, linha da instituição e coluna publicada (formato longo 2025+)
+    primary_key:
+    - id_data
+    coverage_by_scope:
+      prudential_conglomerates (14 relatórios): 20250301..20260601
+      financial_conglomerates (4 relatórios): 20250301..20260601
+      individual_institutions (4 relatórios): 20250301..20260601
+    recommended_for:
+    - Consulta a qualquer rubrica publicada no leiaute atual (2025-03 em diante, Resolução CMN 4.966) sem perda
+      de colunas
+    columns:
+    - name: id_data
+      type: INTEGER
+      description: Chave temporal YYYYMMDD (FK lógica para dim_tempo.id_data).
+    - name: escopo
+      type: VARCHAR
+      description: Escopo institucional em snake_case (prudential_conglomerates, financial_conglomerates, individual_institutions).
+    - name: relatorio
+      type: VARCHAR
+      description: 'Identificador do relatório em snake_case (ex.: summary, assets, liabilities, income_statement,
+        capital_information).'
+    - name: data_base
+      type: DATE
+      description: Data de referência do trimestre (DATE).
+    - name: linha
+      type: BIGINT
+      description: Posição da linha da instituição no CSV publicado.
+    - name: ordem_coluna
+      type: INTEGER
+      description: Posição ordinal da coluna no CSV publicado.
+    - name: codigo
+      type: VARCHAR
+      description: Código identificador da instituição no IF.data.
+    - name: instituicao
+      type: VARCHAR
+      description: Nome da instituição publicado na data-base.
+    - name: campo_original
+      type: VARCHAR
+      description: Nome exato da coluna/rubrica conforme publicado pelo Bacen.
+    - name: eh_dimensao
+      type: BOOLEAN
+      description: Indica se a coluna é atributo cadastral/dimensional (true) ou medida numérica/indicador (false).
+    - name: valor_original
+      type: VARCHAR
+      description: Texto original publicado no CSV (preserva marcadores como NI; células vazias ficam NULL).
+    - name: valor_numerico
+      type: DECIMAL(38,8)
+      description: Valor numérico convertido para DECIMAL(38,8) na escala publicada (percentuais em pontos percentuais).
+    - name: formato_valor
+      type: VARCHAR
+      description: Marcador de formato ('percentual' quando em pontos percentuais; NULL nos demais casos).
+    - name: arquivo_origem
+      type: VARCHAR
+      description: Caminho relativo do CSV bruto versionado de origem.
   fato_movimentacao_cambio:
     table_type: BASE TABLE
     description: Fato de Movimentação no Mercado de Câmbio (Fluxo de Moedas).
