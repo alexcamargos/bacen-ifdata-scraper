@@ -10,8 +10,8 @@ O objetivo deste pipeline é converter os dados fragmentados e heterogêneos dos
 
 | Camada | Tecnologia | Descrição |
 | :--- | :--- | :--- |
-| **Silver** | DuckDB Tables (`interim/releases/.../silver_warehouse.duckdb`) | Dados brutos carregados dos CSVs processados e tipados. As tabelas refletem a estrutura original dos arquivos (ex.: `prudential_conglomerates_assets`) com tipos corrigidos e controle de ledger (`ifdata_control.applied_inputs`). |
-| **Gold** | DuckDB Tables e Views (`processed/releases/.../gold_warehouse.duckdb`) | Dados modelados em 13 dimensões, 13 fatos e 4 views analíticas prontas (via dbt). A release ativa é apontada por `data/processed/current.json` e resolvida via `bacen_ifdata.utilities.releases.warehouse_path('gold')`. |
+| **Silver** | DuckDB Tables (`interim/releases/.../silver_warehouse.duckdb`) | Dados brutos carregados dos CSVs processados e tipados (histórico `2000–2024` e tabela `ifdata_2025_campos` para o leiaute atual de `2025+`). Controle de ledger em `ifdata_control.applied_inputs`. |
+| **Gold** | DuckDB Tables e Views (`processed/releases/.../gold_warehouse.duckdb`) | Dados modelados em 13 dimensões, 14 fatos (incluindo `fato_ifdata_2025_campos`) e 5 views analíticas (incluindo `view_resumo_prudencial_serie` conciliando `2014–2026`). A release ativa é apontada por `data/processed/current.json` e resolvida via `bacen_ifdata.utilities.releases.warehouse_path('gold')`. |
 
 > Para operação do pipeline, variáveis de ambiente (`IFDATA_DATA_DIRECTORY`) e consumo em Python, consulte [Guia de Uso](USAGE.md). Para o catálogo completo de tabelas e regras contábeis do IF.data, veja [Catálogo de Dados](DATA_CATALOG.md), [Regras de Domínio](DOMAIN_RULES.md) e [Cookbook de Consultas](COOKBOOK.md).
 

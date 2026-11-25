@@ -135,17 +135,27 @@ Alguns relatórios Silver chegam "pivotados" (colunas como `comercio`, `industri
 
 ---
 
-## 4. Garantia de Qualidade (Data Quality)
+## 4. Integração do Leiaute Atual (2025 em diante — Resolução CMN nº 4.966)
 
-O processo de build inclui testes automáticos (`dbt test`) que verificam:
+Com a entrada do novo padrão contábil COSIF em março de 2025, os relatórios do portal IF.data passaram a ser publicados em um novo leiaute (`rest/relatorios2025a2030`). Para não misturar rubricas metodologicamente distintas (como provisões de crédito e classificação de risco):
 
-1. **Unique Keys**: Se as chaves primárias compostas (`id_instituicao` + `id_data` + ...) são únicas.
-2. **Not Null**: Se campos obrigatórios estão preenchidos.
-3. **Relationships**: Se todos os IDs (instituição, segmento, classe) nas tabelas fato existem nas tabelas de dimensão. Isso garante que nunca tenhamos um saldo órfão sem saber a quem pertence.
+* **`fato_ifdata_2025_campos`:** espelha a tabela Silver `ifdata_2025_campos` em formato longo (`escopo`, `relatorio`, `data_base`, `linha`, `ordem_coluna`, `codigo`, `instituicao`, `campo_original`, `valor_original`, `valor_numerico`, `formato_valor`), adicionando `id_data` para integração com `dim_tempo`.
+* **`view_resumo_prudencial_serie`:** concilia `Ativo Total` e `Patrimônio Líquido` de `Conglomerado Prudencial` entre `fato_resumo_financeiro` (`cosif_ate_2024`) e `fato_ifdata_2025_campos` (`cosif_desde_2025`) na unidade comum `BRL mil`.
 
 ---
 
-## 5. Documentação Relacionada
+## 5. Garantia de Qualidade (Data Quality)
+
+O processo de build inclui testes automáticos (`dbt test`) e testes de reconciliação (`tests/reconciliacao/`) que verificam:
+
+1. **Unique Keys**: Se as chaves primárias compostas (`id_instituicao` + `id_data` + ...) são únicas.
+2. **Not Null**: Se campos obrigatórios estão preenchidos.
+3. **Relationships**: Se todos os IDs (instituição, segmento, classe) nas tabelas fato existem nas tabelas de dimensão.
+4. **Reconciliação 2025+**: Grão de `fato_ifdata_2025_campos` e grão/valores de `view_resumo_prudencial_serie`.
+
+---
+
+## 6. Documentação Relacionada
 
 * [Catálogo de Dados Gold](DATA_CATALOG.md): inventário completo de colunas, tipos DuckDB e seeds.
 * [Regras de Domínio](DOMAIN_RULES.md): anti-dupla contagem, DRE semestral e cobertura temporal.
