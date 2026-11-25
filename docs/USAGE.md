@@ -1,6 +1,6 @@
 # Guia de Uso do Pacote
 
-Este guia cobre a instalação, a configuração de ambiente, a execução do pipeline via CLI e o consumo programático dos bancos DuckDB produzidos pelo `bacen-ifdata-scraper` (versão `0.0.6`).
+Este guia cobre a instalação, a configuração de ambiente, a execução do pipeline via CLI e o consumo programático dos bancos DuckDB produzidos pelo `bacen-ifdata-scraper` (versão `0.1.0`).
 
 ## Requisitos
 
@@ -18,7 +18,7 @@ Para consumir os módulos Python e ler os bancos DuckDB gerados pelo pacote:
 uv add bacen-ifdata-scraper
 ```
 
-Na versão `0.0.6`, o pacote publicado no PyPI expõe o módulo Python `bacen_ifdata`, mas não registra um script de console em `[project.scripts]`. Para executar a interface de linha de comando (`ifdata.py`) e os modelos dbt localmente, clone o repositório.
+Na versão `0.1.0`, o pacote publicado no PyPI expõe o módulo Python `bacen_ifdata`, mas não registra um script de console em `[project.scripts]`. Para executar a interface de linha de comando (`ifdata.py`) e os modelos dbt localmente, clone o repositório.
 
 ### Instalação local completa (CLI + dbt)
 
