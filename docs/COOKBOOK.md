@@ -257,6 +257,49 @@ LIMIT 20;
 
 ---
 
+## 10. Série Contínua 2014–2026 Cruzando o Novo COSIF (`view_resumo_prudencial_serie`)
+
+Concilia `Ativo Total` e `Patrimônio Líquido` de `Conglomerado Prudencial` entre o regime histórico (`cosif_ate_2024`) e o regime atual da Resolução CMN nº 4.966 (`cosif_desde_2025`), preservando o marcador `regime_contabil`:
+
+```sql
+SELECT
+    data_base,
+    regime_contabil,
+    COUNT(DISTINCT codigo) AS qtd_conglomerados,
+    ROUND(SUM(ativo_total) / 1e6, 2) AS ativo_total_bi,
+    ROUND(SUM(patrimonio_liquido) / 1e6, 2) AS pl_total_bi
+FROM view_resumo_prudencial_serie
+WHERE data_base BETWEEN DATE '2024-06-01' AND DATE '2026-06-01'
+GROUP BY 1, 2
+ORDER BY 1;
+```
+
+---
+
+## 11. Consulta Direta ao Leiaute Atual 2025+ (`fato_ifdata_2025_campos`)
+
+Explora campos publicados a partir de `2025-03` em formato longo. Sempre filtre `escopo`, `relatorio`, `id_data` e `campo_original`, e observe `formato_valor` (percentuais já estão em pontos percentuais):
+
+```sql
+SELECT
+    data_base,
+    codigo,
+    instituicao,
+    MAX(valor_numerico) FILTER (WHERE campo_original = 'Ativo Total') / 1e6 AS ativo_total_bi,
+    MAX(valor_numerico) FILTER (WHERE campo_original = 'Patrimônio Líquido') / 1e6 AS pl_bi,
+    MAX(valor_numerico) FILTER (WHERE campo_original = 'Índice de Basileia') AS basileia_pct
+FROM fato_ifdata_2025_campos
+WHERE id_data = 20260601
+  AND escopo = 'prudential_conglomerates'
+  AND relatorio = 'summary'
+  AND campo_original IN ('Ativo Total', 'Patrimônio Líquido', 'Índice de Basileia')
+GROUP BY 1, 2, 3
+ORDER BY ativo_total_bi DESC NULLS LAST
+LIMIT 15;
+```
+
+---
+
 ## Anti-Patterns de SQL (Erros Comuns a Evitar)
 
 | Anti-Pattern | Por que está errado | Correção |
@@ -264,7 +307,10 @@ LIMIT 20;
 | `SELECT SUM(ativo_total) FROM fato_resumo_financeiro WHERE id_data = 20241201` | Soma o mesmo banco 3 vezes (Prudencial + Financeiro + Individual). | Sempre filtre `tipo_instituicao` (ex.: `'Conglomerado Prudencial'`). |
 | `WHERE tipo_instituicao = 'Instituição Individual'` | Retorna 0 linhas — o valor armazenado não tem cedilha nem acento. | Use `WHERE tipo_instituicao = 'Instituicao Individual'`. |
 | `SELECT SUM(lucro_liquido) FROM view_dre_relatorios WHERE id_data BETWEEN 20240301 AND 20241201` | Conta 1T e 3T duas vezes porque 2T e 4T são acumulados semestrais. | Para lucro anual, filtre `id_data IN (20240601, 20241201)`. |
-| `WHERE tipo_instituicao = 'Conglomerado Prudencial'` em `fato_carteira_credito_*` | Retorna 0 linhas — relatórios de carteira estão em `Conglomerado Financeiro` / `(SCR)`. | Filtre `tipo_instituicao = 'Conglomerado Financeiro'` (ou `tipo_relatorio_bcb = 'Conglomerados Financeiros e Instituições Independentes'` para séries desde 2012-06). |
+| Buscar `id_data >= 20250301` nas 13 tabelas fato históricas ou nas 4 views antigas | Retorna 0 linhas — os dados de 2025+ ficam em `fato_ifdata_2025_campos` e `view_resumo_prudencial_serie`. | Consulte `fato_ifdata_2025_campos` ou `view_resumo_prudencial_serie` para trimestres a partir de `2025-03`. |
+| Multiplicar por `100` colunas com `formato_valor = 'percentual'` em `fato_ifdata_2025_campos` | Em `fato_ifdata_2025_campos`, percentuais já vêm em pontos percentuais (ex.: `16.51` = `16,51%`). | Use `valor_numerico` diretamente quando `formato_valor = 'percentual'`. |
+| Somar `fato_ifdata_2025_campos` sem filtrar `escopo`, `relatorio` e `campo_original` | Mistura diferentes relatórios, escopos e métricas incompatíveis na mesma coluna `valor_numerico`. | Filtre sempre `escopo`, `relatorio` e `campo_original` (e `eh_dimensao = false` para agregações). |
+| `WHERE tipo_instituicao = 'Conglomerado Prudencial'` em `fato_carteira_credito_*` (histórico) | Retorna 0 linhas — relatórios de carteira históricos estão em `Conglomerado Financeiro` / `(SCR)`. | Para `2012–2024`, filtre `Conglomerado Financeiro` (ou `tipo_relatorio_bcb`); para `2025+`, use `fato_ifdata_2025_campos` com `escopo = 'prudential_conglomerates'`. |
 | `JOIN dim_faixa_vencimento f ON c.id_faixa_vencimento = f.id_faixa_vencimento` | A PK em `dim_faixa_vencimento` chama-se `id_faixa`. | Use `ON c.id_faixa_vencimento = f.id_faixa`. |
 | `JOIN dim_risco dr ON r.id_nivel_risco = dr.id_nivel_risco` | A PK em `dim_risco` chama-se `id_risco`. | Use `ON r.id_nivel_risco = dr.id_risco`. |
-| Tratar `ativo_total` como reais (`R$`) ou `indice_basileia` como percentual (`0–100`) | `ativo_total` está em `R$ mil` e `indice_basileia` em fração decimal (`0.1651`). | Divida valores monetários por `1e6` para bilhões de reais e multiplique índices por `100` para `%`. |
+| Tratar `ativo_total` como reais (`R$`) ou `indice_basileia` histórico como percentual (`0–100`) | `ativo_total` está em `R$ mil` e `indice_basileia` histórico em fração decimal (`0.1651`). | Divida valores monetários por `1e6` para bilhões de reais e multiplique índices históricos por `100` para `%`. |
