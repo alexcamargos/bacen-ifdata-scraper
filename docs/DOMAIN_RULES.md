@@ -22,11 +22,17 @@ O portal IF.data publica os mesmos bancos sob diferentes visões de consolidaç�
 
 ---
 
-## 2. Cobertura Temporal Real por Tabela Fato
+## 2. Dois Regimes Contábeis e Cobertura Temporal Real
 
-O calendário `dim_tempo` cobre **100 trimestres**, de `20000301` (`2000-03-01`) a `20241201` (`2024-12-01`), mas nem todo escopo existe em todos os anos:
+O calendário `dim_tempo` cobre **106 trimestres**, de `20000301` (`2000-03-01`) a `20260601` (`2026-06-01`), divididos em dois regimes regulatórios publicados em portais e leiautes distintos pelo Banco Central:
 
-| Tabela Fato | `tipo_instituicao` disponível | Intervalo (`id_data`) |
+1. **Regime histórico (`cosif_ate_2024`, `2000-03` a `2024-12`):** servido pelas 13 tabelas fato dimensionais (`fato_resumo_financeiro`, `fato_balanco_patrimonial`, `fato_demonstracao_resultado`, `fato_capital_prudencial`, `fato_carteira_credito_*`, `fato_risco_credito`, `fato_regiao_credito`, `fato_operacoes_clientes`, `fato_movimentacao_cambio`) e pelas 4 views de relatórios históricos.
+2. **Regime atual (`cosif_desde_2025`, `2025-03` em diante — Resolução CMN nº 4.966/2021):** servido por `fato_ifdata_2025_campos` (formato longo preservando 100% dos campos e rubricas publicados no novo leiaute).
+3. **Série conciliada (`2014-03` a `2026-06`):** a view `view_resumo_prudencial_serie` unifica `Ativo Total` e `Patrimônio Líquido` de `Conglomerado Prudencial` nos dois regimes, identificando cada observação na coluna `regime_contabil` (`'cosif_ate_2024'` ou `'cosif_desde_2025'`). Definições de provisão e classificações de risco não são misturadas automaticamente porque mudaram de metodologia com a Resolução CMN 4.966.
+
+### Cobertura por tabela fato
+
+| Tabela Fato | Escopo / `tipo_instituicao` disponível | Intervalo (`id_data`) |
 | :--- | :--- | :--- |
 | `fato_resumo_financeiro` | `Instituicao Individual`, `Conglomerado Financeiro` | `20000301` a `20241201` |
 | `fato_resumo_financeiro` | `Conglomerado Prudencial` | `20140301` a `20241201` |
@@ -45,20 +51,24 @@ O calendário `dim_tempo` cobre **100 trimestres**, de `20000301` (`2000-03-01`)
 | `fato_operacoes_clientes` | `Conglomerado Financeiro (SCR)` / `Conglomerado Financeiro` | `20120601`..`20140301` / `20140601`..`20241201` |
 | `fato_regiao_credito` | `Conglomerado Financeiro (SCR)` / `Conglomerado Financeiro` | `20120601`..`20140301` / `20140901`..`20241201` |
 | `fato_movimentacao_cambio` | `Instituição de Câmbio` | `20141201` a `20230601` |
+| `fato_ifdata_2025_campos` | `escopo` em `prudential_conglomerates` (14 rel.), `financial_conglomerates` (4 rel.), `individual_institutions` (4 rel.) | `20250301` a `20260601` |
 
 Consequências práticas:
 
-- **Séries de capital prudencial antes e depois de 2015:** até `20141201`, os dados estão em `Conglomerado Financeiro`; de `20150301` em diante, passam para `Conglomerado Prudencial`.
-- **Relatórios de carteira de crédito:** não existem sob `Conglomerado Prudencial` nem `Instituicao Individual` no modelo Gold atual — sempre consulte sob `Conglomerado Financeiro` (e `Conglomerado Financeiro (SCR)` para `2012-06` a `2014-03`).
+- **Séries de capital prudencial antes e depois de 2015:** até `20141201`, os dados estão em `Conglomerado Financeiro`; de `20150301` a `20241201`, em `Conglomerado Prudencial` (`fato_capital_prudencial`); a partir de `20250301`, em `fato_ifdata_2025_campos` com `escopo = 'prudential_conglomerates'` e `relatorio = 'capital_information'`.
+- **Relatórios de carteira de crédito até 2024:** não existem sob `Conglomerado Prudencial` nem `Instituicao Individual` nos fatos históricos — consulte sob `Conglomerado Financeiro` (e `Conglomerado Financeiro (SCR)` para `2012-06` a `2014-03`). A partir de `2025-03`, os relatórios de carteira de crédito passaram a ser publicados no escopo `prudential_conglomerates` em `fato_ifdata_2025_campos`.
 
 ---
 
 ## 3. Unidades, Escalas e Formatos
 
-- **Valores monetários (Balanço, DRE, Resumo, Capital, Carteira de Crédito):** expressos em **milhares de reais (`R$ mil`)**, preservando a unidade original do IF.data. Para converter em bilhões de reais, divida por `1e6` (`1_000_000`).
-- **Índices e percentuais (`roe`, `roa`, `indice_basileia`, `indice_capital_principal`, `indice_capital_nivel_i`, `razao_alavancagem`, `indice_imobilizacao`):** armazenados como **fração decimal** (por exemplo, `0.1651` representa `16,51%`). Multiplique por `100` apenas na apresentação.
+- **Valores monetários (Balanço, DRE, Resumo, Capital, Carteira de Crédito — histórico e 2025+):** expressos em **milhares de reais (`R$ mil`)**, preservando a unidade original do IF.data. Para converter em bilhões de reais, divida por `1e6` (`1_000_000`).
+- **Índices e percentuais — diferença entre histórico e 2025+:**
+  - **Tabelas históricas (`2000-03`..`2024-12`):** `roe`, `roa`, `indice_basileia`, `indice_capital_principal`, `indice_capital_nivel_i`, `razao_alavancagem` e `indice_imobilizacao` estão em **fração decimal** (`0.1651` = `16,51%`). Multiplique por `100` apenas na apresentação.
+  - **Tabela atual (`fato_ifdata_2025_campos`, `2025-03` em diante):** percentuais vêm em **pontos percentuais** (ex.: `16.51` representa `16,51%`) e são marcados com `formato_valor = 'percentual'`. **Não multiplique por `100` novamente.**
+- **Campos textuais e marcadores em `fato_ifdata_2025_campos`:** `valor_original` preserva o texto exato do CSV (incluindo `'NI'` para não informado); células vazias ficam `NULL`; `valor_numerico` (`DECIMAL(38,8)`) só é preenchido quando o campo contém número reconhecível.
 - **Quantidades (`quantidade_agencias`, `quantidade_postos_atendimento`, `quantidade_clientes`, `quantidade_operacoes`):** números inteiros/contagens absolutas.
-- **Chave temporal (`id_data`):** inteiro no formato `YYYYMMDD` sempre apontando para o dia `01` do mês de encerramento do trimestre (`03`, `06`, `09` ou `12`), por exemplo `20241201` para dezembro de 2024. Use `dim_tempo.data` quando precisar de tipo `DATE`.
+- **Chave temporal (`id_data`):** inteiro no formato `YYYYMMDD` sempre apontando para o dia `01` do mês de encerramento do trimestre (`03`, `06`, `09` ou `12`), por exemplo `20260601` para junho de 2026. Use `dim_tempo.data` ou `data_base` quando precisar de tipo `DATE`.
 
 ---
 
@@ -111,4 +121,7 @@ Nas tabelas `fato_resumo_financeiro` e `fato_demonstracao_resultado`, `roe` (`lu
 
 ## 7. Referências Oficiais Locais
 
-Os dicionários originais em PDF publicados pelo Banco Central estão arquivados em `docs/dicionario_dados/`, organizados por escopo (`prudential_conglomerate/`, `financial_conglomerates/`, `financial_conglomerates_scr/`, `individual_institutions/`, `foreign_exchange/`). Consulte-os quando precisar da fórmula regulatória detalhada de uma rubrica específica do COSIF.
+Os dicionários originais publicados pelo Banco Central estão arquivados em `docs/dicionario_dados/`:
+
+- **Período histórico (`2000`–`2024`):** organizados por escopo em `docs/dicionario_dados/<escopo>/*.pdf`.
+- **Período atual (`2025` em diante):** organizados por data-base, escopo e relatório em [docs/dicionario_dados/2025_em_diante/](dicionario_dados/2025_em_diante/README.md) (`AAAA-MM/<escopo>/<relatorio>.pdf`), com URLs e hashes SHA-256 registrados em `docs/dicionario_dados/2025_em_diante/manifesto.json` e atualizáveis via `uv run ifdata.py --download-dictionaries`.

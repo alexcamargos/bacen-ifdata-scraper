@@ -6,9 +6,9 @@ Antes de escrever consultas analíticas, leia [Regras de Domínio](DOMAIN_RULES.
 
 ## Resumo da Cobertura
 
-- **Horizonte temporal:** `20000301` (`2000-03`) até `20241201` (`2024-12`) — **100 trimestres**.
-- **Objetos analíticos no schema `main`:** 4 views prontas, 13 tabelas fato, 13 dimensões, 1 tabela intermediária enriquecida (`int_instituicao_enriquecida`) e 10 seeds de domínio.
-- **Unidades padrão:** valores monetários em **R$ mil**; índices/percentuais em **fração decimal** (ex.: `0.165` = `16,5%`).
+- **Horizonte temporal:** `20000301` (`2000-03`) até `20260601` (`2026-12`) — **106 trimestres**.
+- **Objetos analíticos no schema `main`:** 5 views prontas, 14 tabelas fato, 13 dimensões, 1 tabela intermediária enriquecida (`int_instituicao_enriquecida`) e 10 seeds de domínio.
+- **Unidades padrão:** valores monetários em **R$ mil**; índices/percentuais em **fração decimal** no histórico (`2000–2024`, ex.: `0.165` = `16,5%`) e em **pontos percentuais** em `fato_ifdata_2025_campos` (`2025+`, marcados com `formato_valor = 'percentual'`, ex.: `16.5` = `16,5%`).
 
 ## Inventário Rápido
 
@@ -16,10 +16,11 @@ Antes de escrever consultas analíticas, leia [Regras de Domínio](DOMAIN_RULES.
 
 | View | Colunas | Grão | Uso principal |
 | :--- | :---: | :--- | :--- |
-| `view_balanco_patrimonial_relatorios` | 55 | 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial) | Análise detalhada de composição do Ativo (crédito, TVM, disponibilidades) e Passivo (depósitos, LCI, LCA, LF) |
-| `view_dre_relatorios` | 50 | 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado) | Análise de receitas de intermediação, despesas de captação, PDD, eficiência administrativa e lucro líquido |
-| `view_instituicoes_historico_nomes` | 19 | 1 linha por instituição e data-base com comparação de nome anterior via LAG | Rastreamento de mudanças de razão social, fusões e incorporações ao longo da série histórica |
-| `view_resumo_financeiro_relatorios` | 27 | 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro) | Rankings de instituições por ativo total, patrimônio líquido, captações ou lucro líquido; Evolução temporal de indicadores principais sem necessidade de joins manuais |
+| `view_balanco_patrimonial_relatorios` | 55 | 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial, 2000–2024) | Análise detalhada de composição do Ativo (crédito, TVM, disponibilidades) e Passivo (depósitos, LCI, LCA, LF) |
+| `view_dre_relatorios` | 50 | 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado, 2000–2024) | Análise de receitas de intermediação, despesas de captação, PDD, eficiência administrativa e lucro líquido |
+| `view_instituicoes_historico_nomes` | 19 | 1 linha por instituição e data-base com comparação de nome anterior via LAG (2000–2024) | Rastreamento de mudanças de razão social, fusões e incorporações ao longo da série histórica |
+| `view_resumo_financeiro_relatorios` | 27 | 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro, 2000–2024) | Rankings de instituições por ativo total, patrimônio líquido, captações ou lucro líquido; Evolução temporal de indicadores principais sem necessidade de joins manuais |
+| `view_resumo_prudencial_serie` | 8 | 1 linha por instituição prudencial e data-base conciliando Ativo Total e PL de 2014-03 a 2026-06 | Série contínua de Ativo Total e Patrimônio Líquido de Conglomerados Prudenciais cruzando 2014–2024 (cosif_ate_2024) e 2025+ (cosif_desde_2025) |
 
 ### Tabelas Fato
 
@@ -33,6 +34,7 @@ Antes de escrever consultas analíticas, leia [Regras de Domínio](DOMAIN_RULES.
 | `fato_carteira_credito_produto` | 6 | 1 linha por instituição, data-base, produto de crédito e faixa de vencimento | `Conglomerado Financeiro (SCR)` (20120601..20140301), `Conglomerado Financeiro` (20140601..20241201) |
 | `fato_carteira_credito_totais` | 8 | 1 linha por instituição (id_instituicao) e data-base (id_data) | `Conglomerado Financeiro (SCR)` (20120601..20140301), `Conglomerado Financeiro` (20140601..20241201) |
 | `fato_demonstracao_resultado` | 35 | 1 linha por instituição (id_instituicao) e data-base (id_data) | `Instituicao Individual` (20000301..20241201), `Conglomerado Financeiro` (20000301..20241201), `Conglomerado Prudencial` (20140301..20241201) |
+| `fato_ifdata_2025_campos` | 14 | 1 linha por escopo, relatório, data-base, linha da instituição e coluna publicada (formato longo 2025+) | `prudential_conglomerates (14 relatórios)` (20250301..20260601), `financial_conglomerates (4 relatórios)` (20250301..20260601), `individual_institutions (4 relatórios)` (20250301..20260601) |
 | `fato_movimentacao_cambio` | 24 | 1 linha por instituição de câmbio (id_instituicao) e data-base (id_data) | `Instituição de Câmbio` (20141201..20230601) |
 | `fato_operacoes_clientes` | 4 | 1 linha por instituição (id_instituicao) e data-base (id_data) | `Conglomerado Financeiro (SCR)` (20120601..20140301), `Conglomerado Financeiro` (20140601..20241201) |
 | `fato_regiao_credito` | 4 | 1 linha por instituição, data-base e região geográfica | `Conglomerado Financeiro (SCR)` (20120601..20140301), `Conglomerado Financeiro` (20140901..20241201) |
@@ -66,7 +68,7 @@ Antes de escrever consultas analíticas, leia [Regras de Domínio](DOMAIN_RULES.
 
 Data Mart View unificando o Fato Balanço Patrimonial (Ativos e Passivos) com as Dimensões, para o relatório completo do IF.data.
 
-- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial)
+- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_balanco_patrimonial, 2000–2024)
 - **Chave:** `id_instituicao, id_data`
 
 | Coluna | Tipo DuckDB | Descrição |
@@ -131,7 +133,7 @@ Data Mart View unificando o Fato Balanço Patrimonial (Ativos e Passivos) com as
 
 Data Mart View unificando o Fato Demonstração de Resultados com as Dimensões.
 
-- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado)
+- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_demonstracao_resultado, 2000–2024)
 - **Chave:** `id_instituicao, id_data`
 
 | Coluna | Tipo DuckDB | Descrição |
@@ -191,7 +193,7 @@ Data Mart View unificando o Fato Demonstração de Resultados com as Dimensões.
 
 Data Mart View focada exclusivamente no acompanhamento histórico (De-Para) de mudanças de nome das instituições nos relatórios do Bacen.
 
-- **Grão:** 1 linha por instituição e data-base com comparação de nome anterior via LAG
+- **Grão:** 1 linha por instituição e data-base com comparação de nome anterior via LAG (2000–2024)
 - **Chave:** `id_instituicao, id_data`
 
 | Coluna | Tipo DuckDB | Descrição |
@@ -220,7 +222,7 @@ Data Mart View focada exclusivamente no acompanhamento histórico (De-Para) de m
 
 Data Mart View unificando o Fato Resumo Financeiro com as Dimensões, facilitando o filtro por Tipo de Relatório BCB.
 
-- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro)
+- **Grão:** 1 linha por instituição e data-base (visão desnormalizada de fato_resumo_financeiro, 2000–2024)
 - **Chave:** `id_instituicao, id_data`
 
 | Coluna | Tipo DuckDB | Descrição |
@@ -252,6 +254,21 @@ Data Mart View unificando o Fato Resumo Financeiro com as Dimensões, facilitand
 | `quantidade_postos_atendimento` | `BIGINT` |  |
 | `roe` | `DOUBLE` |  |
 | `roa` | `DOUBLE` |  |
+
+### `view_resumo_prudencial_serie`
+
+- **Grão:** 1 linha por instituição prudencial e data-base conciliando Ativo Total e PL de 2014-03 a 2026-06
+
+| Coluna | Tipo DuckDB | Descrição |
+| :--- | :--- | :--- |
+| `data_base` | `DATE` | Data de referência do trimestre (DATE, 2014-03-01 a 2026-06-01). |
+| `codigo` | `VARCHAR` | Código identificador da instituição no Bacen (VARCHAR). |
+| `instituicao` | `VARCHAR` | Nome histórico da instituição na data-base. |
+| `ativo_total` | `DECIMAL(38,8)` | Ativo Total em R$ mil (DECIMAL(38,8)). |
+| `patrimonio_liquido` | `DECIMAL(38,8)` | Patrimônio Líquido em R$ mil (DECIMAL(38,8)). |
+| `regime_contabil` | `VARCHAR` | Regime COSIF da observação ('cosif_ate_2024' ou 'cosif_desde_2025'). |
+| `escopo` | `VARCHAR` | Escopo fixo 'prudential_conglomerates'. |
+| `unidade` | `VARCHAR` | Unidade monetária fixa 'BRL mil'. |
 
 ---
 
@@ -689,6 +706,29 @@ Fato consolidada de Demonstração de Resultados (DRE).
 | `juros_sobre_capital` | `DOUBLE` |  |
 | `roe` | `DOUBLE` |  |
 | `roa` | `DOUBLE` |  |
+
+### `fato_ifdata_2025_campos`
+
+- **Grão:** 1 linha por escopo, relatório, data-base, linha da instituição e coluna publicada (formato longo 2025+)
+- **Chave:** `id_data`
+- **Cobertura temporal por escopo:** `prudential_conglomerates (14 relatórios)` (`20250301..20260601`); `financial_conglomerates (4 relatórios)` (`20250301..20260601`); `individual_institutions (4 relatórios)` (`20250301..20260601`)
+
+| Coluna | Tipo DuckDB | Descrição |
+| :--- | :--- | :--- |
+| `id_data` | `INTEGER` | Chave temporal YYYYMMDD (FK lógica para dim_tempo.id_data). |
+| `escopo` | `VARCHAR` | Escopo institucional em snake_case (prudential_conglomerates, financial_conglomerates, individual_institutions). |
+| `relatorio` | `VARCHAR` | Identificador do relatório em snake_case (ex.: summary, assets, liabilities, income_statement, capital_information). |
+| `data_base` | `DATE` | Data de referência do trimestre (DATE). |
+| `linha` | `BIGINT` | Posição da linha da instituição no CSV publicado. |
+| `ordem_coluna` | `INTEGER` | Posição ordinal da coluna no CSV publicado. |
+| `codigo` | `VARCHAR` | Código identificador da instituição no IF.data. |
+| `instituicao` | `VARCHAR` | Nome da instituição publicado na data-base. |
+| `campo_original` | `VARCHAR` | Nome exato da coluna/rubrica conforme publicado pelo Bacen. |
+| `eh_dimensao` | `BOOLEAN` | Indica se a coluna é atributo cadastral/dimensional (true) ou medida numérica/indicador (false). |
+| `valor_original` | `VARCHAR` | Texto original publicado no CSV (preserva marcadores como NI; células vazias ficam NULL). |
+| `valor_numerico` | `DECIMAL(38,8)` | Valor numérico convertido para DECIMAL(38,8) na escala publicada (percentuais em pontos percentuais). |
+| `formato_valor` | `VARCHAR` | Marcador de formato ('percentual' quando em pontos percentuais; NULL nos demais casos). |
+| `arquivo_origem` | `VARCHAR` | Caminho relativo do CSV bruto versionado de origem. |
 
 ### `fato_movimentacao_cambio`
 
