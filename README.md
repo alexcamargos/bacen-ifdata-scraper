@@ -371,7 +371,7 @@ uv run ifdata.py
 | Documento | Público | Conteúdo |
 | :--- | :--- | :--- |
 | [docs/USAGE.md](docs/USAGE.md) | Humanos | Instalação, CLI completa, API Python, variáveis de ambiente e estrutura física de saídas. |
-| [docs/DATA_CATALOG.md](docs/DATA_CATALOG.md) | Humanos e IA | Inventário completo das 13 dimensões, 13 fatos, 4 views e tabelas de domínio (seeds) da camada Gold. |
+| [docs/DATA_CATALOG.md](docs/DATA_CATALOG.md) | Humanos e IA | Inventário completo das 13 dimensões, 14 fatos, 5 views e tabelas de domínio (seeds) da camada Gold. |
 | [docs/DOMAIN_RULES.md](docs/DOMAIN_RULES.md) | Humanos e IA | Regras contábeis e regulatórias do IF.data: anti-dupla contagem, unidades, DRE semestral e histórico de nomes. |
 | [docs/COOKBOOK.md](docs/COOKBOOK.md) | Humanos e IA | Consultas SQL (DuckDB) e Python/Polars validadas no warehouse real e lista de anti-patterns. |
 | [llms.txt](llms.txt) | Agentes de IA | Índice compacto de descoberta para LLMs e ferramentas de análise automatizada. |

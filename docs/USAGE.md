@@ -60,22 +60,25 @@ O ponto de entrada principal na raiz do repositório é [ifdata.py](../ifdata.py
 
 | Flag | Etapa | O que faz |
 | :--- | :--- | :--- |
-| `-s`, `--scraper` | Extração | Baixa os relatórios CSV do portal histórico IF.data (até `2024-12`) para a camada `raw/`. |
-| `-c`, `--cleaner` | Limpeza | Normaliza CSVs brutos do Bacen (cabeçalhos múltiplos, linhas de resumo e separadores). |
-| `-t`, `--transformer` | Transformação | Aplica schemas Pydantic/Pandera e grava arquivos tipados prontos para carga. |
-| `-l`, `--loader` | Carga (Silver) | Recria e carrega as tabelas normalizadas no `silver_warehouse.duckdb`. |
-| `-a`, `--analytics` | Modelagem (Gold) | Executa o projeto dbt (`src/bacen_ifdata/data_analytics`) para construir o Star Schema em `gold_warehouse.duckdb`. |
+| `-s`, `--scraper` | Extração | Baixa os relatórios CSV dos portais IF.data histórico (`2000-03` a `2024-12`) e atual (`2025-03` em diante) para a camada `raw/`. |
+| `-c`, `--cleaner` | Limpeza | Normaliza CSVs brutos do Bacen (tanto do leiaute histórico quanto do leiaute atual de 2025+). |
+| `-t`, `--transformer` | Transformação | Aplica schemas Pydantic/Pandera no histórico e tipagem de campos no leiaute atual (`data/interim/ifdata_2025/`). |
+| `-l`, `--loader` | Carga (Silver) | Recria e carrega as tabelas normalizadas (incluindo `ifdata_2025_campos`) no `silver_warehouse.duckdb`. |
+| `-a`, `--analytics` | Modelagem (Gold) | Executa o projeto dbt (`src/bacen_ifdata/data_analytics`) para construir o Star Schema e os modelos de 2025+ em `gold_warehouse.duckdb`. |
 
 Sem nenhuma flag de ação, `uv run ifdata.py` executa o fluxo padrão de limpeza e transformação (`-c -t`).
 
-### Operações incrementais, reparo e auditoria
+### Operações incrementais, reparo, versionamento e auditoria
 
 | Flag | Comportamento |
 | :--- | :--- |
-| `--data-base YYYY-MM` | Limita a coleta a um mês de referência específico até `2024-12`. Exige `--scraper` ou `--repair-raw`. |
+| `--data-base YYYY-MM` | Limita a ação a um mês de referência publicado (histórico ou 2025+). Exige `--scraper`, `--version-local-csv` ou `--download-dictionaries`. |
 | `--repair-raw` | Ativa o scraper e recoleta apenas CSVs em `raw/` com datas de referência ou cabeçalhos inválidos. |
 | `--refresh` | Ativa o scraper e recoleta o mês informado em `--data-base` para verificar revisões do Bacen. Exige `--data-base` e não pode ser combinado com `--repair-raw`. |
-| `--update` | Processa apenas os relatórios alterados, atualiza a camada Silver com controle de ledger, gera e testa uma nova release Gold e atualiza `processed/current.json`. Substitui `-c`, `-t`, `-l` e `-a`. |
+| `--version-local-csv` | Valida CSVs planos (`AAAA-MM.csv`) locais e registra cópias versionadas com manifesto e SHA-256 sem baixar novamente. |
+| `--consolidate-csv` | Combina originais locais de todos os meses por escopo e relatório em `data/interim/consolidated/ifdata/<escopo>/<relatorio>/series.csv`. |
+| `--download-dictionaries` | Baixa a composição oficial de colunas (PDFs/JSON e `manifesto.json`) dos relatórios de 2025+ para `docs/dicionario_dados/2025_em_diante/`. |
+| `--update` | Processa relatórios alterados dos dois leiautes (histórico e 2025+), atualiza a camada Silver com ledger, gera e testa uma nova release Gold e atualiza `processed/current.json`. Substitui `-c`, `-t`, `-l` e `-a`. |
 | `--audit-coverage` | Ação somente leitura que compara as medidas originais com a camada Silver publicada. Não pode ser combinada com nenhuma flag de execução. |
 | `--no-cleanup` | Mantém a sessão do navegador aberta ao final (útil para depuração do scraper). |
 | `-v`, `--version` | Exibe a versão instalada do pacote. |
@@ -99,16 +102,23 @@ Principais valores de `-r / --report`: `SUMMARY`, `ASSETS`, `LIABILITIES`, `INCO
 ### Exemplos práticos de CLI
 
 ```bash
-# Coletar um único trimestre de Conglomerados Prudenciais (Resumo)
-uv run ifdata.py -s -i PRUDENTIAL_CONGLOMERATES -r SUMMARY --data-base 2024-12
+# Coletar um trimestre publicado (histórico ou 2025+) de Conglomerados Prudenciais (Resumo)
+uv run ifdata.py -s -i PRUDENTIAL_CONGLOMERATES -r SUMMARY --data-base 2025-03
 
 # Verificar revisão de um trimestre e publicar nova release Gold testada
-uv run ifdata.py --refresh --data-base 2024-12 --update
+uv run ifdata.py --refresh --data-base 2026-06 --update
+
+# Versionar CSVs planos locais e consolidar séries brutas por relatório
+uv run ifdata.py --version-local-csv
+uv run ifdata.py --consolidate-csv
+
+# Baixar dicionários oficiais de colunas dos relatórios de 2025+
+uv run ifdata.py --download-dictionaries
 
 # Reparar arquivos raw corrompidos de um escopo específico
 uv run ifdata.py --repair-raw -i INDIVIDUAL_INSTITUTIONS
 
-# Processar alterações pendentes e publicar release Silver + Gold
+# Processar alterações pendentes (histórico + 2025+) e publicar release Silver + Gold
 uv run ifdata.py --update
 
 # Auditar cobertura de medidas (somente leitura)
@@ -183,8 +193,10 @@ O fluxo de dados é unidirecional (`raw -> interim -> processed`). A localizaç�
 | Artefato | Layout padrão (`<repo>/data`) | Layout isolado (`IFDATA_DATA_DIRECTORY` externo) |
 | :--- | :--- | :--- |
 | CSVs brutos (Bronze) | `data/raw/<escopo>/<relatorio>/` | `<DIR>/raw/<escopo>/<relatorio>/` |
-| CSVs limpos | `data/processed/<escopo>/` | `<DIR>/interim/cleaned/<escopo>/` |
-| CSVs tipados | `data/transformed/<escopo>/` | `<DIR>/interim/typed/<escopo>/` |
+| CSVs limpos (histórico) | `data/processed/<escopo>/` | `<DIR>/interim/cleaned/<escopo>/` |
+| CSVs tipados (histórico) | `data/transformed/<escopo>/` | `<DIR>/interim/typed/<escopo>/` |
+| Staging do leiaute atual (2025+) | `data/interim/ifdata_2025/` | `<DIR>/interim/ifdata_2025/` |
+| CSVs consolidados por série | `data/interim/consolidated/ifdata/<escopo>/<relatorio>/series.csv` | `<DIR>/interim/consolidated/ifdata/<escopo>/<relatorio>/series.csv` |
 | Releases Silver publicados | `data/interim/releases/<release-id>/silver_warehouse.duckdb` | `<DIR>/interim/releases/<release-id>/silver_warehouse.duckdb` |
 | Releases Gold publicados | `data/processed/releases/<release-id>/gold_warehouse.duckdb` | `<DIR>/processed/releases/<release-id>/gold_warehouse.duckdb` |
 | Ponteiro da release ativa | `data/processed/current.json` | `<DIR>/processed/current.json` |
